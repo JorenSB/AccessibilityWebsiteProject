@@ -4,6 +4,9 @@ trigger:
 pool:
   vmImage: 'windows-latest'
 
+variables:
+  buildConfiguration: 'Release'
+
 steps:
 - task: UseDotNet@2
   displayName: 'Install .NET Core SDK'
@@ -12,8 +15,7 @@ steps:
     performMultiLevelLookup: true
     includePreviewVersions: true # Required for preview versions
 
-variables:
-  buildConfiguration: 'Release'
+
 
 - task: DotNetCoreCLI@2
   inputs:
