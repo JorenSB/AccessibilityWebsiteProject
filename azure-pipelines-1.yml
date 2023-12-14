@@ -36,8 +36,10 @@ steps:
     arguments: '--configuration $(BuildConfiguration) --output $(Build.ArtifactStagingDirectory)'
     zipAfterPublish: True
 
-# this code takes all the files in $(Build.ArtifactStagingDirectory) and uploads them as an artifact of your build.
-- task: PublishPipelineArtifact@1
+- task: AzureWebApp@1
   inputs:
-    targetPath: '$(Build.ArtifactStagingDirectory)' 
-    artifactName: 'myWebsiteName'
+    azureSubscription: 'Azure for Students(1)(a003b4d0-ca2f-4f7c-98c2-ec7c41a35482)'
+    appType: 'webApp'
+    appName: 'Website-Project-Accessibility'
+    package: '$(System.DefaultWorkingDirectory)/**/*.zip'
+    deploymentMethod: 'auto'
