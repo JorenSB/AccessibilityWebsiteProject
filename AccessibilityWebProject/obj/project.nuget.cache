@@ -1,0 +1,16 @@
+{
+  "version": 2,
+  "dgSpecHash": "y2L5rlRO9Hjm2X2mdXwwVi3GKPztTHo9oFC4+OXVRJ4Tn0yG0gei9kl10MVlDQEh89s/00BDSJ8J8AFMS9EfaA==",
+  "success": true,
+  "projectFilePath": "C:\\Users\\joren\\OneDrive\\Joren\\HHS\\Semester 3\\Project\\yes\\AccessibilityWebsiteProject\\AccessibilityWebProject\\AccessibilityWebProject.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\joren\\.nuget\\packages\\microsoft.aspnetcore.openapi\\7.0.10\\microsoft.aspnetcore.openapi.7.0.10.nupkg.sha512",
+    "C:\\Users\\joren\\.nuget\\packages\\microsoft.extensions.apidescription.server\\6.0.5\\microsoft.extensions.apidescription.server.6.0.5.nupkg.sha512",
+    "C:\\Users\\joren\\.nuget\\packages\\microsoft.openapi\\1.4.3\\microsoft.openapi.1.4.3.nupkg.sha512",
+    "C:\\Users\\joren\\.nuget\\packages\\swashbuckle.aspnetcore\\6.5.0\\swashbuckle.aspnetcore.6.5.0.nupkg.sha512",
+    "C:\\Users\\joren\\.nuget\\packages\\swashbuckle.aspnetcore.swagger\\6.5.0\\swashbuckle.aspnetcore.swagger.6.5.0.nupkg.sha512",
+    "C:\\Users\\joren\\.nuget\\packages\\swashbuckle.aspnetcore.swaggergen\\6.5.0\\swashbuckle.aspnetcore.swaggergen.6.5.0.nupkg.sha512",
+    "C:\\Users\\joren\\.nuget\\packages\\swashbuckle.aspnetcore.swaggerui\\6.5.0\\swashbuckle.aspnetcore.swaggerui.6.5.0.nupkg.sha512"
+  ],
+  "logs": []
+}
