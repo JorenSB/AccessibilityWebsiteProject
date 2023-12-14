@@ -1,1 +1,0 @@
-System.Console.WriteLine("herro world chippi chippi chappa chappa");
