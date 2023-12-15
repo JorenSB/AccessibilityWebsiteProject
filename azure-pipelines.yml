@@ -1,0 +1,78 @@
+trigger:
+- main
+
+pool:
+  vmImage: 'windows-latest'
+
+variables:
+  buildConfiguration: 'Release'
+
+stages:
+- stage: Build
+  displayName: 'Build Stage'
+  jobs:
+  - job: BuildJob
+    displayName: 'Build Job'
+    steps:
+    - task: UseDotNet@2
+      name: 'Install_DOTNET_Core_SDK'
+      displayName: 'Install .NET Core SDK'
+      inputs:
+        version: 7.x
+        performMultiLevelLookup: true
+        includePreviewVersions: true
+
+    - task: DotNetCoreCLI@2
+      name: 'Restore_NuGet_Packages'
+      inputs:
+        command: 'restore'
+        feedsToUse: 'select'
+        vstsFeed: 'my-vsts-feed'
+
+    - task: DotNetCoreCLI@2
+      name: 'Build_DotNet_Project'
+      inputs:
+        command: 'build'
+        arguments: '--configuration $(buildConfiguration)'
+      displayName: 'dotnet build $(buildConfiguration)'
+
+    - task: DotNetCoreCLI@2
+      name: 'Publish_Artifact'
+      displayName: 'Publish Artifact'
+      inputs:
+        command: publish
+        publishWebProjects: True
+        arguments: '--configuration $(BuildConfiguration) --output $(Build.ArtifactStagingDirectory)'
+        zipAfterPublish: True
+
+    - task: PublishPipelineArtifact@1
+      name: 'Publish_Build_Artifact'
+      displayName: 'Publish Build Artifact'
+      inputs:
+        targetPath: '$(Build.ArtifactStagingDirectory)'
+        artifact: 'drop'
+        publishLocation: 'pipeline'
+
+- stage: Deploy
+  displayName: 'Deploy Stage'
+  jobs:
+  - job: DeployJob
+    displayName: 'Deploy Job'
+    steps:
+    - task: DownloadPipelineArtifact@2
+      name: 'Download_Build_Artifact'
+      displayName: 'Download Build Artifact'
+      inputs:
+        buildType: 'current'
+        artifactName: 'drop'
+        targetPath: '$(System.DefaultWorkingDirectory)'
+
+    - task: AzureWebApp@1
+      name: 'Deploy_to_Azure_WebApp'
+      displayName: 'Deploy to Azure WebApp'
+      inputs:
+        azureSubscription: 'Azure for Students(1)(a003b4d0-ca2f-4f7c-98c2-ec7c41a35482)'
+        appType: 'webApp'
+        appName: 'Website-Project-Accessibility'
+        package: '$(System.DefaultWorkingDirectory)/**/*.zip'
+        deploymentMethod: 'auto'
