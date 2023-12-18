@@ -72,3 +72,30 @@ input{
     background-color: #1A3A8B; /* Donkerdere blauwe achtergrondkleur op hover */
 }
 
+@media (max-width: 1200px) {
+    .wrapper{
+        width: 100%;
+    }
+
+    .logo-img{
+        margin-top: 0px;
+    }
+
+    .wrapper .input-box {
+      width: 90vw;
+      max-width: none; /* Reset max-width for smaller screens */
+      font-size: 25px;
+    }
+
+    .wrapper a{
+        font-size: 25px;
+    }
+
+    .button{
+        font-size: 25px;
+        width: 20vw;
+        height: 5vh;
+    }
+
+    
+  }
