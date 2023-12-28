@@ -98,7 +98,7 @@
     }
   
     .wrapper .input-box {
-      width: 90vw;
+      width: 60vw;
       max-width: none; /* Reset max-width for kleinere schermen */
       font-size: 25px;
     }

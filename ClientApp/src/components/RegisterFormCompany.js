@@ -48,6 +48,7 @@ function RegisterFormCompany() {
         <div className='wrapper'>
             <form>
                 <img className='logo-img' src={Logo} alt='logo accessibility.nl'></img>
+                <h3 className='title'>Registreer als Deskundige</h3>
                 <div className='input-box'>
                     <input type='text' placeholder='Bedrijfsnaam' required onChange={(e) => setCompanyName(e.target.value)} />
                 </div>
