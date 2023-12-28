@@ -12,7 +12,7 @@ function LoginNav() {
       <img className='logo' src={Logo} alt="Logo" />
 
       <input type='checkbox' id='check'></input>
-      <label for="check" className="icons">
+      <label htmlFor="check" className="icons">
         <img id="menu-icon" src={burgier} alt="Menu" />
         <img id="close-icon" src={burgierClose} alt="close menu" />
       </label>

@@ -1,21 +1,22 @@
-import React, { Component } from 'react';
-import './custom.css';
-import Login from './components/Login';
+// App.js
 
-export default class App extends Component {
-  static displayName = App.name;
+import React from 'react';
+import { Routes, Route } from 'react-router-dom';
+import AppRoutes from './AppRoutes'; // Assuming you have a file with route configurations
 
-  render() {
-    return (
-      // // <Layout>
-      //   <Routes>
-      //     {AppRoutes.map((route, index) => {
-      //       const { element, ...rest } = route;
-      //       return <Route key={index} {...rest} element={element} />;
-      //     })}
-      //   </Routes>
-      // // </Layout>
-      <Login />
-    );
-  }
-}
+const App = () => {
+  return (
+      <Routes>
+        {AppRoutes.map((route, index) => (
+          <Route
+            key={index}
+            path={route.path}
+            element={route.element}
+            index={route.index}
+          />
+        ))}
+      </Routes>
+  );
+};
+
+export default App;
