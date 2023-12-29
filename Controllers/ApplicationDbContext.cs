@@ -25,7 +25,7 @@ public class ApplicationDbContext : DbContext
         var username = Environment.GetEnvironmentVariable("DB_USERNAME") ?? "default_username";
         var password = Environment.GetEnvironmentVariable("DB_PASSWORD") ?? "default_password";
 
-        var connectionString = $"Server=tcp:accessibilityserver.database.windows.net,1433;Initial Catalog=AccessibilityDB;Persist Security Info=False;User ID={username};Password={password};MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;";
+        var connectionString = $"Server=tcp:accessibilityserver1.database.windows.net,1433;Initial Catalog=AccessibilityDB;Persist Security Info=False;User ID={username};Password={password};MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;";
 
         optionsBuilder.UseSqlServer(connectionString, providerOptions => providerOptions.CommandTimeout(60));
 }
