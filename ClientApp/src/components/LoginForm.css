@@ -1,0 +1,97 @@
+.body{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 90vh;
+}
+
+.wrapper{
+    background-image: url('./media/icon_accessibility.png');
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    width: 35vw;
+    height: 70vh;
+}
+
+.wrapper .input-box{
+    width: 20vw;
+    height: 5vh;
+    margin: 30px 0;
+}
+
+input{
+    width: 90%;
+    height: 100%;
+    border-radius: 8px;
+    border: 1px solid #2B50EC;
+
+}
+.login-text{
+    color: #FFF;
+}
+
+.logo-img{
+    margin-top: 100px;
+    width: 60%;
+}
+
+.forgot-register a{
+    text-decoration: none;
+    font-size: 20px;
+    color: #FFF;
+}
+.forgot-register a:hover{
+    text-decoration: none;
+    font-size: 20px;
+    color: gainsboro;
+}
+
+.button {
+    display: inline-block;
+    padding: 10px 20px;
+    font-size: 16px;
+    text-align: center;
+    text-decoration: none;
+    background-color: #2B50EC; /* Blauwe achtergrondkleur */
+    color: #FFF; /* Witte tekstkleur */
+    border-radius: 8px; /* Afgeronde hoeken */
+    border: none;
+    cursor: pointer;
+}
+
+.button:hover {
+    background-color: #1A3A8B; /* Donkerdere blauwe achtergrondkleur op hover */
+}
+
+@media (max-width: 1200px) {
+    .wrapper{
+        width: 100%;
+    }
+
+    .logo-img{
+        margin-top: 0px;
+    }
+
+    .wrapper .input-box {
+      width: 90vw;
+      max-width: none; /* Reset max-width for smaller screens */
+      font-size: 25px;
+    }
+
+    .wrapper a{
+        font-size: 25px;
+    }
+
+    .button{
+        font-size: 25px;
+        width: 20vw;
+        height: 5vh;
+    }
+
+    
+  }
