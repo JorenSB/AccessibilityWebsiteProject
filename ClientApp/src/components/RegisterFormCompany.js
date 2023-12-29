@@ -3,7 +3,6 @@ import './RegisterForm.css';
 import Logo from './media/logo.png';
 import { Link } from 'react-router-dom';
 
-
 function RegisterFormCompany() {
     const [email, setEmail] = useState('');
     const [companyName, setCompanyName] = useState('');
@@ -25,18 +24,15 @@ function RegisterFormCompany() {
                     Password: password
                 }),
             });
-            console.log(response);
 
             const contentType = response.headers.get('content-type');
             const data = contentType && contentType.includes('application/json') ? await response.json() : null;
 
             if (response.ok) {
                 setRegisterMessage('Registratie succesvol!'); 
-                
             } else {
                 const errorMessage = data?.Message || 'Er is iets fout gegaan. Probeer opnieuw (else).';
                 setRegisterMessage(errorMessage);
-                console.log(email,kvk, companyName,password);
             }
         } catch (error) {
             console.error('Fout tijdens registratie:', error);
@@ -46,26 +42,48 @@ function RegisterFormCompany() {
 
     return (
         <div className='wrapper'>
-            <form>
+            <form onSubmit={handleRegister}>
                 <img className='logo-img' src={Logo} alt='logo accessibility.nl'></img>
-                <h3 className='title'>Registreer als Deskundige</h3>
+                <h3 className='title'>Registreer als Bedrijf</h3>
                 <div className='input-box'>
-                    <input type='text' placeholder='Bedrijfsnaam' required onChange={(e) => setCompanyName(e.target.value)} />
+                    <input
+                        type='text'
+                        placeholder='Bedrijfsnaam'
+                        required
+                        onChange={(e) => setCompanyName(e.target.value)}
+                    />
                 </div>
                 <div className='input-box'>
-                    <input type='text' placeholder='E-mail' required onChange={(e) => setEmail(e.target.value)} />
-                </div>  
-                <div className='input-box'>
-                    <input type='text' placeholder='KVK-nummer' required onChange={(e) => setKVK(e.target.value)} />
+                    <input
+                        type='email'
+                        placeholder='E-mail'
+                        required
+                        onChange={(e) => setEmail(e.target.value)}
+                    />
                 </div>
                 <div className='input-box'>
-                    <input type='password' placeholder='Wachtwoord' required onChange={(e) => setPassword(e.target.value)} />
-                </div> 
-                <Link to="/registerexpert">Registreer als deskundige</Link>
-
-                <button className='button' type='button' onClick={handleRegister}>Registreer</button>
+                    <input
+                        type='text'
+                        placeholder='KVK-nummer'
+                        required
+                        onChange={(e) => setKVK(e.target.value)}
+                    />
+                </div>
+                <div className='input-box'>
+                    <input
+                        type='password'
+                        placeholder='Wachtwoord'
+                        pattern="^(?=.*[A-Z])(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]{8,}$"
+                        title="Minimaal 1 hoofdletter, 1 vreemd teken en 8 karakters."
+                        required
+                        onChange={(e) => setPassword(e.target.value)}
+                    />
+                </div>
+                <button className='button' type='submit'>
+                    Registreer
+                </button>
             </form>
-            {/* register message moet uiteindelijk weg. alleen voor devs / veranderen met ui stuff */}
+            <Link to="/registerexpert">Registreer als expert</Link>
             {registerMessage && <h1>{registerMessage}</h1>}
         </div>
     );
