@@ -1,29 +1,29 @@
 import React, { useState } from 'react';
 import './RegisterForm.css';
-import Logo from './media/logo.png';
+import Logo from '../media/logo.png';
 import { Link } from 'react-router-dom';
 
-function RegisterFormExpert() {
+function RegisterFormCompany() {
     const [email, setEmail] = useState('');
-    const [firstName, setFirstName] = useState('');
-    const [lastName, setLastName] = useState('');
+    const [companyName, setCompanyName] = useState('');
+    const [kvk, setKVK] = useState('');
     const [password, setPassword] = useState('');
     const [registerMessage, setRegisterMessage] = useState(null);
 
     const handleRegister = async (e) => {
         e.preventDefault();
-
+        
         try {
-            const response = await fetch('https://localhost:7101/api/account/registerExpert', {
+            const response = await fetch('https://localhost:7101/api/account/registerCompany', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify({
+                    CompanyName: companyName,
                     Email: email,
-                    Password: password,
-                    FirstName: firstName,
-                    LastName: lastName  
+                    KVK: kvk,
+                    Password: password
                 }),
             });
 
@@ -47,27 +47,28 @@ function RegisterFormExpert() {
         <div className='wrapper'>
             <form onSubmit={handleRegister}>
                 <img className='logo-img' src={Logo} alt='logo accessibility.nl'></img>
-                <h3 className='title'>Registreer als Deskundige</h3>
+                <h3 className='title'>Registreer als Bedrijf</h3>
                 <div className='input-box'>
-                    <input type='text' placeholder='Voornaam' required onChange={(e) => setFirstName(e.target.value)} />
-                </div>
-                <div className='input-box'>
-                    <input type='text' placeholder='Achternaam' required onChange={(e) => setLastName(e.target.value)} />
+                    <input type='text' placeholder='Bedrijfsnaam' required onChange={(e) => setCompanyName(e.target.value)} />
                 </div>
                 <div className='input-box'>
                     <input type='email' placeholder='E-mail' required onChange={(e) => setEmail(e.target.value)} />
                 </div>
                 <div className='input-box'>
-                    <input type='password' placeholder='Wachtwoord' pattern="^(?=.*[A-Z])(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]{8,}$" title="Minimaal 1 hoofdletter, 1 vreemd teken en 8 karakters." required onChange={(e) => setPassword(e.target.value)} />
+                    <input type='text'placeholder='KVK-nummer' required onChange={(e) => setKVK(e.target.value)}/>
+                </div>
+                <div className='input-box'>
+                    <input type='password' placeholder='Wachtwoord' pattern="^(?=.*[A-Z])(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]{8,}$" title="Minimaal 1 hoofdletter, 1 vreemd teken en 8 karakters." required onChange={(e) => setPassword(e.target.value)}/>
                 </div>
                 <button className='button' type='submit'>
                     Registreer
                 </button>
             </form>
-            <Link to="/registercompany">Registreer als bedrijf</Link>
-            <h1 className='registerMsg'>{registerMessage}</h1>
+            <Link to="/registreerdeskundige">Registreer als expert</Link>
+            
+           <h1 className='registerMsg'>{registerMessage}</h1>
         </div>
     );
 }
 
-export default RegisterFormExpert;
+export default RegisterFormCompany;

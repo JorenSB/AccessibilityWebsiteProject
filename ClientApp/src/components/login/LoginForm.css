@@ -6,7 +6,7 @@
 }
 
 .wrapper{
-    background-image: url('./media/icon_accessibility.png');
+    background-image: url('../media/icon_accessibility.png');
     background-size: contain;
     background-repeat: no-repeat;
     background-position: center;

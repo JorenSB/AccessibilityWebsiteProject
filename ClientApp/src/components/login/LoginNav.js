@@ -1,8 +1,8 @@
 import React from 'react';
 import './LoginNav.css';
-import burgier from './media/menu-regular-24.png';
-import burgierClose from './media/x-regular-24.png';
-import Logo from './media/logo.png';
+import burgier from '../media/menu-regular-24.png';
+import burgierClose from '../media/x-regular-24.png';
+import Logo from '../media/logo.png';
 
 
 
