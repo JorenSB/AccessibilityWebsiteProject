@@ -10,7 +10,9 @@ function RegisterFormExpert() {
     const [password, setPassword] = useState('');
     const [registerMessage, setRegisterMessage] = useState(null);
 
-    const handleRegister = async () => {
+    const handleRegister = async (e) => {
+        e.preventDefault();
+
         try {
             const response = await fetch('https://localhost:7101/api/account/registerExpert', {
                 method: 'POST',
@@ -26,6 +28,7 @@ function RegisterFormExpert() {
             });
 
             const contentType = response.headers.get('content-type');
+
             const data = contentType && contentType.includes('application/json') ? await response.json() : null;
 
             if (response.ok) {
@@ -57,10 +60,12 @@ function RegisterFormExpert() {
                 <div className='input-box'>
                     <input type='password' placeholder='Wachtwoord' pattern="^(?=.*[A-Z])(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]{8,}$" title="Minimaal 1 hoofdletter, 1 vreemd teken en 8 karakters." required onChange={(e) => setPassword(e.target.value)} />
                 </div>
-                <button className='button' type='submit'>Registreer</button>
+                <button className='button' type='submit'>
+                    Registreer
+                </button>
             </form>
             <Link to="/registercompany">Registreer als bedrijf</Link>
-            {registerMessage && <h1>{registerMessage}</h1>}
+            <h1 className='registerMsg'>{registerMessage}</h1>
         </div>
     );
 }

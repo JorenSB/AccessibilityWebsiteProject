@@ -29,6 +29,10 @@
     color: white;
     padding-top: 10px;
   }
+
+  .registerMsg{
+    color: white;
+  }
   
   input {
     width: 90%;

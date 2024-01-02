@@ -10,7 +10,9 @@ function RegisterFormCompany() {
     const [password, setPassword] = useState('');
     const [registerMessage, setRegisterMessage] = useState(null);
 
-    const handleRegister = async () => {
+    const handleRegister = async (e) => {
+        e.preventDefault();
+
         try {
             const response = await fetch('https://localhost:7101/api/account/registerCompany', {
                 method: 'POST',
@@ -26,6 +28,7 @@ function RegisterFormCompany() {
             });
 
             const contentType = response.headers.get('content-type');
+
             const data = contentType && contentType.includes('application/json') ? await response.json() : null;
 
             if (response.ok) {
@@ -46,45 +49,24 @@ function RegisterFormCompany() {
                 <img className='logo-img' src={Logo} alt='logo accessibility.nl'></img>
                 <h3 className='title'>Registreer als Bedrijf</h3>
                 <div className='input-box'>
-                    <input
-                        type='text'
-                        placeholder='Bedrijfsnaam'
-                        required
-                        onChange={(e) => setCompanyName(e.target.value)}
-                    />
+                    <input type='text' placeholder='Bedrijfsnaam' required onChange={(e) => setCompanyName(e.target.value)} />
                 </div>
                 <div className='input-box'>
-                    <input
-                        type='email'
-                        placeholder='E-mail'
-                        required
-                        onChange={(e) => setEmail(e.target.value)}
-                    />
+                    <input type='email' placeholder='E-mail' required onChange={(e) => setEmail(e.target.value)} />
                 </div>
                 <div className='input-box'>
-                    <input
-                        type='text'
-                        placeholder='KVK-nummer'
-                        required
-                        onChange={(e) => setKVK(e.target.value)}
-                    />
+                    <input type='text'placeholder='KVK-nummer' required onChange={(e) => setKVK(e.target.value)}/>
                 </div>
                 <div className='input-box'>
-                    <input
-                        type='password'
-                        placeholder='Wachtwoord'
-                        pattern="^(?=.*[A-Z])(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]{8,}$"
-                        title="Minimaal 1 hoofdletter, 1 vreemd teken en 8 karakters."
-                        required
-                        onChange={(e) => setPassword(e.target.value)}
-                    />
+                    <input type='password' placeholder='Wachtwoord' pattern="^(?=.*[A-Z])(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]{8,}$" title="Minimaal 1 hoofdletter, 1 vreemd teken en 8 karakters." required onChange={(e) => setPassword(e.target.value)}/>
                 </div>
                 <button className='button' type='submit'>
                     Registreer
                 </button>
             </form>
             <Link to="/registerexpert">Registreer als expert</Link>
-            {registerMessage && <h1>{registerMessage}</h1>}
+            
+           <h1 className='registerMsg'>{registerMessage}</h1>
         </div>
     );
 }
