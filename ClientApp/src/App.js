@@ -1,23 +1,22 @@
 import React, { Component } from 'react';
 import { Route, Routes } from 'react-router-dom';
 import AppRoutes from './AppRoutes';
-import Layout from './components/layouts/BaseLayout';
+import BaseLayout from './components/layouts/BaseLayout';
 import './custom.css';
-//import Login from './components/Login';
 
 export default class App extends Component {
   static displayName = App.name;
 
   render() {
     return (
-       <Layout>
+      <BaseLayout>
         <Routes>
           {AppRoutes.map((route, index) => {
             const { element, ...rest } = route;
             return <Route key={index} {...rest} element={element} />;
           })}
         </Routes>
-       </Layout>
+      </BaseLayout>
     );
   }
 }
