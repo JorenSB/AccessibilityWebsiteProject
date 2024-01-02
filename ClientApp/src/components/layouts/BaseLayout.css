@@ -1,0 +1,13 @@
+/* Main Content stat onder de Top Nav */
+#contentRow{
+    padding-top: 80px;
+  }
+  @media (max-width: 979px) {
+    #content {
+      padding-top: 0px;
+    }
+  }
+
+#sideBar {
+  padding-top: 4rem !important;
+}
