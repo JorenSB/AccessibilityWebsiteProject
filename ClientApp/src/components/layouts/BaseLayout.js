@@ -1,33 +1,38 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import Nav from './BaseNavbar'
 import SideBar from './ChatSideBar'
 import './BaseLayout.css'
 
 export default class BaseLayout extends React.Component {
-  constructor(props) {
-    super(props);
-  }
-
   render() {
     return (
-        <div id='main'>
-          <Nav />
+        <div id='container-fluid'>
           <div className='row'>
-            <div className='col-1' style={{width: '8%'}}>
+            <div className='col-12'>
+              <Nav />
+            </div>
+          </div>
+          <div className='row'>
+          <div className='container-fluid'>
+            {/* Nav height Filler */}
+            <div className='row filler'></div>
+            {/* End Nav Height Filler */}
+            <div className='row'>
+            
               <SideBar />
-            </div>
-            <div id='contentRow'  className='col-11'>
-            <div id='content'>
-                  <div className='container'>
-                      <div className='row'>
-                          <div className='col-6 bg-danger' style={{height: '100vh'}}>test</div>
-                          <div className='col-6 bg-success' style={{height: '100vh'}}>test</div>
-                      </div>
-                  </div>
+
+              <div className='col-md-10 col-12'>
+                <div className='row p-3'>
+                    <div id='PageContent' className='col-12 text-center'>
+                      {this.props.children}
+                    </div>
+                </div>
+              </div>
+
             </div>
           </div>
           </div>
+          
         </div>
     );
   }
