@@ -8,7 +8,7 @@ import Logo from '../media/logo.png';
 
 function LoginNav() {
   return (
-    <header >
+    <header className='headerNav' >
       <img className='logo' src={Logo} alt="Logo" />
 
       <input type='checkbox' id='check'></input>

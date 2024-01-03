@@ -32,11 +32,11 @@ export default class BaseNavbar extends React.Component {
   }
   render() {
     return (
-    <div>
-      <Navbar color="primary" light expand="xl" fixed='top' container="fluid">
+    <header>
+      <Navbar id='navBar' light expand="xxl" fixed='top' container="fluid">
         <NavbarBrand href="/">Gekke test Nav</NavbarBrand>
         <NavbarToggler onClick={this.toggle} />
-        <Collapse isOpen={this.state.isOpen} navbar>
+        <Collapse id='nav-modal' className='text-center' isOpen={this.state.isOpen} navbar>
           <Nav className="me-auto" navbar>
             <NavItem>
               <NavLink href="/components/">Components</NavLink>
@@ -58,10 +58,10 @@ export default class BaseNavbar extends React.Component {
               </DropdownMenu>
             </UncontrolledDropdown>
           </Nav>
-          <NavbarText className='btn btn-success text-white' tag={Button} href="/">Login</NavbarText>
+          <NavbarText className='btn btn-danger text-white' tag={Button} href="/">Open Profile</NavbarText>
         </Collapse>
       </Navbar>
-    </div>
+    </header>
     );
   }
 }
