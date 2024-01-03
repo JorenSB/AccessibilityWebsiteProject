@@ -1,9 +1,7 @@
-// App.js
-
 import React from 'react';
 import { Routes, Route } from 'react-router-dom';
-import AppRoutes from './AppRoutes'; // Assuming you have a file with route configurations
-
+import AppRoutes from './AppRoutes'; 
+import Deskundige from './components/DeskundigePortaal/Deskundige';
 const App = () => {
   return (
       <Routes>
@@ -16,6 +14,8 @@ const App = () => {
           />
         ))}
       </Routes>
+      // <Deskundige />
+       
   );
 };
 

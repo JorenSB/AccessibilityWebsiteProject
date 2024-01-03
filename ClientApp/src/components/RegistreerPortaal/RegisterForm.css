@@ -6,11 +6,12 @@
   }
   
   .wrapper {
-    background-image: url('./media/icon_accessibility.png');
+    background-image: url('../media/icon_accessibility.png');
     background-size: contain;
     background-repeat: no-repeat;
     background-position: center;
     display: flex;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
     text-align: center;
@@ -27,6 +28,10 @@
   .title{
     color: white;
     padding-top: 10px;
+  }
+
+  .registerMsg{
+    color: white;
   }
   
   input {
@@ -64,6 +69,7 @@
   .button {
     display: inline-block;
     padding: 10px 20px;
+    margin-bottom: 10px;
     font-size: 16px;
     text-align: center;
     text-decoration: none;

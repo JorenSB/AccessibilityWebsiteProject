@@ -3,7 +3,6 @@ using Microsoft.AspNetCore.Identity;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
@@ -13,6 +12,8 @@ builder.Services.AddIdentity<User, IdentityRole>(options =>
 
 builder.Services.AddControllersWithViews();
 builder.Services.AddSwaggerGen();
+
+//TODO: wachtwoord vereisten veranderen bij deployment
 
 builder.Services.Configure<IdentityOptions>(options =>{
     options.Password.RequireDigit = false;
@@ -26,10 +27,8 @@ builder.Services.Configure<IdentityOptions>(options =>{
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
 {
-    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
 }
 
@@ -39,10 +38,8 @@ app.UseRouting();
 app.UseSwagger();
 app.UseSwaggerUI();
 
-
-// Add CORS configuration
 app.UseCors(builder => builder
-    .WithOrigins("https://localhost:44432", "http://localhost:7101") // Replace with your React app's URLs
+    .WithOrigins("https://localhost:44432", "http://localhost:7101")
     .AllowAnyHeader()
     .AllowAnyMethod()
     .AllowCredentials());
