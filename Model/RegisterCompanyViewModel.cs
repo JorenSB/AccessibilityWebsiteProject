@@ -1,5 +1,3 @@
-
-
 public class RegisterCompanyViewModel
 {
     public string CompanyName { get; set; }

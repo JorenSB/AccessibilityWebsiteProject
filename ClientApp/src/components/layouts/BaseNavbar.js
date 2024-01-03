@@ -33,7 +33,7 @@ export default class BaseNavbar extends React.Component {
   render() {
     return (
     <header>
-      <Navbar id='navBar' light expand="xxl" fixed='top' container="fluid">
+      <Navbar id='navBar' light expand="xxl" container="fluid">
         <NavbarBrand href="/">Gekke test Nav</NavbarBrand>
         <NavbarToggler onClick={this.toggle} />
         <Collapse id='nav-modal' className='text-center' isOpen={this.state.isOpen} navbar>

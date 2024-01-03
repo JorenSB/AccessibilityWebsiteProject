@@ -4,8 +4,10 @@ using DotNetEnv;
 
 public class ApplicationDbContext : IdentityDbContext<User>
 {
+    //hieronder sets die je nodig hebt toevoegen.
     public DbSet<Company> Companies { get; set; }
     public DbSet<Expert> Experts { get; set; }
+    
 
     public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
     {
@@ -14,6 +16,7 @@ public class ApplicationDbContext : IdentityDbContext<User>
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        //hier wordt de table aangemaakt dus voeg wederom je set toe
         base.OnModelCreating(modelBuilder);
         modelBuilder.Entity<Company>(entity => entity.ToTable("Companies"));
         modelBuilder.Entity<Expert>(entity => entity.ToTable("Experts"));

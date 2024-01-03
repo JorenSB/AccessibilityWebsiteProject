@@ -1,18 +1,13 @@
-import Login from "./components/login/Login.js";
-import RegisterCompany from "./components/registreer/RegisterCompany.js";
-import RegisterExpert from "./components/registreer/RegisterExpert.js";
-import Deskundige from "./components/Deskundige.js"
-import Example2 from "./components/layouts/Example.js";
+import Login from "./components/LoginPortaal/Login.js";
+import RegisterCompany from "./components/RegistreerPortaal/RegisterCompany.js";
+import RegisterExpert from "./components/RegistreerPortaal/RegisterExpert.js";
+import Deskundige from "./components/DeskundigePortaal/Deskundige.js"
 
 const AppRoutes = [
   {
     index: true,
     element: <Login />
   },
-  // {
-  //   index: true,
-  //   element:<Example2/>
-  // },
   {
     path: "/registreerbedrijf",
     element: <RegisterCompany />
@@ -24,8 +19,7 @@ const AppRoutes = [
   {
     path: "/deskundige",
     element: <Deskundige/>
-  }
-
+  },
 ];
 
 export default AppRoutes;

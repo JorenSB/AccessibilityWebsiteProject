@@ -15,9 +15,6 @@ export default class BaseLayout extends React.Component {
       </div>
       <div className='row'>
         <div className='container-fluid'>
-          {/* Nav height Filler */}
-          <div className='row filler'></div>
-          {/* End Nav Height Filler */}
 
           <div className='row'>
             <SideBar />
