@@ -1,6 +1,7 @@
-import Login from "./components/Login.js";
-import RegisterCompany from "./components/RegisterCompany.js";
-import RegisterExpert from "./components/RegisterExpert.js";
+import Login from "./components/LoginPortaal/Login.js";
+import RegisterCompany from "./components/RegistreerPortaal/RegisterCompany.js";
+import RegisterExpert from "./components/RegistreerPortaal/RegisterExpert.js";
+import Deskundige from "./components/DeskundigePortaal/Deskundige.js"
 
 const AppRoutes = [
   {
@@ -8,14 +9,17 @@ const AppRoutes = [
     element: <Login />
   },
   {
-    path: "/registercompany",
+    path: "/registreerbedrijf",
     element: <RegisterCompany />
   },
   {
-    path: "/registerexpert",
+    path: "/registreerdeskundige",
     element: <RegisterExpert/>
-  }
-
+  },
+  {
+    path: "/deskundige",
+    element: <Deskundige/>
+  },
 ];
 
 export default AppRoutes;

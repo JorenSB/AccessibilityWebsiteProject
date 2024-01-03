@@ -1,5 +1,5 @@
 import React from 'react';
-import LoginNav from './LoginNav';
+import LoginNav from '../LoginPortaal/LoginNav';
 import RegisterFormCompany from './RegisterFormCompany';
 
 

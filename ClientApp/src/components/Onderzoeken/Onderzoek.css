@@ -1,0 +1,38 @@
+.onderzoek {
+    margin: 10px;
+    background-color: #FF7D00;
+    padding: 10px;
+    display: flex;
+    flex-direction: column; 
+    align-items: left;
+    width: 40rem;
+    height: 15rem;
+}
+
+.onderzoek h1 {
+    background-color: #FFF;
+    width: 12rem;
+    border-radius: 4%;
+    font-size: 1.5rem;
+}
+
+.upperhalf{
+    display: flex;
+    flex-direction: row;
+    height: 80%;
+}
+.infoItem{
+    width: 75%;
+    display: flex;
+    flex-direction: column;
+    align-items: start;
+    padding: 10px;
+}
+
+.lowerhalf{
+    height: 20%;
+    display: flex;
+    justify-content: space-between; 
+    padding-left: 10px;
+    padding-right: 10px ;
+}

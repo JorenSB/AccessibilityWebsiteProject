@@ -1,12 +1,14 @@
 import React, { useState } from 'react';
 import './LoginForm.css';
-import Logo from './media/logo.png';
-import { Link } from 'react-router-dom';
+import Logo from '../media/logo.png';
+import { Link, useNavigate } from 'react-router-dom';
 
 function LoginForm() {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [loginMessage, setLoginMessage] = useState(null);
+
+    const navigate = useNavigate();
 
     const handleLogin = async () => {
         try {
@@ -22,16 +24,24 @@ function LoginForm() {
             const data = contentType && contentType.includes('application/json') ? await response.json() : null;
     
             if (response.ok) {
-                setLoginMessage('Je bent ingelogd! ');
-                // Additional logic for successful login
+                var role = data.role || '';
+
+                if(role === "Expert"){
+                    //console.log("gelukt",response,data,role);
+                    navigate("/deskundige");
+                }   
+                else if(role === "Company"){
+                    //console.log("mislukt",response,data,role);
+                    navigate("/bedrijf");
+                }else{
+                    console.log("mislukt tijdens het inloggen");
+                }
             } else {
-                const errorMessage = data?.Message || 'Er is iets fout gegaan. Probeer opnieuw(else).';
-                setLoginMessage(errorMessage);
-                // Additional logic for login error
+                console.log("er is iets fout gegaan tijdens het inloggen",data);
             }
         } catch (error) {
             console.error('Error during login:', error);
-            setLoginMessage('Er is iets fout gegaan. Probeer opnieuw(catch).');
+            setLoginMessage('Er is iets fout gegaan. neem contact op met ons.');
         }
     };
     
@@ -48,12 +58,12 @@ function LoginForm() {
                 </div>
                 <div className='forgot-register'>
                     <a href='#'>Wachtwoord vergeten</a>
-                    <Link to='/registerexpert'>Registreer</Link>
+                    <Link to='/registreerdeskundige'>Registreer</Link>
                 </div>
                 <button className='button' type='button' onClick={handleLogin}>Login</button>
             </form>
 
-            {loginMessage && <h1>{loginMessage}</h1>}
+            <h1>{loginMessage}</h1>
         </div>
     );
 }

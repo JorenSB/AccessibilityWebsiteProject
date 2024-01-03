@@ -19,9 +19,12 @@ public class AccountController : ControllerBase
     {
         var result = await _signInManager.PasswordSignInAsync(model.Username, model.Password, false, false);
 
+
         if (result.Succeeded)
         {
-            return Ok(new { Message = "Login successful" });
+            var user = await _userManager.FindByNameAsync(model.Username);
+            var role = user.rol;
+            return Ok(new { Message = "Login successful",  role = role});
         }
         else
         {
@@ -32,7 +35,6 @@ public class AccountController : ControllerBase
     [HttpPost("registerExpert")]
     public async Task<IActionResult> RegisterExpert([FromBody] RegisterExpertViewModel model)
     {
-        // Maak een nieuwe Expert-gebruiker
         var expert = new Expert
         {
             Email = model.Email,
@@ -43,17 +45,13 @@ public class AccountController : ControllerBase
             LastName = model.LastName
         };
 
-        // Probeer de gebruiker te registreren
         var result = await _userManager.CreateAsync(expert, model.Password);
 
-        // Controleer het resultaat van de registratiepoging
         if (result.Succeeded)
         {
-            // Registratie is gelukt
             return Ok("Expert geregistreerd");
         }
 
-        // Registratie is mislukt, geef een foutmelding terug
         return BadRequest("Er is iets misgegaan bij de registratie van de expert");
     }
 
