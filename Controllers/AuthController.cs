@@ -23,8 +23,7 @@ public class AccountController : ControllerBase
         if (result.Succeeded)
         {
             var user = await _userManager.FindByNameAsync(model.Username);
-            var role = user.rol;
-            return Ok(new { Message = "Login successful",  role = role});
+            return Ok(new { Message = "Login successful"});
         }
         else
         {
@@ -38,7 +37,6 @@ public class AccountController : ControllerBase
         var expert = new Expert
         {
             Email = model.Email,
-            rol = "Expert",
             EmailConfirmed = true,
             UserName = model.Email,
             FirstName = model.FirstName, 
@@ -49,6 +47,8 @@ public class AccountController : ControllerBase
 
         if (result.Succeeded)
         {
+            await _userManager.AddToRoleAsync(expert, "Expert");
+
             return Ok("Expert geregistreerd");
         }
 
