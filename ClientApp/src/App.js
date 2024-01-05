@@ -13,9 +13,7 @@ const App = () => {
             index={route.index}
           />
         ))}
-      </Routes>
-      // <Deskundige />
-       
+      </Routes>   
   );
 };
 
