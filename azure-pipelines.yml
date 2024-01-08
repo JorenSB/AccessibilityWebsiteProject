@@ -26,8 +26,10 @@ stages:
       name: 'Restore_NuGet_Packages'
       inputs:
         command: 'restore'
+        projects: '**/*.csproj'  # Update this to match your project structure
         feedsToUse: 'select'
         vstsFeed: 'my-vsts-feed'
+
 
     - task: DotNetCoreCLI@2
       name: 'Build_DotNet_Project'
