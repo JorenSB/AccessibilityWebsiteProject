@@ -71,8 +71,8 @@ stages:
       name: 'Deploy_to_Azure_WebApp'
       displayName: 'Deploy to Azure WebApp'
       inputs:
-        azureSubscription: 'Azure for Students(1)(9fb0baaa-a671-4427-9370-9e991596c84d)'
+        azureSubscription: 'Azure for Students(6cf66cea-613b-499c-b63e-063998ea2f41)'
         appType: 'webApp'
-        appName: 'AccessibilityProjectWebApp'
+        appName: 'accessibilityProject'
         package: '$(System.DefaultWorkingDirectory)/**/*.zip'
         deploymentMethod: 'auto'
