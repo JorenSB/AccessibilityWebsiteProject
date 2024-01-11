@@ -1,9 +1,20 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import BaseLayout from '../layouts/BaseLayout.js';
 import Onderzoek from '../Onderzoeken/Onderzoek.js';
+import { jwtIsValid } from '../../Auth.js';
+import { useNavigate } from 'react-router-dom';
+
 import './Deskundige.css';
 
 const Deskundige = () => {
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if(!jwtIsValid()){
+      navigate('/');
+    }
+
+  },[]) 
   return (
    
         <BaseLayout>
