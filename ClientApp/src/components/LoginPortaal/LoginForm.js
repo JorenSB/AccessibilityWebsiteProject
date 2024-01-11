@@ -1,7 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import './LoginForm.css';
 import Logo from '../media/logo.png';
 import { Link, useNavigate } from 'react-router-dom';
+import { jwtDecode } from "jwt-decode"
+import { isAuthenticated, getUserRole } from '../../Auth';
 
 function LoginForm() {
     const [username, setUsername] = useState('');
@@ -24,27 +26,49 @@ function LoginForm() {
             const data = contentType && contentType.includes('application/json') ? await response.json() : null;
     
             if (response.ok) {
-                var role = data.role || '';
-
-                if(role === "Expert"){
-                    //console.log("gelukt",response,data,role);
-                    navigate("/deskundige");
-                }   
-                else if(role === "Company"){
-                    //console.log("mislukt",response,data,role);
-                    navigate("/bedrijf");
-                }else{
-                    console.log("mislukt tijdens het inloggen");
+                var jwtToken = data.token || '';
+    
+                if (jwtToken) {
+                    localStorage.setItem('jwtToken', jwtToken);
+    
+                    const decodedToken = jwtDecode(jwtToken);
+                    const role = decodedToken['http://schemas.microsoft.com/ws/2008/06/identity/claims/role'] || '';
+    
+                    if (role === "Expert") {
+                        navigate("/deskundige");
+                    } else if (role === "Company") {
+                        navigate("/test");
+                    } else {
+                        console.log("mislukt tijdens het inloggen", "role = " + role);
+                    }
+                } else {
+                    console.log("Geen JWT-token ontvangen na succesvol inloggen");
                 }
             } else {
-                console.log("er is iets fout gegaan tijdens het inloggen",data);
+                console.log("er is iets fout gegaan tijdens het inloggen", data);
             }
         } catch (error) {
             console.error('Error during login:', error);
-            setLoginMessage('Er is iets fout gegaan. neem contact op met ons.');
+            setLoginMessage('Er is iets fout gegaan. Neem contact op met ons.');
         }
+
+        
     };
-    
+    useEffect(() => {
+        const checkLocalStorage = () => {
+          if (isAuthenticated()) {
+            const role = getUserRole();
+      
+            if (role === 'Expert') {
+              navigate('/deskundige');
+            } else if (role === 'Company') {
+              navigate('/test');
+            }
+          }
+        };
+      
+        checkLocalStorage();
+      }, []);
 
     return (
         <div className='wrapper'>

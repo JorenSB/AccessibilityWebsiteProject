@@ -11,8 +11,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace AccessibilityWebsiteProject.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20231229140852_InitialCreate")]
-    partial class InitialCreate
+    [Migration("20240108111131_roles added")]
+    partial class rolesadded
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -208,10 +208,6 @@ namespace AccessibilityWebsiteProject.Migrations
                     b.Property<string>("UserName")
                         .HasMaxLength(256)
                         .HasColumnType("nvarchar(256)");
-
-                    b.Property<string>("rol")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
