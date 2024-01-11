@@ -1,7 +1,7 @@
 import Login from "./components/LoginPortaal/Login.js";
 import RegisterCompany from "./components/RegistreerPortaal/RegisterCompany.js";
 import RegisterExpert from "./components/RegistreerPortaal/RegisterExpert.js";
-import Deskundige from "./components/DeskundigePortaal/Deskundige.js";
+import Deskundige from "./components/DeskundigePortaal/Deskundige.js"
 
 import AdminPortaalBedrijven from "./components/AdminPortaal/Bedrijven/BedrijvenView.js";
 import AdminPortaalEditBedrijf from "./components/AdminPortaal/Bedrijven/BedrijfEditView";
@@ -15,11 +15,11 @@ const AppRoutes = [
     element: <Login />
   },
   {
-    path: "/registreerbedrijf",
+    path: "/registercompany",
     element: <RegisterCompany />
   },
   {
-    path: "/registreerdeskundige",
+    path: "/registerexpert",
     element: <RegisterExpert/>
   },
   {
