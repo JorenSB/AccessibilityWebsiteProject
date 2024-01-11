@@ -2,11 +2,12 @@ import React from 'react';
 import Nav from './AdminPortaalNav'
 import SideBar from '../layouts/ChatSideBar'
 import PropTypes from 'prop-types'; 
+import '../layouts/BaseLayout.css';
 
 export default class AdminPortaalLayout extends React.Component {
   render() {
     return (
-    <div id='container-fluid'>
+    <div>
       <div className='row'>
         <div className='col-12'>
           <Nav />

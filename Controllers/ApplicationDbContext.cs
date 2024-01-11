@@ -25,11 +25,17 @@ public class ApplicationDbContext : IdentityDbContext<User>
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
+        var DBname = Environment.GetEnvironmentVariable("DB_NAME") ?? "default_username";
+        var DBhost = Environment.GetEnvironmentVariable("DB_HOST") ?? "default_password";
+        var DBport = Environment.GetEnvironmentVariable("DB_PORT") ?? "default_password";
+
         var username = Environment.GetEnvironmentVariable("DB_USERNAME") ?? "default_username";
         var password = Environment.GetEnvironmentVariable("DB_PASSWORD") ?? "default_password";
 
-        var connectionString = $"Server=tcp:accessibilityserver1.database.windows.net,1433;Initial Catalog=AccessibilityDB;Persist Security Info=False;User ID={username};Password={password};MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;";
-
+        var connectionString = $"Server=tcp:{DBhost},{DBport};Initial Catalog={DBname};Persist Security Info=False;User ID={username};Password={password};MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;";
         optionsBuilder.UseSqlServer(connectionString, providerOptions => providerOptions.CommandTimeout(60));
+
+        //Local
+        //optionsBuilder.UseSqlServer("Server=localhost\\SQLEXPRESS02;Database=testDB;Trusted_Connection=True;TrustServerCertificate=True;Connection Timeout=30;");
     }
 }

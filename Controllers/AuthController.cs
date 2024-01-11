@@ -67,7 +67,7 @@ public class AccountController : ControllerBase
             Email = model.Email,
             UserName = model.Email,
             CompanyName = model.CompanyName,
-            rol = "Bedrijf",
+            //rol = "Bedrijf",
             EmailConfirmed = true,
             KvkNumber = model.KVK
         };

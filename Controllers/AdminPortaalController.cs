@@ -1,5 +1,7 @@
+using System.Text.Json.Serialization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Identity;
 
 [ApiController]
 [Route("api/portaal/admin")]
@@ -14,20 +16,46 @@ public class AdminPortaalController : ControllerBase
 
     // een get all bedrijven
     [HttpGet("companies")]
-    public async Task<IActionResult> GetAllCompanies() {
-        var getCompanies = _dbContext.Companies.ToList();
-        return Ok(getCompanies);
-    }
+    public IActionResult GetAllCompanies() => Ok(_dbContext.Companies.ToList().OrderBy(x => x.CompanyName));
+    
+    [HttpGet("companies/{id}")]
+    public IActionResult GetCompany(string? id)
+    {
+        if (id == null || !ModelState.IsValid)
+        {
+            return BadRequest(ModelState);
+        }
 
-    // een get 1 by id bedrijf
+        Company company = _dbContext.Companies.Where(c => c.Id == id).FirstOrDefault();
+
+        if (company == null)
+        {
+            return NotFound("Company not found pik");
+        }
+
+        return Ok(company);
+    }
 
     // een get all experts
     [HttpGet("experts")]
-    public async Task<IActionResult> GetAllExperts() {
-        var getExperts = _dbContext.Experts.ToList();
-        return Ok(getExperts);
-    }
+    public IActionResult GetAllExperts() => Ok(_dbContext.Experts.ToList().OrderBy(x => x.FirstName));
 
-    // een get 1 by id expert
+    [HttpGet("experts/{id}")]
+    public IActionResult GetExpert(string? id)
+    {
+        if (id == null || !ModelState.IsValid)
+        {
+            return BadRequest(ModelState);
+        }
+
+        Expert expert = _dbContext.Experts.Where(e => e.Id == id).FirstOrDefault();
+
+        if (expert == null)
+        {
+            return NotFound("Expert not found pik");
+        }
+
+        return Ok(expert);
+    }
 
 }

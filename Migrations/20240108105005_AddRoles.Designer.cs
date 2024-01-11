@@ -11,8 +11,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace AccessibilityWebsiteProject.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20240104131738_RemoveRoleColumn")]
-    partial class RemoveRoleColumn
+    [Migration("20240108105005_AddRoles")]
+    partial class AddRoles
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

@@ -1,6 +1,6 @@
 import React from 'react';
 
-import FetchBedrijven from './component/FetchBedrijven';
+import FetchBedrijven from '../component/FetchBedrijven';
 
 export default class AdminPortaal_Bedrijven extends React.Component {
   render() {
