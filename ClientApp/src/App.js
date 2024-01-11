@@ -1,22 +1,37 @@
 import React from 'react';
-import { Routes, Route } from 'react-router-dom';
-import AppRoutes from './AppRoutes'; 
+import { BrowserRouter as Router, Routes, Route} from 'react-router-dom'
+import PrivateRoutes from './PrivateRoutes';
 import Deskundige from './components/DeskundigePortaal/Deskundige';
-const App = () => {
+import Login from './components/LoginPortaal/Login';
+import RegisterCompany from './components/RegistreerPortaal/RegisterCompany';
+import RegisterExpert from './components/RegistreerPortaal/RegisterExpert';
+import TestPagina from './components/TestPagina';
+
+function App() {
   return (
-      <Routes>
-        {AppRoutes.map((route, index) => (
-          <Route
-            key={index}
-            path={route.path}
-            element={route.element}
-            index={route.index}
-          />
-        ))}
-      </Routes>
-      // <Deskundige />
-       
+    
+        <Routes>
+          {/* zet hier onder alle routes van de experts */}
+          <Route element={<PrivateRoutes role={'Expert'} />}>
+              <Route path='/deskundige' element={<Deskundige/>} />
+          </Route>
+          {/* zet hier onder alle routes van de bedrijven */}
+          <Route element={<PrivateRoutes role={'Company'} />}>
+          <Route path='/test' element={<TestPagina/>} />
+          </Route>
+
+          {/* zet hieronder alle routes van de admins */}
+          <Route element={<PrivateRoutes role={'Admin'} />}>
+          {/* <Route path='' element={<TestPagina/>} /> */}
+          </Route>
+          
+          {/* dit zijn publieke routes */}
+          <Route path='/' element={<Login/>}/>
+          <Route path='/registreerbedrijf' element={<RegisterCompany/>}/>
+          <Route path='/registreerdeskundige' element={<RegisterExpert/>}/>
+        </Routes>
+    
   );
-};
+}
 
 export default App;
