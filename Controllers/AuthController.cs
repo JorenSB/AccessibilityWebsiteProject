@@ -32,6 +32,7 @@
                 var claims = new List<Claim>
                 {
                     new Claim(ClaimTypes.Name, user.UserName),
+                    new Claim(ClaimTypes.NameIdentifier , user.Id),
                     new Claim(ClaimTypes.Role, string.Join(",", roles))
                 };
 
@@ -101,7 +102,7 @@
         if (result.Succeeded)
         {
             // Geef de rol "Bedrijf" aan de nieuwe gebruiker
-            await _userManager.AddToRoleAsync(company, "Bedrijf");
+            await _userManager.AddToRoleAsync(company, "Company");
 
             return Ok("Bedrijf geregistreerd");
         }

@@ -6,4 +6,5 @@ public class Company : User
     public string CompanyName {get; set;}
     public string? Url { get; set; }
     public string KvkNumber { get; set; }
+    public Address? Address { get; set; }
 }
