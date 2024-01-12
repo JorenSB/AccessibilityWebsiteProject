@@ -8,10 +8,10 @@ using Microsoft.EntityFrameworkCore;
 
 [Route("api/[controller]")]
 [ApiController]
-public class BedrijfController : ControllerBase
+public class CompanyController : ControllerBase
 {
     private readonly ApplicationDbContext _context;
-    public BedrijfController(ApplicationDbContext dbContext)
+    public CompanyController(ApplicationDbContext dbContext)
     {
         _context = dbContext;
     }
