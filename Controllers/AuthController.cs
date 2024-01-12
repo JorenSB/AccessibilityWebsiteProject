@@ -1,91 +1,91 @@
-    using System.IdentityModel.Tokens.Jwt;
-    using System.Security.Claims;
-    using System.Text;
-    using Microsoft.AspNetCore.Identity;
-    using Microsoft.AspNetCore.Mvc;
-    using Microsoft.IdentityModel.Tokens;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using System.Text;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.IdentityModel.Tokens;
 
-    [ApiController]
-    [Route("api/account")]
-    public class AccountController : ControllerBase
+[ApiController]
+[Route("api/account")]
+public class AccountController : ControllerBase
+{
+    private readonly UserManager<User> _userManager;
+    private readonly SignInManager<User> _signInManager;
+
+    public AccountController(UserManager<User> userManager, SignInManager<User> signInManager)
     {
-        private readonly UserManager<User> _userManager;
-        private readonly SignInManager<User> _signInManager;
+        _userManager = userManager;
+        _signInManager = signInManager;
+    }
 
-        public AccountController(UserManager<User> userManager, SignInManager<User> signInManager)
+    [HttpPost("login")]
+    public async Task<IActionResult> Login([FromBody] LoginModel model)
+    {
+        var result = await _signInManager.PasswordSignInAsync(model.Username, model.Password, false, false);
+
+        if (result.Succeeded)
         {
-            _userManager = userManager;
-            _signInManager = signInManager;
-        }
+            var user = await _userManager.FindByNameAsync(model.Username);
 
-        [HttpPost("login")]
-        public async Task<IActionResult> Login([FromBody] LoginModel model)
-        {
-            var result = await _signInManager.PasswordSignInAsync(model.Username, model.Password, false, false);
+            var roles = await _userManager.GetRolesAsync(user);
 
-            if (result.Succeeded)
-            {
-                var user = await _userManager.FindByNameAsync(model.Username);
-
-                var roles = await _userManager.GetRolesAsync(user);
-
-                var claims = new List<Claim>
+            var claims = new List<Claim>
                 {
                     new Claim(ClaimTypes.Name, user.UserName),
                     new Claim(ClaimTypes.NameIdentifier , user.Id),
                     new Claim(ClaimTypes.Role, string.Join(",", roles))
                 };
 
-                var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Environment.GetEnvironmentVariable("SECRET_KEY")));
-                var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
+            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Environment.GetEnvironmentVariable("SECRET_KEY")));
+            var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 
-                var token = new JwtSecurityToken(
-                    issuer: HttpContext.Request.Scheme + "://" + HttpContext.Request.Host,
-                    audience: HttpContext.Request.Scheme + "://" + HttpContext.Request.Host,
-                    claims: claims,
-                    expires: DateTime.Now.AddMinutes(5),
-                    signingCredentials: creds
-                );
+            var token = new JwtSecurityToken(
+                issuer: HttpContext.Request.Scheme + "://" + HttpContext.Request.Host,
+                audience: HttpContext.Request.Scheme + "://" + HttpContext.Request.Host,
+                claims: claims,
+                expires: DateTime.Now.AddMinutes(20), // DEV remove afer testing
+                signingCredentials: creds
+            );
 
-                var jwtToken = new JwtSecurityTokenHandler().WriteToken(token);
+            var jwtToken = new JwtSecurityTokenHandler().WriteToken(token);
 
-                return Ok(new { Message = "Login successful", Token = jwtToken });
-            }
-            else
-            {
-                return BadRequest(new { Message = "Login failed" });
-            }
+            return Ok(new { Message = "Login successful", Token = jwtToken });
         }
-
-        [HttpPost("registerExpert")]
-        public async Task<IActionResult> RegisterExpert([FromBody] RegisterExpertViewModel model)
+        else
         {
-            var expert = new Expert
-            {
-                Email = model.Email,
-                EmailConfirmed = true,
-                UserName = model.Email,
-                FirstName = model.FirstName, 
-                LastName = model.LastName
-            };
-            
+            return BadRequest(new { Message = "Login failed" });
+        }
+    }
 
-            var result = await _userManager.CreateAsync(expert, model.Password);
+    [HttpPost("registerExpert")]
+    public async Task<IActionResult> RegisterExpert([FromBody] RegisterExpertViewModel model)
+    {
+        var expert = new Expert
+        {
+            Email = model.Email,
+            EmailConfirmed = true,
+            UserName = model.Email,
+            FirstName = model.FirstName,
+            LastName = model.LastName
+        };
 
-            if (result.Succeeded)
-            {
-                await _userManager.AddToRoleAsync(expert, "Expert");
 
-                return Ok("Expert geregistreerd");
-            }
+        var result = await _userManager.CreateAsync(expert, model.Password);
 
-            return BadRequest("Er is iets misgegaan bij de registratie van de expert");
+        if (result.Succeeded)
+        {
+            await _userManager.AddToRoleAsync(expert, "Expert");
+
+            return Ok("Expert geregistreerd");
         }
 
+        return BadRequest("Er is iets misgegaan bij de registratie van de expert");
+    }
 
 
 
-        [HttpPost("registerCompany")]
+
+    [HttpPost("registerCompany")]
     public async Task<IActionResult> RegisterCompany([FromBody] RegisterCompanyViewModel model)
     {
         var company = new Company
@@ -110,4 +110,4 @@
         return BadRequest("Er is iets misgegaan bij de registratie van het bedrijf");
     }
 
-    }
+}
