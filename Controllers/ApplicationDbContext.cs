@@ -7,7 +7,9 @@ public class ApplicationDbContext : IdentityDbContext<User>
     //hieronder sets die je nodig hebt toevoegen.
     public DbSet<Company> Companies { get; set; }
     public DbSet<Expert> Experts { get; set; }
-    
+    public DbSet<Study> Studies { get; set; }
+    public DbSet<Result> Results {get; set;}
+    public DbSet<Address> Addresses { get; set; }
 
     public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
     {
@@ -20,6 +22,9 @@ public class ApplicationDbContext : IdentityDbContext<User>
         base.OnModelCreating(modelBuilder);
         modelBuilder.Entity<Company>(entity => entity.ToTable("Companies"));
         modelBuilder.Entity<Expert>(entity => entity.ToTable("Experts"));
+        modelBuilder.Entity<Study>(entity => entity.ToTable("Studies"));
+        modelBuilder.Entity<Result>(entity => entity.ToTable("Results"));
+        modelBuilder.Entity<Address>(entity => entity.ToTable("Addresses"));
         // Voeg eventueel andere configuraties toe
     }
 
