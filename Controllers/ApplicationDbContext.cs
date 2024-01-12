@@ -8,12 +8,13 @@ public class ApplicationDbContext : IdentityDbContext<User>
     public DbSet<Company> Companies { get; set; }
     public DbSet<Expert> Experts { get; set; }
     public DbSet<Study> Studies { get; set; }
-    public DbSet<Result> Results {get; set;}
+    public DbSet<Result> Results { get; set; }
     public DbSet<Address> Addresses { get; set; }
 
     public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
     {
         DotNetEnv.Env.Load();
+        // Database.EnsureCreated();
     }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
