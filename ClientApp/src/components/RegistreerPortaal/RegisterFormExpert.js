@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import './RegisterForm.css';
 import Logo from '../media/logo.png';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 function RegisterFormExpert() {
     const [email, setEmail] = useState('');
@@ -9,6 +9,9 @@ function RegisterFormExpert() {
     const [lastName, setLastName] = useState('');
     const [password, setPassword] = useState('');
     const [registerMessage, setRegisterMessage] = useState(null);
+
+    const navigate = useNavigate();
+
 
     const handleRegister = async (e) => {
         e.preventDefault();
@@ -33,8 +36,9 @@ function RegisterFormExpert() {
 
             if (response.ok) {
                 setRegisterMessage('Registratie succesvol!'); 
+                navigate("/");
             } else {
-                const errorMessage = data?.Message || 'Er is iets fout gegaan. Probeer opnieuw (else).';
+                const errorMessage = data?.message || 'Er is iets fout gegaan. Probeer opnieuw (else).';
                 setRegisterMessage(errorMessage);
             }
         } catch (error) {
@@ -47,7 +51,7 @@ function RegisterFormExpert() {
         <div className='wrapper'>
             <form onSubmit={handleRegister}>
                 <img className='logo-img' src={Logo} alt='logo accessibility.nl'></img>
-                <h3 className='title'>Registreer als Deskundige</h3>
+                <h3 className='title'>Deskundige Registratie</h3>
                 <div className='input-box'>
                     <input type='text' placeholder='Voornaam' required onChange={(e) => setFirstName(e.target.value)} />
                 </div>
@@ -60,7 +64,7 @@ function RegisterFormExpert() {
                 <div className='input-box'>
                     <input type='password' placeholder='Wachtwoord' pattern="^(?=.*[A-Z])(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]{8,}$" title="Minimaal 1 hoofdletter, 1 vreemd teken en 8 karakters." required onChange={(e) => setPassword(e.target.value)} />
                 </div>
-                <button className='button' type='submit'>
+                <button className='RegistreerButton' type='submit'>
                     Registreer
                 </button>
             </form>
