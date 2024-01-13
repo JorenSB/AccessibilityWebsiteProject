@@ -47,7 +47,7 @@
                 );
 
                 var jwtToken = new JwtSecurityTokenHandler().WriteToken(token);
-
+                
                 return Ok(new { Message = "Login successful", Token = jwtToken });
             }
             else
@@ -56,9 +56,37 @@
             }
         }
 
+        [HttpPost("logout")]
+        public async Task<IActionResult> Logout()
+        {
+            await _signInManager.SignOutAsync();
+            return Ok( new {Message = "succesvol uitgelogd"});
+        }
+
         [HttpPost("registerExpert")]
         public async Task<IActionResult> RegisterExpert([FromBody] RegisterExpertViewModel model)
         {
+            // check of de email en password geldig zijn
+            if (!ValidationController.IsValidEmail(model.Email) || !ValidationController.IsValidPassword(model.Password))
+            {
+                if (!ValidationController.IsValidEmail(model.Email))
+                {
+                    return BadRequest(new {Message = "Ongeldig e-mailadres"});
+
+                }
+                else
+                {
+                    return BadRequest(new {Message = "Ongeldig wachtwoord"});
+                }
+            }
+             // check of de user al bestaat
+            var existingUser = await _userManager.FindByEmailAsync(model.Email);
+            if (existingUser != null)
+            {
+                return BadRequest(new { Message = "Dit e-mailadres is al geregistreerd" });
+            }
+
+
             var expert = new Expert
             {
                 Email = model.Email,
@@ -67,46 +95,58 @@
                 FirstName = model.FirstName, 
                 LastName = model.LastName
             };
-            
 
             var result = await _userManager.CreateAsync(expert, model.Password);
 
             if (result.Succeeded)
             {
                 await _userManager.AddToRoleAsync(expert, "Expert");
-
-                return Ok("Expert geregistreerd");
+                return Ok();
             }
 
-            return BadRequest("Er is iets misgegaan bij de registratie van de expert");
+            return BadRequest(new { Message = "Er is iets misgegaan bij de registratie van de expert" });
         }
 
 
 
 
         [HttpPost("registerCompany")]
-    public async Task<IActionResult> RegisterCompany([FromBody] RegisterCompanyViewModel model)
-    {
-        var company = new Company
+        public async Task<IActionResult> RegisterCompany([FromBody] RegisterCompanyViewModel model)
         {
-            Email = model.Email,
-            UserName = model.Email,
-            CompanyName = model.CompanyName,
-            EmailConfirmed = true,
-            KvkNumber = model.KVK
-        };
 
-        var result = await _userManager.CreateAsync(company, model.Password);
+            if (!ValidationController.IsValidEmail(model.Email) || !ValidationController.IsValidPassword(model.Password))
+            {
+                if (!ValidationController.IsValidEmail(model.Email))
+                {
+                    return BadRequest(new {Message = "Ongeldig e-mailadres"});
+                }
 
-        if (result.Succeeded)
-        {
-            // Geef de rol "Bedrijf" aan de nieuwe gebruiker
-            await _userManager.AddToRoleAsync(company, "Bedrijf");
+                else
+                {
+                    return BadRequest(new {Message = "Ongeldig wachtwoord"});
+                }
+            }
 
-            return Ok("Bedrijf geregistreerd");
+            var company = new Company
+            {
+                Email = model.Email,
+                UserName = model.Email,
+                CompanyName = model.CompanyName,
+                EmailConfirmed = true,
+                KvkNumber = model.KVK
+            };
+
+            var result = await _userManager.CreateAsync(company, model.Password);
+
+            if (result.Succeeded)
+            {
+                // Geef de rol "Bedrijf" aan de nieuwe gebruiker
+                await _userManager.AddToRoleAsync(company, "Company");
+
+                return Ok();
+            }
+
+            return BadRequest(new {Message = "Er is iets misgegaan bij de registratie van het bedrijf"});
         }
-
-        return BadRequest("Er is iets misgegaan bij de registratie van het bedrijf");
-    }
 
     }
