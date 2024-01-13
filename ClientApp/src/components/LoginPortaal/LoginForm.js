@@ -6,22 +6,22 @@ import { jwtDecode } from "jwt-decode"
 import { isAuthenticated, getUserRole } from '../../Auth';
 
 function LoginForm() {
-    const [username, setUsername] = useState('');
+    const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [loginMessage, setLoginMessage] = useState(null);
 
     const navigate = useNavigate();
 
     const handleLogin = async () => {
+        setLoginMessage("U word ingelogd een ogenblik geduld...");
         try {
             const response = await fetch('https://localhost:7101/api/account/login', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({ UserName: username, Password: password }),
+                body: JSON.stringify({ UserName: email, Password: password }),
             });
-    
             const contentType = response.headers.get('content-type');
             const data = contentType && contentType.includes('application/json') ? await response.json() : null;
     
@@ -75,7 +75,7 @@ function LoginForm() {
             <form>
                 <img className='logo-img' src={Logo} alt='logo accessibilty.nl'></img>
                 <div className='input-box'>
-                    <input type='text' placeholder='Gebruikersnaam' required onChange={(e) => setUsername(e.target.value)} />
+                    <input type='text' placeholder='E-mail' required onChange={(e) => setEmail(e.target.value)} />
                 </div>
                 <div className='input-box'>
                     <input type='password' placeholder='Wachtwoord' required onChange={(e) => setPassword(e.target.value)} />
@@ -84,10 +84,10 @@ function LoginForm() {
                     <a href='#'>Wachtwoord vergeten</a>
                     <Link to='/registreerdeskundige'>Registreer</Link>
                 </div>
-                <button className='button' type='button' onClick={handleLogin}>Login</button>
+                <button className='LoginButton' type='button' onClick={handleLogin}>Login</button>
             </form>
 
-            <h1>{loginMessage}</h1>
+            <p className='loginMessage'>{loginMessage}</p>
         </div>
     );
 }

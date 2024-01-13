@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import './RegisterForm.css';
 import Logo from '../media/logo.png';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 function RegisterFormCompany() {
     const [email, setEmail] = useState('');
@@ -9,6 +9,8 @@ function RegisterFormCompany() {
     const [kvk, setKVK] = useState('');
     const [password, setPassword] = useState('');
     const [registerMessage, setRegisterMessage] = useState(null);
+
+    const navigate = useNavigate();
 
     const handleRegister = async (e) => {
         e.preventDefault();
@@ -33,13 +35,18 @@ function RegisterFormCompany() {
 
             if (response.ok) {
                 setRegisterMessage('Registratie succesvol!'); 
+                navigate("/");
             } else {
-                const errorMessage = data?.Message || 'Er is iets fout gegaan. Probeer opnieuw (else).';
+                const responseData = data || {};
+                const errorMessage = responseData?.message || 'Er is iets fout gegaan. Probeer opnieuw.';
+
                 setRegisterMessage(errorMessage);
             }
         } catch (error) {
-            console.error('Fout tijdens registratie:', error);
-            setRegisterMessage('Er is iets fout gegaan. Probeer opnieuw (catch).');
+            if(error){
+                console.error('Fout tijdens registratie:', error);
+                setRegisterMessage('Er is iets fout gegaan. Probeer opnieuw (catch).');
+            }
         }
     };
 
@@ -47,7 +54,7 @@ function RegisterFormCompany() {
         <div className='wrapper'>
             <form onSubmit={handleRegister}>
                 <img className='logo-img' src={Logo} alt='logo accessibility.nl'></img>
-                <h3 className='title'>Registreer als Bedrijf</h3>
+                <h3 className='title'>Bedrijfs Registratie</h3>
                 <div className='input-box'>
                     <input type='text' placeholder='Bedrijfsnaam' required onChange={(e) => setCompanyName(e.target.value)} />
                 </div>
@@ -58,9 +65,9 @@ function RegisterFormCompany() {
                     <input type='text'placeholder='KVK-nummer' required onChange={(e) => setKVK(e.target.value)}/>
                 </div>
                 <div className='input-box'>
-                    <input type='password' placeholder='Wachtwoord' pattern="^(?=.*[A-Z])(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]{8,}$" title="Minimaal 1 hoofdletter, 1 vreemd teken en 8 karakters." required onChange={(e) => setPassword(e.target.value)}/>
+                    <input type='password' placeholder='Wachtwoord' pattern="^(?=.*[A-Z])(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]{8,}$" title="Minimaal 1 hoofdletter, 1 vreemd teken en 8 karakters." required  onChange={(e) => setPassword(e.target.value)}/>
                 </div>
-                <button className='button' type='submit'>
+                <button className='RegistreerButton' type='submit'>
                     Registreer
                 </button>
             </form>
