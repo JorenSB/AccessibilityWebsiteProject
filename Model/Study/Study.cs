@@ -10,5 +10,5 @@ public class Study
     public string Language { get; set; }
     public string Beperking { get; set; }
     public DateTime Date { get; set; }
-    public Result ?Result { get; set; }
+    public Result? Result { get; set; }
 }
