@@ -5,11 +5,21 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Text;
 using System.Security.Claims;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Identity;
 
 [Route("api/[controller]")]
 [ApiController]
 public class CompanyController : ControllerBase
 {
+    private bool IsStringNotNullOrEmptyOrDefault(string? input)
+    {
+        if(!string.IsNullOrEmpty(input)) {
+            if (!input.Equals("string")) {
+                return true;
+            }   
+        }
+        return false;
+    }
     private readonly ApplicationDbContext _context;
     public CompanyController(ApplicationDbContext dbContext)
     {
@@ -44,8 +54,17 @@ public class CompanyController : ControllerBase
 
             // Now you can use userName and userId in your logic
             // ...
-            User user = _context.Users.First(u => u.Id == idClaim);
-            return Ok(user);
+            Company company = _context.Companies.First(c => c.Id == idClaim);
+            CompanyViewModel companyViewModel = new CompanyViewModel
+            {
+                Information = company.Information,
+                CompanyName = company.CompanyName,
+                Email = company.Email,
+                Url = company.Url,
+                KvkNumber = company.KvkNumber,
+                Address = company.Address
+            };
+            return Ok(companyViewModel);
             // return Ok(new { UserName = nameClaim, UserId = idClaim });
         }
         catch (Exception ex)
@@ -56,51 +75,83 @@ public class CompanyController : ControllerBase
     }
 
 
-    [HttpPut("{id}")]
-    public async Task<IActionResult> PutCompany(string id, Company company)
+
+    [HttpPut("UpdateCompany/{JWTToken}")]
+    [Authorize(Roles = "Company")]
+    public async Task<IActionResult> UpdateCompany(string JWTToken, CompanyViewModel companyViewModel)
     {
-        if (id != company.Id)
+        DotNetEnv.Env.Load();
+        var secret = Environment.GetEnvironmentVariable("SECRET_KEY") ?? "default_key";
+        var key = Encoding.ASCII.GetBytes(secret);
+
+        var handler = new JwtSecurityTokenHandler();
+        var validations = new TokenValidationParameters
         {
-            return BadRequest();
-        }
-
-        Company c1 = _context.Companies.First(c => c.Id == company.Id);
-        foreach (var property in typeof(Company).GetProperties())
-        {
-            var value1 = property.GetValue(c1);
-            var value2 = property.GetValue(company);
-
-            // If values are not equal, objects are not equal
-            if (!Equals(value1, value2))
-                property.SetValue(c1, value2);
-
-        }
-
-        _context.Companies.Update(c1);
-
+            ValidateIssuerSigningKey = true,
+            IssuerSigningKey = new SymmetricSecurityKey(key),
+            ValidateIssuer = false,
+            ValidateAudience = false
+        };
+        //var claims = handler.ValidateToken(JWTToken, validations, out var tokenSecure);
         try
         {
-            await _context.SaveChangesAsync();
+            // Validate the token
+            var claimsPrincipal = handler.ValidateToken(JWTToken, validations, out var tokenSecure);
+
+            // Access the user's ID claim
+            var idClaim = claimsPrincipal.Identities.First().Claims.First(o => o.Type == ClaimTypes.NameIdentifier).Value;
+
+            User user = _context.Users.First(c => c.Id == idClaim);
+            Company company = _context.Companies.First(c => c.Id == idClaim);
+
+            if (IsStringNotNullOrEmptyOrDefault(companyViewModel.Information)) {
+                company.Information = companyViewModel.Information;
+            }
+            if (IsStringNotNullOrEmptyOrDefault(companyViewModel.CompanyName)) {
+                company.CompanyName = companyViewModel.CompanyName;
+            }
+            if (IsStringNotNullOrEmptyOrDefault(companyViewModel.Email)) {
+                company.Email = companyViewModel.Email;
+                company.NormalizedEmail = companyViewModel.Email.ToUpper();
+                company.UserName = companyViewModel.Email;
+                company.NormalizedUserName = companyViewModel.Email.ToUpper();
+            }
+            if (IsStringNotNullOrEmptyOrDefault(companyViewModel.Password))
+            if (IsStringNotNullOrEmptyOrDefault(companyViewModel.Url)) {
+                company.Url = companyViewModel.Url;
+            }
+            if (IsStringNotNullOrEmptyOrDefault(companyViewModel.KvkNumber)) {
+                company.KvkNumber = companyViewModel.KvkNumber;
+            }
+            if (companyViewModel.Address != null)
+            {
+                if (IsStringNotNullOrEmptyOrDefault(companyViewModel.Address.Streetname)) {
+                    company.Address.Streetname = companyViewModel.Address.Streetname;
+                }
+                if (IsStringNotNullOrEmptyOrDefault(companyViewModel.Address.City)) {
+                    company.Address.City = companyViewModel.Address.City;
+                }
+                if (IsStringNotNullOrEmptyOrDefault(companyViewModel.Address.Country)) {
+                    company.Address.Country = companyViewModel.Address.Country;
+                }
+                if (companyViewModel.Address.HouseNumber != 0) {
+                    company.Address.HouseNumber = companyViewModel.Address.HouseNumber;
+                }
+            }
+            _context.Companies.Update(company);
+            try
+            {
+                await _context.SaveChangesAsync();
+                return Ok("Success");
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                return BadRequest("Error while updating the information");
+            }
         }
-        catch (DbUpdateConcurrencyException)
+        catch (Exception ex)
         {
-            if (!CompanyExists(id))
-            {
-                return NotFound();
-            }
-            else
-            {
-                throw;
-            }
+            return BadRequest("Invalid or expired token");
         }
-
-        return NoContent();
     }
-
-    private bool CompanyExists(string id)
-    {
-        return (_context.Companies?.Any(e => e.Id == id)).GetValueOrDefault();
-    }
-    
-
 }
