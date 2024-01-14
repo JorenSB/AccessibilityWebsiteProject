@@ -12,6 +12,14 @@ using System.Runtime.CompilerServices;
 [ApiController]
 public class CompanyController : ControllerBase
 {
+    private readonly UserManager<User> _userManager;
+    private readonly ApplicationDbContext _context;
+    public CompanyController(UserManager<User> userManager, ApplicationDbContext dbContext)
+        {
+            _userManager = userManager;
+             _context = dbContext;
+        }
+
     private bool IsStringNotNullOrEmptyOrDefault(string? input)
     {
         if(!string.IsNullOrEmpty(input)) {
@@ -20,11 +28,6 @@ public class CompanyController : ControllerBase
             }   
         }
         return false;
-    }
-    private readonly ApplicationDbContext _context;
-    public CompanyController(ApplicationDbContext dbContext)
-    {
-        _context = dbContext;
     }
 
     [HttpGet("GetCompany/{JWTToken}")]
@@ -69,7 +72,7 @@ public class CompanyController : ControllerBase
                 Email = company.Email,
                 Url = company.Url,
                 KvkNumber = company.KvkNumber,
-                Address = new AddressViewModel(company.Address)
+                Address = company.Address
             };
 
             return Ok(companyViewModel);
@@ -116,14 +119,21 @@ public class CompanyController : ControllerBase
                     return BadRequest("Invalid or missing ID claim in the token");
                 }
 
-                User user = _context.Users.FirstOrDefault(c => c.Id == idClaim);
+                User user = _context.Users.FirstOrDefault(u => u.Id == idClaim);
                 Company company = _context.Companies.FirstOrDefault(c => c.Id == idClaim);
 
                 if (company != null && companyViewModel != null)
                 {
-                    if (IsStringNotNullOrEmptyOrDefault(companyViewModel.Information))
+                    if (companyViewModel.Information != null)
                     {
-                        company.Information = companyViewModel.Information;
+                        if (companyViewModel.Information.Equals("")) 
+                        {
+                            company.Information = null;
+                        }
+                        else 
+                        {
+                            company.Information = companyViewModel.Information;
+                        }
                     }
 
                     if (IsStringNotNullOrEmptyOrDefault(companyViewModel.CompanyName))
@@ -131,53 +141,56 @@ public class CompanyController : ControllerBase
                         company.CompanyName = companyViewModel.CompanyName;
                     }
 
-                    if (IsStringNotNullOrEmptyOrDefault(companyViewModel.Email))
+                    if (IsStringNotNullOrEmptyOrDefault(companyViewModel.Email) && ValidationController.IsValidEmail(companyViewModel.Email))
                     {
+                     var existingUser = await _userManager.FindByEmailAsync(companyViewModel.Email);
+                    if (existingUser != null)
+                    {
+                        return BadRequest(new { Message = "Dit e-mailadres is al geregistreerd" });
+                    }   
                         company.Email = companyViewModel.Email;
                         company.NormalizedEmail = companyViewModel.Email.ToUpper();
                         company.UserName = companyViewModel.Email;
                         company.NormalizedUserName = companyViewModel.Email.ToUpper();
                     }
 
-                    if (IsStringNotNullOrEmptyOrDefault(companyViewModel.NewPassword) && ValidationController.IsValidPassword(companyViewModel.NewPassword))
+                    if (IsStringNotNullOrEmptyOrDefault(companyViewModel.NewPassword))
                     {
-                        if (IsStringNotNullOrEmptyOrDefault(companyViewModel.CurrentPassword))
-                        {
+                        if (ValidationController.IsValidPassword(companyViewModel.NewPassword))
+                            if (IsStringNotNullOrEmptyOrDefault(companyViewModel.CurrentPassword))
+                            {
+                                await _userManager.ChangePasswordAsync(user, companyViewModel.CurrentPassword, companyViewModel.NewPassword);   
+                                
+                            }
+                            else {
                             return BadRequest("Required new & old password to change password");
-                        }
-
-                        // TODO: Implement password change using SignInManager.ChangePasswordAsync
-                    }
-
-                    if (IsStringNotNullOrEmptyOrDefault(companyViewModel.Url))
-                    {
-                        company.Url = companyViewModel.Url;
-                    }
-
-                    if (IsStringNotNullOrEmptyOrDefault(companyViewModel.KvkNumber))
-                    {
-                        company.KvkNumber = companyViewModel.KvkNumber;
-                    }
-
-                    if (companyViewModel.Address != null) // TODO: fix this shit not working :)
-                    {
-                        // Check if all required fields are filled in
-                        if (IsStringNotNullOrEmptyOrDefault(companyViewModel.Address.Streetname) &&
-                            IsStringNotNullOrEmptyOrDefault(companyViewModel.Address.City) &&
-                            IsStringNotNullOrEmptyOrDefault(companyViewModel.Address.Country) &&
-                            companyViewModel.Address.HouseNumber.HasValue)
+                            }
+                        else 
                         {
-                            // Update company.Address properties
-                            company.Address.Streetname = companyViewModel.Address.Streetname;
-                            company.Address.City = companyViewModel.Address.City;
-                            company.Address.Country = companyViewModel.Address.Country;
-                            company.Address.HouseNumber = companyViewModel.Address.HouseNumber.Value;
+                            return BadRequest("Password does not meet requirements");
                         }
-                        else
+                    }
+
+                    if (companyViewModel.Url != null)
+                    {
+                        if (companyViewModel.Url.Equals("")) 
                         {
-                            // If any of the required fields are missing, return a bad request
-                            return BadRequest("Address fields are incomplete");
+                            company.Url = null;
                         }
+                        else 
+                        {
+                            company.Url = companyViewModel.Url;
+                        }
+                    }
+
+                    if (companyViewModel.KvkNumber.HasValue)
+                    {
+                        company.KvkNumber = companyViewModel.KvkNumber.Value;
+                    }
+
+                    if (IsStringNotNullOrEmptyOrDefault(companyViewModel.Address))
+                    {
+                        company.Address = companyViewModel.Address;
                     }
 
                     _context.Companies.Update(company);
