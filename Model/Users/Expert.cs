@@ -9,7 +9,7 @@ public class Expert : User
 
     public string ContactPreferences { get; set; }
     public bool CommercialContact { get; set; }
-    public DateTime BrithDate { get; set; }
+    public DateTime BirthDate { get; set; }
     public bool ProfileComplete { get; set; }
 
     public Guardian? guardian { get; set; }
