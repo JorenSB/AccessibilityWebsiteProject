@@ -1,7 +1,7 @@
-using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 public class Address {
-    [Key]
+    [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
     public int AddressID {get; set;}
     public string Streetname { get; set; }
     public int HouseNumber { get; set; }
