@@ -1,3 +1,17 @@
+/* Nav Edits */
+#adminNav {
+    background-color: #21CEA1;
+}
+#navBrand:hover {
+    text-decoration: none !important;
+}
+
+/* Bedrijven Edit page */
+.fill { 
+    height: 90vh;
+    max-height: 90vh;
+}
+
 /* AdminPanel Listview Styles */
 .img-rond {
     border-top-left-radius: 50% 50%; 

@@ -38,7 +38,9 @@ function LoginForm() {
                         navigate("/deskundige");
                     } else if (role === "Company") {
                         navigate("/test");
-                    } else {
+                    } else if (role === "Admin") {
+                        navigate("/admin/deskundigen");
+                    }else {
                         console.log("mislukt tijdens het inloggen", "role = " + role);
                     }
                 } else {

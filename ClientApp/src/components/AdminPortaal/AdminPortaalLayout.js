@@ -2,7 +2,7 @@ import React from 'react';
 import Nav from './AdminPortaalNav'
 import SideBar from '../layouts/ChatSideBar'
 import PropTypes from 'prop-types'; 
-import '../layouts/BaseLayout.css';
+
 
 export default class AdminPortaalLayout extends React.Component {
   render() {
@@ -17,14 +17,10 @@ export default class AdminPortaalLayout extends React.Component {
         <div className='container-fluid'>
 
           <div className='row'>
+          
             <SideBar />
-            <div className='col-md-10 col-12'>
-              <div className='row p-3'>
-                <div id='PageContent' className='col-12 text-center'>
-                  {this.props.children}
-                </div>
-              </div>
-            </div>
+
+            <div className='col-md-10 col-12 pt-3'>{this.props.children}</div>
           </div>
         </div>
       </div>

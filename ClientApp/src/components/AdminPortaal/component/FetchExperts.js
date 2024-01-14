@@ -9,14 +9,18 @@ const FetchExperts = () => {
   const [expertData, setExpertData] = useState([]);
 
   const fetcher = () => {
+    const jwtToken = localStorage.getItem('jwtToken');
     fetch("https://localhost:7101/api/portaal/admin/experts", {
         method: "GET",
+        headers: {
+          Authorization: `${jwtToken}`,
+        },
       })
         .then((response) => { return response.json(); })
         .then((data) => {
             setExpertData(data);
         })
-        .catch((error) => console.log(error));
+        .catch((error) => console.log('Error:', error, error.response));
   }
 
   useEffect(() => {

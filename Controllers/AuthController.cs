@@ -32,6 +32,7 @@
                 var claims = new List<Claim>
                 {
                     new Claim(ClaimTypes.Name, user.UserName),
+                    new Claim(ClaimTypes.NameIdentifier , user.Id),
                     new Claim(ClaimTypes.Role, string.Join(",", roles))
                 };
 
@@ -42,7 +43,7 @@
                     issuer: HttpContext.Request.Scheme + "://" + HttpContext.Request.Host,
                     audience: HttpContext.Request.Scheme + "://" + HttpContext.Request.Host,
                     claims: claims,
-                    expires: DateTime.Now.AddMinutes(5),
+                    expires: DateTime.Now.AddMinutes(50),
                     signingCredentials: creds
                 );
 
@@ -84,7 +85,7 @@
 
 
 
-        [HttpPost("registerCompany")]
+    [HttpPost("registerCompany")]
     public async Task<IActionResult> RegisterCompany([FromBody] RegisterCompanyViewModel model)
     {
         var company = new Company
@@ -101,12 +102,37 @@
         if (result.Succeeded)
         {
             // Geef de rol "Bedrijf" aan de nieuwe gebruiker
-            await _userManager.AddToRoleAsync(company, "Bedrijf");
+            await _userManager.AddToRoleAsync(company, "Company");
 
             return Ok("Bedrijf geregistreerd");
         }
 
         return BadRequest("Er is iets misgegaan bij de registratie van het bedrijf");
+    }
+
+    [HttpPost("registerAdmin")]
+    public async Task<IActionResult> RegisterAdmin([FromBody] RegisterAdminViewModel model)
+    {
+        var admin = new Admin
+        {
+            Email = model.Email,
+            EmailConfirmed = true,
+            UserName = model.Email,
+            FirstName = model.FirstName, 
+            LastName = model.LastName
+        };
+
+        var result = await _userManager.CreateAsync(admin, model.Password);
+
+        if (result.Succeeded)
+        {
+            // Geef de rol "Admin" aan de nieuwe gebruiker
+            await _userManager.AddToRoleAsync(admin, "Admin");
+
+            return Ok("Admin geregistreerd");
+        }
+
+        return BadRequest("Er is iets misgegaan bij de toevoegen van een Admin");
     }
 
     }

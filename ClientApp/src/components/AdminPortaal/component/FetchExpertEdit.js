@@ -4,18 +4,21 @@ import { Link } from 'react-router-dom';
 
 const FetchBedrijfEdit = () => {
     const {id} = useParams();
-    const [currentBedrijf, setCurrentBedrijf] = useState([]);
-    const [currentError, setCurrentError] = useState([]);
+    const [currentExpert, setCurrentExpert] = useState([]);
 
     const fetcher = (id) => {
+        const jwtToken = localStorage.getItem('jwtToken');
         fetch(`https://localhost:7101/api/portaal/admin/experts/${id}`, {
             method: "GET",
+            headers: {
+            Authorization: `${jwtToken}`,
+            },
         })
             .then((response) => { return response.json(); })
             .then((data) => {
-                setCurrentBedrijf([data]);
+                setCurrentExpert([data]);
             })
-            .catch((error) => setCurrentError([error]));
+            .catch((error) => console.log('Error:', error, error.response));
     }
 
     useEffect(() => {
@@ -24,9 +27,10 @@ const FetchBedrijfEdit = () => {
 
 
         return (
-            <div>
-                <div className='row'> 
-                    {currentError ? ( currentBedrijf.map(expert => (
+            <div className='row d-flex align-items-stretch'>
+                {/* max height info page */}
+                <div className='col-6 '>
+                    {currentExpert.map(expert => (
                         <div key={expert.id} className="card col-lg-12 col-md-12 col-12">
                             <div className="card-body">
                                 <h5 className="card-title">{expert.firstName} {expert.lastName}</h5>
@@ -34,17 +38,18 @@ const FetchBedrijfEdit = () => {
                                 <p className="card-text">{expert.firstName} {expert.firstName} {expert.firstName} </p>
                             </div>
                         </div>
-                    ))
-                    ) : (
-                        <p>Kan geen Ervarings deskundige vinden met dit id</p>
-                    )}
+                    ))}
                 </div>
-                <div>
-                    <Link to='/admin/bedrijven' className="card-link">Terug naar overzicht</Link>
+
+                {/* Laadt nieuw comonent in die alle onderzoeken ophaald van een bedrijf */}
+                <div className='col-6'>
+                    Lijst met Alle onderzoeken - prob een scroll nodig <br></br>
+                    Mobile design ontbreekt?
+                </div>
+                <div className='col-12'>
+                    <Link to='/admin/deskundigen' className="card-link">Terug naar overzicht</Link>
                 </div>
             </div>
-            
-            
         );
     };
     

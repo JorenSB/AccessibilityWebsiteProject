@@ -1,16 +1,17 @@
 import React from 'react';
-
-
 import Layout from '../AdminPortaalLayout';
-import Bedrijven from './AdminPortaal_Bedrijven';
+
 
 
 export default class Bedrijvenview extends React.Component {
   render() {
     return (
         <Layout>
-            <h1 className='text-decoration-underline'>Hier zijn alle Bedrijven</h1>
-            <Bedrijven/>
+            <div className='container-fluid'>
+              <div className='row'>
+                <div className='col-12'><h1>Admin portaal</h1></div>
+              </div>
+            </div>
         </Layout>
     )
   }66

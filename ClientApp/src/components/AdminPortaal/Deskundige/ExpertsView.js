@@ -6,7 +6,7 @@ export default class Bedrijvenview extends React.Component {
   render() {
     return (
         <Layout>
-            <h1>Ervaringsdeskundige Lijst:</h1>
+            <h1 className='text-decoration-underline'>Hier zijn alle Ervaringsdeskundige</h1>
             <Experts/>  
         </Layout>
     )

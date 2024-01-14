@@ -1,15 +1,9 @@
 import React from 'react';
-import {
-    Collapse,
-    Navbar,
-    NavbarToggler,
-    NavbarBrand,
-    Nav,
-    NavItem,
-    NavLink,
-  } from 'reactstrap';
-import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
+import brandLogo from '../media/logo.png';
+
+// import stylesheet
+import './AdminPortaal.css';
 
 export default class AdminPortaalNav extends React.Component {
   constructor(props) {
@@ -28,36 +22,36 @@ export default class AdminPortaalNav extends React.Component {
   render() {
     return (
     <header>
-      <Navbar id='navBar' light expand="xxl" container="fluid">
-        <NavbarBrand href="/">Admin Portaal</NavbarBrand>
-        <NavbarToggler onClick={this.toggle} />
-        <Collapse id='nav-modal' className='text-center' isOpen={this.state.isOpen} navbar>
-          <Nav className="me-auto" navbar>
-            <NavItem>
-               <Link className="nav-link" to="/admin/bedrijven">Bedrijven View</Link>
-            </NavItem>
-            <NavItem>
-               <Link className="nav-link" to="/admin/deskundigen">Deskundige View</Link>
-            </NavItem>
-          </Nav>
-          {/* <NavbarText className='btn text-white' tag={Button} href="/">Profiel Bekijken</NavbarText> */}
-        </Collapse>
-      </Navbar>
+      <nav id='adminNav' className="navbar navbar-expand-lg ">
+          <div id='AdminNav' className="container-fluid">
+              <div className="d-flex flex-grow-1">
+                  <span className="w-100 d-lg-none d-block"/>
+                  <a id='navBrand' className="navbar-brand text-decoration-none fw-bold text-dark" href="/"><img alt='Logo van Accessibility in NavigatieBalk' src={brandLogo} className='img im-fluid' style={{width : "10rem"}}></img>  Admin Portaal </a>
+                  <div className="w-100 text-right">
+                      <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#myNavbar7">
+                          <span className="navbar-toggler-icon"></span>
+                      </button>
+                  </div>
+              </div>
+              <div className="collapse navbar-collapse flex-grow-1 text-right" id="myNavbar7">
+                  <ul className="navbar-nav ms-auto flex-nowrap">
+                      <li className="nav-item">
+                          <Link className='nav-link text-dark' to='/admin/bedrijven'>Bedrijven</Link>
+                      </li>
+                      <li className="nav-item">
+                          <Link className='nav-link text-dark' to='/admin/deskundigen'>ErvaringsDeskundigen</Link>
+                      </li>
+                      <li className="nav-item">
+                          <Link className='nav-link text-dark' to='/admin/profiel'>Mijn Profiel</Link>
+                      </li>
+                      <li className="nav-item">
+                          <Link className='nav-link text-dark' to='/'>Log Out</Link>
+                      </li>
+                  </ul>
+              </div>
+          </div>
+      </nav>
     </header>
     );
   }
-}
-Navbar.propTypes = {
-  light: PropTypes.bool,
-  dark: PropTypes.bool,
-  fixed: PropTypes.string,
-  color: PropTypes.string,
-  role: PropTypes.string,
-  expand: PropTypes.oneOfType([PropTypes.bool, PropTypes.string]),
-  tag: PropTypes.oneOfType([PropTypes.func, PropTypes.string])
-  // pass in custom element to use
-}
-NavbarBrand.propTypes = {
-  tag: PropTypes.oneOfType([PropTypes.func, PropTypes.string])
-  // pass in custom element to use
 }

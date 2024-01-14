@@ -9,10 +9,16 @@ import AdminPortaalEditBedrijf from "./components/AdminPortaal/Bedrijven/Bedrijf
 import AdminPortaalExperts from "./components/AdminPortaal/Deskundige/ExpertsView";
 import AdminPortaalEditExpert from "./components/AdminPortaal/Deskundige/ExpertEditView.js";
 
+import Example from "./components/AdminPortaal/Example.js";
+
 const AppRoutes = [
   {
     index: true,
     element: <Login />
+  },
+  {
+    path: "/example",
+    element: <Example/>
   },
   {
     path: "/registercompany",
