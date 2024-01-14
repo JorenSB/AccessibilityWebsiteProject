@@ -54,7 +54,7 @@ const FetchBedrijfEdit = () => {
                             <label htmlFor="companyName" className="form-label">Naam Bedrijf</label>
                             <div className="input-group">
                               <span className="input-group-text" id="inputGroup-sizing-lg">Naam Bedrijf</span>
-                              <input type="text" className="form-control" id="companyName" value="{bedrijf.companyName}" />
+                              <input type="text" className="form-control" id="companyName" value={bedrijf.companyName}/>
                             </div>
                           </div>
 
@@ -62,7 +62,7 @@ const FetchBedrijfEdit = () => {
                             <label htmlFor="email" className="form-label">E-mail Bedrijf</label>
                             <div className="input-group">
                               <span className="input-group-text" id="inputGroup-sizing-lg">E-mail Bedrijf</span>
-                              <input type="text" className="form-control" id="email" value="{bedrijf.email}" />
+                              <input type="text" className="form-control" id="email" value={bedrijf.email} />
                             </div>
                           </div>
 
@@ -78,7 +78,7 @@ const FetchBedrijfEdit = () => {
                             <label htmlFor="address" className="form-label">Adresgegevens</label>
                             <div className="input-group">
                               <span className="input-group-text" id="inputGroup-sizing-lg">Adresgegevens</span>
-                              <input type="text" className="form-control" id="address" value="{bedrijf.address}" />
+                              <input type="text" className="form-control" id="address" value={bedrijf.address} />
                             </div>
                           </div>
 
@@ -86,7 +86,7 @@ const FetchBedrijfEdit = () => {
                             <label htmlFor="url" className="form-label">Website adres</label>
                             <div className="input-group">
                               <span className="input-group-text" id="inputGroup-sizing-lg">Website adres</span>
-                              <input type="text" className="form-control" id="url" value="{bedrijf.url}" />
+                              <input type="text" className="form-control" id="url" value={bedrijf.url} />
                             </div>
                           </div>
 
@@ -94,7 +94,7 @@ const FetchBedrijfEdit = () => {
                             <label htmlFor="kvk" className="form-label">KVK nummer</label>
                             <div className="input-group">
                               <span className="input-group-text" id="inputGroup-sizing-lg">KVK nummer</span>
-                              <input type="text" className="form-control" id="kvk" value="{bedrijf.kvk}" />
+                              <input type="text" className="form-control" id="kvk" value={bedrijf.kvk} />
                             </div>
                           </div>
                           <div className="mb-3 text-center">
