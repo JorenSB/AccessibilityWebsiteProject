@@ -1,8 +1,14 @@
-public class AddressViewModel {
-    public string Streetname { get; set; }
-    public int HouseNumber { get; set; }
-    public string City { get; set; }
-    public string Country { get; set; }
+public class AddressViewModel
+{
+    public string? Streetname { get; set; }
+    public int? HouseNumber { get; set; }
+    public string? City { get; set; }
+    public string? Country { get; set; }
+
+    public AddressViewModel()
+    {
+    }
+
     public AddressViewModel(Address address)
     {
         if (address != null)
