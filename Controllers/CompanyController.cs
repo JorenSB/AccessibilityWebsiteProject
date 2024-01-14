@@ -6,6 +6,7 @@ using System.Text;
 using System.Security.Claims;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity;
+using System.Runtime.CompilerServices;
 
 [Route("api/[controller]")]
 [ApiController]
@@ -42,19 +43,25 @@ public class CompanyController : ControllerBase
             ValidateIssuer = false,
             ValidateAudience = false
         };
-        //var claims = handler.ValidateToken(JWTToken, validations, out var tokenSecure);
+
         try
         {
-            // Validate the token
             var claimsPrincipal = handler.ValidateToken(JWTToken, validations, out var tokenSecure);
 
-            // Access the user's ID claim
-            var idClaim = claimsPrincipal.Identities.First().Claims.First(o => o.Type == ClaimTypes.NameIdentifier).Value;
+            var idClaim = claimsPrincipal?.Claims?.FirstOrDefault(claim => claim.Type == ClaimTypes.NameIdentifier)?.Value;
+            
+            if (string.IsNullOrEmpty(idClaim))
+            {
+                return BadRequest("Invalid or missing ID claim in the token");
+            }
 
+            Company company = _context.Companies.FirstOrDefault(c => c.Id == idClaim);
 
-            // Now you can use userName and userId in your logic
-            // ...
-            Company company = _context.Companies.First(c => c.Id == idClaim);
+            if (company == null)
+            {
+                return NotFound("Company not found");
+            }
+
             CompanyViewModel companyViewModel = new CompanyViewModel
             {
                 Information = company.Information,
@@ -62,19 +69,20 @@ public class CompanyController : ControllerBase
                 Email = company.Email,
                 Url = company.Url,
                 KvkNumber = company.KvkNumber,
-                Address = company.Address
+                Address = new AddressViewModel(company.Address)
             };
+
             return Ok(companyViewModel);
-            // return Ok(new { UserName = nameClaim, UserId = idClaim });
         }
         catch (Exception ex)
         {
+            // Log the exception for debugging purposes
+            Console.WriteLine($"Exception: {ex}");
+
             // Handle validation errors
             return BadRequest("Invalid token");
         }
     }
-
-
 
     [HttpPut("UpdateCompany/{JWTToken}")]
     [Authorize(Roles = "Company")]
@@ -92,66 +100,113 @@ public class CompanyController : ControllerBase
             ValidateIssuer = false,
             ValidateAudience = false
         };
-        //var claims = handler.ValidateToken(JWTToken, validations, out var tokenSecure);
+
         try
         {
             // Validate the token
             var claimsPrincipal = handler.ValidateToken(JWTToken, validations, out var tokenSecure);
 
-            // Access the user's ID claim
-            var idClaim = claimsPrincipal.Identities.First().Claims.First(o => o.Type == ClaimTypes.NameIdentifier).Value;
+            if (claimsPrincipal != null)
+            {
+                // Access the user's ID claim
+                var idClaim = claimsPrincipal.Identities.FirstOrDefault()?.Claims.FirstOrDefault(o => o.Type == ClaimTypes.NameIdentifier)?.Value;
 
-            User user = _context.Users.First(c => c.Id == idClaim);
-            Company company = _context.Companies.First(c => c.Id == idClaim);
+                if (string.IsNullOrEmpty(idClaim))
+                {
+                    return BadRequest("Invalid or missing ID claim in the token");
+                }
 
-            if (IsStringNotNullOrEmptyOrDefault(companyViewModel.Information)) {
-                company.Information = companyViewModel.Information;
+                User user = _context.Users.FirstOrDefault(c => c.Id == idClaim);
+                Company company = _context.Companies.FirstOrDefault(c => c.Id == idClaim);
+
+                if (company != null && companyViewModel != null)
+                {
+                    if (IsStringNotNullOrEmptyOrDefault(companyViewModel.Information))
+                    {
+                        company.Information = companyViewModel.Information;
+                    }
+
+                    if (IsStringNotNullOrEmptyOrDefault(companyViewModel.CompanyName))
+                    {
+                        company.CompanyName = companyViewModel.CompanyName;
+                    }
+
+                    if (IsStringNotNullOrEmptyOrDefault(companyViewModel.Email))
+                    {
+                        company.Email = companyViewModel.Email;
+                        company.NormalizedEmail = companyViewModel.Email.ToUpper();
+                        company.UserName = companyViewModel.Email;
+                        company.NormalizedUserName = companyViewModel.Email.ToUpper();
+                    }
+
+                    if (IsStringNotNullOrEmptyOrDefault(companyViewModel.NewPassword) && ValidationController.IsValidPassword(companyViewModel.NewPassword))
+                    {
+                        if (IsStringNotNullOrEmptyOrDefault(companyViewModel.CurrentPassword))
+                        {
+                            return BadRequest("Required new & old password to change password");
+                        }
+
+                        // TODO: Implement password change using SignInManager.ChangePasswordAsync
+                    }
+
+                    if (IsStringNotNullOrEmptyOrDefault(companyViewModel.Url))
+                    {
+                        company.Url = companyViewModel.Url;
+                    }
+
+                    if (IsStringNotNullOrEmptyOrDefault(companyViewModel.KvkNumber))
+                    {
+                        company.KvkNumber = companyViewModel.KvkNumber;
+                    }
+
+                    if (companyViewModel.Address != null) // TODO: fix this shit not working :)
+                    {
+                        // Check if all required fields are filled in
+                        if (IsStringNotNullOrEmptyOrDefault(companyViewModel.Address.Streetname) &&
+                            IsStringNotNullOrEmptyOrDefault(companyViewModel.Address.City) &&
+                            IsStringNotNullOrEmptyOrDefault(companyViewModel.Address.Country) &&
+                            companyViewModel.Address.HouseNumber.HasValue)
+                        {
+                            // Update company.Address properties
+                            company.Address.Streetname = companyViewModel.Address.Streetname;
+                            company.Address.City = companyViewModel.Address.City;
+                            company.Address.Country = companyViewModel.Address.Country;
+                            company.Address.HouseNumber = companyViewModel.Address.HouseNumber.Value;
+                        }
+                        else
+                        {
+                            // If any of the required fields are missing, return a bad request
+                            return BadRequest("Address fields are incomplete");
+                        }
+                    }
+
+                    _context.Companies.Update(company);
+
+                    try
+                    {
+                        await _context.SaveChangesAsync();
+                        return Ok("Success");
+                    }
+                    catch (DbUpdateConcurrencyException)
+                    {
+                        return BadRequest("Error while updating the information");
+                    }
+                }
+                else
+                {
+                    return BadRequest("Invalid company or companyViewModel");
+                }
             }
-            if (IsStringNotNullOrEmptyOrDefault(companyViewModel.CompanyName)) {
-                company.CompanyName = companyViewModel.CompanyName;
-            }
-            if (IsStringNotNullOrEmptyOrDefault(companyViewModel.Email)) {
-                company.Email = companyViewModel.Email;
-                company.NormalizedEmail = companyViewModel.Email.ToUpper();
-                company.UserName = companyViewModel.Email;
-                company.NormalizedUserName = companyViewModel.Email.ToUpper();
-            }
-            if (IsStringNotNullOrEmptyOrDefault(companyViewModel.Password))
-            if (IsStringNotNullOrEmptyOrDefault(companyViewModel.Url)) {
-                company.Url = companyViewModel.Url;
-            }
-            if (IsStringNotNullOrEmptyOrDefault(companyViewModel.KvkNumber)) {
-                company.KvkNumber = companyViewModel.KvkNumber;
-            }
-            if (companyViewModel.Address != null)
+            else
             {
-                if (IsStringNotNullOrEmptyOrDefault(companyViewModel.Address.Streetname)) {
-                    company.Address.Streetname = companyViewModel.Address.Streetname;
-                }
-                if (IsStringNotNullOrEmptyOrDefault(companyViewModel.Address.City)) {
-                    company.Address.City = companyViewModel.Address.City;
-                }
-                if (IsStringNotNullOrEmptyOrDefault(companyViewModel.Address.Country)) {
-                    company.Address.Country = companyViewModel.Address.Country;
-                }
-                if (companyViewModel.Address.HouseNumber != 0) {
-                    company.Address.HouseNumber = companyViewModel.Address.HouseNumber;
-                }
-            }
-            _context.Companies.Update(company);
-            try
-            {
-                await _context.SaveChangesAsync();
-                return Ok("Success");
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                return BadRequest("Error while updating the information");
+                return BadRequest("Invalid token");
             }
         }
         catch (Exception ex)
         {
-            return BadRequest("Invalid or expired token");
+            Console.WriteLine($"Exception: {ex.Message}");
+            Console.WriteLine($"Stack Trace: {ex.StackTrace}");
+            return BadRequest("Unknown error");
         }
     }
 }
