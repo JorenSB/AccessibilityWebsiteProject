@@ -40,6 +40,24 @@ export const jwtIsValid = () => {
   }
 };
 
+export const getUserName = () => {
+  const jwtToken = localStorage.getItem('jwtToken');
+
+  if (!jwtToken) {
+    return null;
+  }
+
+  try {
+    const decodedToken = jwtDecode(jwtToken);
+    const username = decodedToken['http://schemas.microsoft.com/ws/2008/06/identity/claims/username'] || '';
+    return username || null;
+  } catch (error) {
+    console.error('Fout bij het decoderen van JWT-token:', error);
+    return null;
+  }
+};
+
+
 export const getUserRole = () => {
   const jwtToken = localStorage.getItem('jwtToken');
 
@@ -50,7 +68,6 @@ export const getUserRole = () => {
   try {
     const decodedToken = jwtDecode(jwtToken);
     const role = decodedToken['http://schemas.microsoft.com/ws/2008/06/identity/claims/role'] || '';
-    console.log(role);
     return role || null;
   } catch (error) {
     console.error('Fout bij het decoderen van JWT-token:', error);

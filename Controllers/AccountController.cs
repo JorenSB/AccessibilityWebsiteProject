@@ -31,7 +31,7 @@
 
                 var claims = new List<Claim>
                 {
-                    new Claim(ClaimTypes.Name, user.UserName),
+                    new Claim(ClaimTypes.NameIdentifier , user.Id),
                     new Claim(ClaimTypes.Role, string.Join(",", roles))
                 };
 
@@ -42,7 +42,7 @@
                     issuer: HttpContext.Request.Scheme + "://" + HttpContext.Request.Host,
                     audience: HttpContext.Request.Scheme + "://" + HttpContext.Request.Host,
                     claims: claims,
-                    expires: DateTime.Now.AddMinutes(5),
+                    expires: DateTime.Now.AddMinutes(5), 
                     signingCredentials: creds
                 );
 
