@@ -6,6 +6,6 @@ public class CompanyViewModel
     public string? NewPassword { get; set; }
     public string? Email { get; set; }
     public string? Url { get; set; }
-    public string? KvkNumber { get; set; }
-    public AddressViewModel? Address { get; set; }
+    public int? KvkNumber { get; set; }
+    public string? Address { get; set; }
 }
