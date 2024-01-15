@@ -56,16 +56,16 @@ function RegisterFormCompany() {
                 <img className='logo-img' src={Logo} alt='logo accessibility.nl'></img>
                 <h3 className='title'>Bedrijfs Registratie</h3>
                 <div className='input-box'>
-                    <input type='text' placeholder='Bedrijfsnaam' required onChange={(e) => setCompanyName(e.target.value)} />
+                    <input className='input' type='text' placeholder='Bedrijfsnaam' required onChange={(e) => setCompanyName(e.target.value)} />
                 </div>
                 <div className='input-box'>
-                    <input type='email' placeholder='E-mail' required onChange={(e) => setEmail(e.target.value)} />
+                    <input className='input' type='email' placeholder='E-mail' required onChange={(e) => setEmail(e.target.value)} />
                 </div>
                 <div className='input-box'>
-                    <input type='text'placeholder='KVK-nummer' required onChange={(e) => setKVK(e.target.value)}/>
+                    <input className='input' type='text'placeholder='KVK-nummer' required onChange={(e) => setKVK(e.target.value)}/>
                 </div>
                 <div className='input-box'>
-                    <input type='password' placeholder='Wachtwoord' pattern="^(?=.*[A-Z])(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]{8,}$" title="Minimaal 1 hoofdletter, 1 vreemd teken en 8 karakters." required  onChange={(e) => setPassword(e.target.value)}/>
+                    <input className='input' type='password' placeholder='Wachtwoord' pattern="^(?=.*[A-Z])(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]{8,}$" title="Minimaal 1 hoofdletter, 1 vreemd teken en 8 karakters." required  onChange={(e) => setPassword(e.target.value)}/>
                 </div>
                 <button className='RegistreerButton' type='submit'>
                     Registreer

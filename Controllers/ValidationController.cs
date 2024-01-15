@@ -1,12 +1,15 @@
 using System.Text.RegularExpressions;
 using Microsoft.IdentityModel.Tokens;
+using System.IdentityModel.Tokens.Jwt;
+using System.Text;
+using System.Security.Claims;
 
 public class ValidationController
 {
     public static bool IsValidEmail(string? email)
     {
         // Checks if the email is empty or null
-        if (email.IsNullOrEmpty()) 
+        if (email.IsNullOrEmpty())
         {
             return false;
         }
@@ -15,7 +18,8 @@ public class ValidationController
         return Regex.IsMatch(email, emailPattern);
     }
 
-    public static bool IsValidPassword(string? password){
+    public static bool IsValidPassword(string? password)
+    {
         // Checks if the password is empty or null
         if (password.IsNullOrEmpty())
         {
@@ -37,5 +41,52 @@ public class ValidationController
             return false;
         }
         return true;
+    }
+    public static string? getIdentifierFromJWT(string JWTToken)
+    {
+        if (JWTToken.IsNullOrEmpty()) {
+            return null;
+        }
+
+        DotNetEnv.Env.Load();
+        var secret = Environment.GetEnvironmentVariable("SECRET_KEY") ?? "default_key";
+        var key = Encoding.ASCII.GetBytes(secret);
+
+        var handler = new JwtSecurityTokenHandler();
+        var validations = new TokenValidationParameters
+        {
+            ValidateIssuerSigningKey = true,
+            IssuerSigningKey = new SymmetricSecurityKey(key),
+            ValidateIssuer = false,
+            ValidateAudience = false
+        };
+
+        try
+        {
+            // Validate the token
+            var claimsPrincipal = handler.ValidateToken(JWTToken, validations, out var tokenSecure);
+
+            if (claimsPrincipal != null)
+            {
+                // Access the user's ID claim
+                var idClaim = claimsPrincipal.Identities.FirstOrDefault()?.Claims.FirstOrDefault(o => o.Type == ClaimTypes.NameIdentifier)?.Value;
+
+                if (string.IsNullOrEmpty(idClaim))
+                {
+                    return null;
+                }
+                return idClaim;
+            }
+            else
+            {
+                return null;
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Exception: {ex.Message}");
+            Console.WriteLine($"Stack Trace: {ex.StackTrace}");
+            return null;
+        }
     }
 }

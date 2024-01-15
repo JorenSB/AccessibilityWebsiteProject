@@ -1,0 +1,27 @@
+.card {
+    padding-top: 10px;
+    align-items: center;
+    background-color: #1CA883;
+    box-shadow: 0 2px 8px 0 rgba(0,0,0,0.2);
+
+  }
+  .pic{
+    border-radius: 100%;
+    background-color: lightgrey;
+    width: 15vw;
+    height: 30vh;
+    margin-top: 20px;
+  }
+  
+  .container {
+    padding: 20px 16px;
+  }
+  .card h4{
+    font-size: 30px;
+  }
+
+  .card p{
+    font-size: 20px;
+    font-weight: bold;
+  }
+  

@@ -11,8 +11,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace AccessibilityWebsiteProject.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20240108111131_roles added")]
-    partial class rolesadded
+    [Migration("20240115092746_initialCreate")]
+    partial class initialCreate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -23,6 +23,36 @@ namespace AccessibilityWebsiteProject.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
+
+            modelBuilder.Entity("DisabilityAidExpert", b =>
+                {
+                    b.Property<string>("DisabilityAidsDisabilityAidId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("ExpertId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("DisabilityAidsDisabilityAidId", "ExpertId");
+
+                    b.HasIndex("ExpertId");
+
+                    b.ToTable("ExpertDisabilityAids", (string)null);
+                });
+
+            modelBuilder.Entity("DisabilityExpert", b =>
+                {
+                    b.Property<string>("DisabilitiesDisabilityId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("ExpertId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("DisabilitiesDisabilityId", "ExpertId");
+
+                    b.HasIndex("ExpertId");
+
+                    b.ToTable("ExpertDisabilities", (string)null);
+                });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
                 {
@@ -157,6 +187,127 @@ namespace AccessibilityWebsiteProject.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
+            modelBuilder.Entity("Model.Users.Expert.Disability", b =>
+                {
+                    b.Property<string>("DisabilityId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("DisabilityName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("DisabilityId");
+
+                    b.ToTable("Disabilities", (string)null);
+                });
+
+            modelBuilder.Entity("Model.Users.Expert.DisabilityAid", b =>
+                {
+                    b.Property<string>("DisabilityAidId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("DisabilityAidName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("DisabilityAidId");
+
+                    b.ToTable("DisabilityAids", (string)null);
+                });
+
+            modelBuilder.Entity("Model.Users.Expert.Guardian", b =>
+                {
+                    b.Property<string>("GuardianId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("FirstName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("LastName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("PhoneNumber")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("GuardianId");
+
+                    b.ToTable("Guardians", (string)null);
+                });
+
+            modelBuilder.Entity("Result", b =>
+                {
+                    b.Property<int>("ResultID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ResultID"));
+
+                    b.Property<string>("Feedback")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("Score")
+                        .HasColumnType("int");
+
+                    b.HasKey("ResultID");
+
+                    b.ToTable("Results", (string)null);
+                });
+
+            modelBuilder.Entity("Study", b =>
+                {
+                    b.Property<int>("StudyID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("StudyID"));
+
+                    b.Property<string>("Beperking")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("CompanyID")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("Date")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Language")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("ResultID")
+                        .HasColumnType("int");
+
+                    b.Property<double>("Reward")
+                        .HasColumnType("float");
+
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("StudyID");
+
+                    b.HasIndex("ResultID");
+
+                    b.ToTable("Studies", (string)null);
+                });
+
             modelBuilder.Entity("User", b =>
                 {
                     b.Property<string>("Id")
@@ -164,6 +315,9 @@ namespace AccessibilityWebsiteProject.Migrations
 
                     b.Property<int>("AccessFailedCount")
                         .HasColumnType("int");
+
+                    b.Property<bool>("Active")
+                        .HasColumnType("bit");
 
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken()
@@ -228,6 +382,9 @@ namespace AccessibilityWebsiteProject.Migrations
                 {
                     b.HasBaseType("User");
 
+                    b.Property<string>("Address")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("CompanyName")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -235,9 +392,8 @@ namespace AccessibilityWebsiteProject.Migrations
                     b.Property<string>("Information")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("KvkNumber")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int>("KvkNumber")
+                        .HasColumnType("int");
 
                     b.Property<string>("Url")
                         .HasColumnType("nvarchar(max)");
@@ -249,15 +405,65 @@ namespace AccessibilityWebsiteProject.Migrations
                 {
                     b.HasBaseType("User");
 
+                    b.Property<DateTime>("BirthDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("CommercialContact")
+                        .HasColumnType("bit");
+
+                    b.Property<bool?>("EmailPreference")
+                        .HasColumnType("bit");
+
                     b.Property<string>("FirstName")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("GuardianId")
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("LastName")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<bool?>("PhonePreference")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("ProfileComplete")
+                        .HasColumnType("bit");
+
+                    b.HasIndex("GuardianId");
+
                     b.ToTable("Experts", (string)null);
+                });
+
+            modelBuilder.Entity("DisabilityAidExpert", b =>
+                {
+                    b.HasOne("Model.Users.Expert.DisabilityAid", null)
+                        .WithMany()
+                        .HasForeignKey("DisabilityAidsDisabilityAidId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Expert", null)
+                        .WithMany()
+                        .HasForeignKey("ExpertId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("DisabilityExpert", b =>
+                {
+                    b.HasOne("Model.Users.Expert.Disability", null)
+                        .WithMany()
+                        .HasForeignKey("DisabilitiesDisabilityId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Expert", null)
+                        .WithMany()
+                        .HasForeignKey("ExpertId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -311,6 +517,15 @@ namespace AccessibilityWebsiteProject.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("Study", b =>
+                {
+                    b.HasOne("Result", "Result")
+                        .WithMany()
+                        .HasForeignKey("ResultID");
+
+                    b.Navigation("Result");
+                });
+
             modelBuilder.Entity("Company", b =>
                 {
                     b.HasOne("User", null)
@@ -322,11 +537,17 @@ namespace AccessibilityWebsiteProject.Migrations
 
             modelBuilder.Entity("Expert", b =>
                 {
+                    b.HasOne("Model.Users.Expert.Guardian", "guardian")
+                        .WithMany()
+                        .HasForeignKey("GuardianId");
+
                     b.HasOne("User", null)
                         .WithOne()
                         .HasForeignKey("Expert", "Id")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("guardian");
                 });
 #pragma warning restore 612, 618
         }
