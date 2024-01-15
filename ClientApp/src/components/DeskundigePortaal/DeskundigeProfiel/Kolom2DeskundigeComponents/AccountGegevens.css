@@ -1,0 +1,23 @@
+.accountGegevensContainer{
+    height: 50%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.accountGegevensContainer input {
+  border: 2px solid #1CA883;
+  margin-top: 10px;
+  width: 70%;
+  height: 13%;
+  margin-bottom: 10px; 
+  border-radius: 10px;
+}
+.accountGegevensContainer h2{
+  width: 17vw;
+  color: black;
+  margin-top: 10px;
+  padding-bottom: 5px;
+  border-bottom: 3px solid #1CA883;
+}
+  

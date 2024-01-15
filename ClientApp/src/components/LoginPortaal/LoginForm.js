@@ -77,10 +77,10 @@ function LoginForm() {
             <form>
                 <img className='logo-img' src={Logo} alt='logo accessibilty.nl'></img>
                 <div className='input-box'>
-                    <input type='text' placeholder='E-mail' required onChange={(e) => setEmail(e.target.value)} />
+                    <input className='input' type='text' placeholder='E-mail' required onChange={(e) => setEmail(e.target.value)} />
                 </div>
                 <div className='input-box'>
-                    <input type='password' placeholder='Wachtwoord' required onChange={(e) => setPassword(e.target.value)} />
+                    <input className='input' type='password' placeholder='Wachtwoord' required onChange={(e) => setPassword(e.target.value)} />
                 </div>
                 <div className='forgot-register'>
                     <a href='#'>Wachtwoord vergeten</a>
