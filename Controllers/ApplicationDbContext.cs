@@ -1,6 +1,5 @@
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using DotNetEnv;
 using Model.Users.Expert;
 
 public class ApplicationDbContext : IdentityDbContext<User>
@@ -11,13 +10,13 @@ public class ApplicationDbContext : IdentityDbContext<User>
     public DbSet<Guardian> Guardians { get; set; }
     public DbSet<Disability> Disabilities { get; set; }
     public DbSet<DisabilityAid> DisabilityAids { get; set; }
-
-
-    
+    public DbSet<Study> Studies { get; set; }
+    public DbSet<Result> Results { get; set; }
 
     public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
     {
         DotNetEnv.Env.Load();
+        // Database.EnsureCreated();
     }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -42,12 +41,17 @@ public class ApplicationDbContext : IdentityDbContext<User>
         .HasMany(e => e.DisabilityAids)
         .WithMany()
         .UsingEntity(j => j.ToTable("ExpertDisabilityAids"));
+        modelBuilder.Entity<Study>(entity => entity.ToTable("Studies"));
+        modelBuilder.Entity<Result>(entity => entity.ToTable("Results"));
+        // Voeg eventueel andere configuraties toe
     }
 
     //prod connection
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
-
+        var IP = Environment.GetEnvironmentVariable("DB_IP") ?? "default_ip";
+        var port = Environment.GetEnvironmentVariable("DB_PORT") ?? "default_port";
+        var database = Environment.GetEnvironmentVariable("DB_NAME") ?? "default_datbase";
         var username = Environment.GetEnvironmentVariable("DB_USERNAME") ?? "default_username";
         var password = Environment.GetEnvironmentVariable("DB_PASSWORD") ?? "default_password";
 

@@ -55,8 +55,7 @@ namespace AccessibilityWebsiteProject.Migrations
                 name: "Disabilities",
                 columns: table => new
                 {
-                    DisabilityId = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                    DisabilityId = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     DisabilityName = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
@@ -89,6 +88,20 @@ namespace AccessibilityWebsiteProject.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Guardians", x => x.GuardianId);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Results",
+                columns: table => new
+                {
+                    ResultID = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Score = table.Column<int>(type: "int", nullable: false),
+                    Feedback = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Results", x => x.ResultID);
                 });
 
             migrationBuilder.CreateTable(
@@ -205,7 +218,8 @@ namespace AccessibilityWebsiteProject.Migrations
                     Information = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     CompanyName = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Url = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    KvkNumber = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    KvkNumber = table.Column<int>(type: "int", nullable: false),
+                    Address = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -229,6 +243,7 @@ namespace AccessibilityWebsiteProject.Migrations
                     PhonePreference = table.Column<bool>(type: "bit", nullable: true),
                     CommercialContact = table.Column<bool>(type: "bit", nullable: false),
                     BirthDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    ProfileComplete = table.Column<bool>(type: "bit", nullable: false),
                     GuardianId = table.Column<string>(type: "nvarchar(450)", nullable: true)
                 },
                 constraints: table =>
@@ -248,10 +263,35 @@ namespace AccessibilityWebsiteProject.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Studies",
+                columns: table => new
+                {
+                    StudyID = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    CompanyID = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Title = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Status = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Reward = table.Column<double>(type: "float", nullable: false),
+                    Language = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Beperking = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Date = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    ResultID = table.Column<int>(type: "int", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Studies", x => x.StudyID);
+                    table.ForeignKey(
+                        name: "FK_Studies_Results_ResultID",
+                        column: x => x.ResultID,
+                        principalTable: "Results",
+                        principalColumn: "ResultID");
+                });
+
+            migrationBuilder.CreateTable(
                 name: "ExpertDisabilities",
                 columns: table => new
                 {
-                    DisabilitiesDisabilityId = table.Column<int>(type: "int", nullable: false),
+                    DisabilitiesDisabilityId = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     ExpertId = table.Column<string>(type: "nvarchar(450)", nullable: false)
                 },
                 constraints: table =>
@@ -348,6 +388,11 @@ namespace AccessibilityWebsiteProject.Migrations
                 name: "IX_Experts_GuardianId",
                 table: "Experts",
                 column: "GuardianId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Studies_ResultID",
+                table: "Studies",
+                column: "ResultID");
         }
 
         /// <inheritdoc />
@@ -378,6 +423,9 @@ namespace AccessibilityWebsiteProject.Migrations
                 name: "ExpertDisabilityAids");
 
             migrationBuilder.DropTable(
+                name: "Studies");
+
+            migrationBuilder.DropTable(
                 name: "AspNetRoles");
 
             migrationBuilder.DropTable(
@@ -388,6 +436,9 @@ namespace AccessibilityWebsiteProject.Migrations
 
             migrationBuilder.DropTable(
                 name: "Experts");
+
+            migrationBuilder.DropTable(
+                name: "Results");
 
             migrationBuilder.DropTable(
                 name: "AspNetUsers");

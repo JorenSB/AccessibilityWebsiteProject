@@ -27,10 +27,11 @@ const fetchUserData = async () => {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
-        'id': userId
+        'jwt': localStorage.getItem("jwtToken")
       }
     });
     const data = await response.json();
+    console.log("jwtToken")
     setUserData(data);
   } catch (error) {
     console.error('Error fetching user data:', error);

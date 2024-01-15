@@ -15,6 +15,7 @@ function App() {
           {/* zet hier onder alle routes van de experts */}
           <Route element={<PrivateRoutes role={'Expert'} />}>
               <Route path='/deskundige' element={<Deskundige/>} />
+              <Route path='/deskundigeprofiel/:jwt' element={<DeskundigeProfiel/>}/>
           </Route>
           {/* zet hier onder alle routes van de bedrijven */}
           <Route element={<PrivateRoutes role={'Company'} />}>
@@ -30,7 +31,7 @@ function App() {
           <Route path='/' element={<Login/>}/>
           <Route path='/registreerbedrijf' element={<RegisterCompany/>}/>
           <Route path='/registreerdeskundige' element={<RegisterExpert/>}/>
-          <Route path='/deskundigeprofiel/:userId' element={<DeskundigeProfiel/>}/>
+          
         </Routes>
     
   );

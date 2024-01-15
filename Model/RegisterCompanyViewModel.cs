@@ -1,8 +1,7 @@
 public class RegisterCompanyViewModel
 {
-    public required string CompanyName { get; set; }
-    public required string Email { get; set; }
-    public required string KVK { get; set; }
-    public required string Password { get; set; }
-   
+    public string CompanyName { get; set; }
+    public string Email { get; set; }
+    public int KVK { get; set; }
+    public string Password { get; set; }
 }
