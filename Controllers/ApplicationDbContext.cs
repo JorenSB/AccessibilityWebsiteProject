@@ -1,6 +1,5 @@
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using DotNetEnv;
 
 public class ApplicationDbContext : IdentityDbContext<User>
 {
@@ -38,6 +37,5 @@ public class ApplicationDbContext : IdentityDbContext<User>
         var connectionString = $"Server=tcp:accessibility1.database.windows.net,1433;Initial Catalog=Accessibility2;Persist Security Info=False;User ID={username};Password={password};MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;";
 
         optionsBuilder.UseSqlServer(connectionString, providerOptions => providerOptions.CommandTimeout(60));
-            }
+    }
 }
- 
