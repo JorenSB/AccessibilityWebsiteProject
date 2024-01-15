@@ -1,6 +1,5 @@
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using DotNetEnv;
 
 public class ApplicationDbContext : IdentityDbContext<User>
 {
@@ -8,11 +7,13 @@ public class ApplicationDbContext : IdentityDbContext<User>
     public DbSet<Company> Companies { get; set; }
     public DbSet<Expert> Experts { get; set; }
     public DbSet<Admin> Admins { get; set; }
-    
+    public DbSet<Study> Studies { get; set; }
+    public DbSet<Result> Results { get; set; }
 
     public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
     {
         DotNetEnv.Env.Load();
+        // Database.EnsureCreated();
     }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -21,15 +22,14 @@ public class ApplicationDbContext : IdentityDbContext<User>
         base.OnModelCreating(modelBuilder);
         modelBuilder.Entity<Company>(entity => entity.ToTable("Companies"));
         modelBuilder.Entity<Expert>(entity => entity.ToTable("Experts"));
+        modelBuilder.Entity<Study>(entity => entity.ToTable("Studies"));
+        modelBuilder.Entity<Result>(entity => entity.ToTable("Results"));
         modelBuilder.Entity<Admin>(entity => entity.ToTable("Admins"));
         // Voeg eventueel andere configuraties toe
     }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
-        var DBname = Environment.GetEnvironmentVariable("DB_NAME") ?? "default_username";
-        var DBhost = Environment.GetEnvironmentVariable("DB_HOST") ?? "default_password";
-        var DBport = Environment.GetEnvironmentVariable("DB_PORT") ?? "default_password";
 
         var username = Environment.GetEnvironmentVariable("DB_USERNAME") ?? "default_username";
         var password = Environment.GetEnvironmentVariable("DB_PASSWORD") ?? "default_password";
