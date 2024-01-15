@@ -51,6 +51,35 @@ namespace AccessibilityWebsiteProject.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Guardian",
+                columns: table => new
+                {
+                    GuardianId = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    FirstName = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    LastName = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Email = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    PhoneNumber = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Guardian", x => x.GuardianId);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Results",
+                columns: table => new
+                {
+                    ResultID = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Score = table.Column<int>(type: "int", nullable: false),
+                    Feedback = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Results", x => x.ResultID);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "AspNetRoleClaims",
                 columns: table => new
                 {
@@ -183,7 +212,8 @@ namespace AccessibilityWebsiteProject.Migrations
                     Information = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     CompanyName = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Url = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    KvkNumber = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    KvkNumber = table.Column<int>(type: "int", nullable: false),
+                    Address = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -202,7 +232,12 @@ namespace AccessibilityWebsiteProject.Migrations
                 {
                     Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     FirstName = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    LastName = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    LastName = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    ContactPreferences = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    CommercialContact = table.Column<bool>(type: "bit", nullable: false),
+                    BirthDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    ProfileComplete = table.Column<bool>(type: "bit", nullable: false),
+                    GuardianId = table.Column<string>(type: "nvarchar(450)", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -213,6 +248,36 @@ namespace AccessibilityWebsiteProject.Migrations
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Experts_Guardian_GuardianId",
+                        column: x => x.GuardianId,
+                        principalTable: "Guardian",
+                        principalColumn: "GuardianId");
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Studies",
+                columns: table => new
+                {
+                    StudyID = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    CompanyID = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Title = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Status = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Reward = table.Column<double>(type: "float", nullable: false),
+                    Language = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Beperking = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Date = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    ResultID = table.Column<int>(type: "int", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Studies", x => x.StudyID);
+                    table.ForeignKey(
+                        name: "FK_Studies_Results_ResultID",
+                        column: x => x.ResultID,
+                        principalTable: "Results",
+                        principalColumn: "ResultID");
                 });
 
             migrationBuilder.CreateIndex(
@@ -253,6 +318,16 @@ namespace AccessibilityWebsiteProject.Migrations
                 column: "NormalizedUserName",
                 unique: true,
                 filter: "[NormalizedUserName] IS NOT NULL");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Experts_GuardianId",
+                table: "Experts",
+                column: "GuardianId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Studies_ResultID",
+                table: "Studies",
+                column: "ResultID");
         }
 
         /// <inheritdoc />
@@ -283,10 +358,19 @@ namespace AccessibilityWebsiteProject.Migrations
                 name: "Experts");
 
             migrationBuilder.DropTable(
+                name: "Studies");
+
+            migrationBuilder.DropTable(
                 name: "AspNetRoles");
 
             migrationBuilder.DropTable(
                 name: "AspNetUsers");
+
+            migrationBuilder.DropTable(
+                name: "Guardian");
+
+            migrationBuilder.DropTable(
+                name: "Results");
         }
     }
 }

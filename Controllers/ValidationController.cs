@@ -89,4 +89,35 @@ public class ValidationController
             return null;
         }
     }
+
+    public static bool authAdmin(string? tokenJWT) {
+        var secret = Environment.GetEnvironmentVariable("SECRET_KEY") ?? "default_key";
+        var key = Encoding.ASCII.GetBytes(secret);
+
+        var handler = new JwtSecurityTokenHandler();
+        var validations = new TokenValidationParameters
+        {
+            ValidateIssuerSigningKey = true,
+            IssuerSigningKey = new SymmetricSecurityKey(key),
+            ValidateIssuer = false,
+            ValidateAudience = false
+        };
+
+        try {
+            // Validate the token
+            var claimsPrincipal = handler.ValidateToken(tokenJWT, validations, out var tokenSecure);
+           
+            var roleClaim = claimsPrincipal.Identities.First().Claims.First(o => o.Type == ClaimTypes.Role).Value;
+            
+            if (roleClaim == "Admin") {
+                return true;
+            } else {
+                return false;
+            }
+            
+        }
+        catch{
+            return false;
+        }
+    }
 }

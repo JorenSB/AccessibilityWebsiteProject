@@ -20,41 +20,13 @@ public class AdminPortaalController : ControllerBase
         _dbContext = dbContext;
     }
 
-    public bool authAdmin(string tokenJWT) {
-        var secret = Environment.GetEnvironmentVariable("SECRET_KEY") ?? "default_key";
-        var key = Encoding.ASCII.GetBytes(secret);
-
-        var handler = new JwtSecurityTokenHandler();
-        var validations = new TokenValidationParameters
-        {
-            ValidateIssuerSigningKey = true,
-            IssuerSigningKey = new SymmetricSecurityKey(key),
-            ValidateIssuer = false,
-            ValidateAudience = false
-        };
-
-        try {
-            // Validate the token
-            var claimsPrincipal = handler.ValidateToken(tokenJWT, validations, out var tokenSecure);
-           
-            var roleClaim = claimsPrincipal.Identities.First().Claims.First(o => o.Type == ClaimTypes.Role).Value;
-            
-            if (roleClaim == "Admin") {
-                return true;
-            } else {
-                return false;
-            }
-            
-        }
-        catch{
-            return false;
-        }
-    }
 
     [HttpGet("companies")]
     public IActionResult GetAllCompanies()
     {
-        if (!authAdmin(Request.Headers["Authorization"].FirstOrDefault())) {
+        var authAdmin = ValidationController.authAdmin(Request.Headers["Authorization"].FirstOrDefault());
+
+        if (!authAdmin) {
             return BadRequest("Invalid or Expired Token");
         }
 
@@ -65,7 +37,8 @@ public class AdminPortaalController : ControllerBase
     [HttpGet("companies/{id}")]
     public IActionResult GetCompany(string? id)
     {
-        if (!authAdmin(Request.Headers["Authorization"].FirstOrDefault())) {
+        var authAdmin = ValidationController.authAdmin(Request.Headers["Authorization"].FirstOrDefault());
+        if (!authAdmin) {
             return BadRequest("Invalid or Expired Token");
         }
 
@@ -84,7 +57,8 @@ public class AdminPortaalController : ControllerBase
     [HttpPut("companies/{id}")]
     public IActionResult PutCompany(string? id)
     {
-        if (!authAdmin(Request.Headers["Authorization"].FirstOrDefault())) {
+        var authAdmin = ValidationController.authAdmin(Request.Headers["Authorization"].FirstOrDefault());
+        if (!authAdmin) {
             return BadRequest("Invalid or Expired Token");
         }
 
@@ -106,7 +80,8 @@ public class AdminPortaalController : ControllerBase
     [HttpGet("experts")]
     public IActionResult GetAllExperts()
     {
-        if (!authAdmin(Request.Headers["Authorization"].FirstOrDefault())) {
+        var authAdmin = ValidationController.authAdmin(Request.Headers["Authorization"].FirstOrDefault());
+        if (!authAdmin) {
             return BadRequest("Invalid or Expired Token");
         }
 
@@ -117,7 +92,8 @@ public class AdminPortaalController : ControllerBase
     [HttpGet("experts/{id}")]
     public IActionResult GetExpert(string? id)
     {
-        if (!authAdmin(Request.Headers["Authorization"].FirstOrDefault())) {
+        var authAdmin = ValidationController.authAdmin(Request.Headers["Authorization"].FirstOrDefault());
+        if (!authAdmin) {
             return BadRequest("Invalid or Expired Token");
         }
 
