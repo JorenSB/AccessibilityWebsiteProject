@@ -89,6 +89,7 @@
 
             var expert = new Expert
             {
+                Active = false,
                 Email = model.Email,
                 EmailConfirmed = true,
                 UserName = model.Email,
@@ -129,6 +130,7 @@
 
             var company = new Company
             {
+                Active = false,
                 Email = model.Email,
                 UserName = model.Email,
                 CompanyName = model.CompanyName,

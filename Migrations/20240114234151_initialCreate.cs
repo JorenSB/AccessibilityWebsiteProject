@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace AccessibilityWebsiteProject.Migrations
 {
     /// <inheritdoc />
-    public partial class InitialCreate : Migration
+    public partial class initialCreate : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -30,6 +30,7 @@ namespace AccessibilityWebsiteProject.Migrations
                 columns: table => new
                 {
                     Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    Active = table.Column<bool>(type: "bit", nullable: false),
                     UserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     NormalizedUserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     Email = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
@@ -48,6 +49,46 @@ namespace AccessibilityWebsiteProject.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_AspNetUsers", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Disabilities",
+                columns: table => new
+                {
+                    DisabilityId = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    DisabilityName = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Disabilities", x => x.DisabilityId);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "DisabilityAids",
+                columns: table => new
+                {
+                    DisabilityAidId = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    DisabilityAidName = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_DisabilityAids", x => x.DisabilityAidId);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Guardians",
+                columns: table => new
+                {
+                    GuardianId = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    FirstName = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    LastName = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Email = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    PhoneNumber = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Guardians", x => x.GuardianId);
                 });
 
             migrationBuilder.CreateTable(
@@ -183,7 +224,12 @@ namespace AccessibilityWebsiteProject.Migrations
                 {
                     Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     FirstName = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    LastName = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    LastName = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    EmailPreference = table.Column<bool>(type: "bit", nullable: true),
+                    PhonePreference = table.Column<bool>(type: "bit", nullable: true),
+                    CommercialContact = table.Column<bool>(type: "bit", nullable: false),
+                    BirthDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    GuardianId = table.Column<string>(type: "nvarchar(450)", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -192,6 +238,59 @@ namespace AccessibilityWebsiteProject.Migrations
                         name: "FK_Experts_AspNetUsers_Id",
                         column: x => x.Id,
                         principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Experts_Guardians_GuardianId",
+                        column: x => x.GuardianId,
+                        principalTable: "Guardians",
+                        principalColumn: "GuardianId");
+                });
+
+            migrationBuilder.CreateTable(
+                name: "ExpertDisabilities",
+                columns: table => new
+                {
+                    DisabilitiesDisabilityId = table.Column<int>(type: "int", nullable: false),
+                    ExpertId = table.Column<string>(type: "nvarchar(450)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ExpertDisabilities", x => new { x.DisabilitiesDisabilityId, x.ExpertId });
+                    table.ForeignKey(
+                        name: "FK_ExpertDisabilities_Disabilities_DisabilitiesDisabilityId",
+                        column: x => x.DisabilitiesDisabilityId,
+                        principalTable: "Disabilities",
+                        principalColumn: "DisabilityId",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_ExpertDisabilities_Experts_ExpertId",
+                        column: x => x.ExpertId,
+                        principalTable: "Experts",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "ExpertDisabilityAids",
+                columns: table => new
+                {
+                    DisabilityAidsDisabilityAidId = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    ExpertId = table.Column<string>(type: "nvarchar(450)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ExpertDisabilityAids", x => new { x.DisabilityAidsDisabilityAidId, x.ExpertId });
+                    table.ForeignKey(
+                        name: "FK_ExpertDisabilityAids_DisabilityAids_DisabilityAidsDisabilityAidId",
+                        column: x => x.DisabilityAidsDisabilityAidId,
+                        principalTable: "DisabilityAids",
+                        principalColumn: "DisabilityAidId",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_ExpertDisabilityAids_Experts_ExpertId",
+                        column: x => x.ExpertId,
+                        principalTable: "Experts",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -234,6 +333,21 @@ namespace AccessibilityWebsiteProject.Migrations
                 column: "NormalizedUserName",
                 unique: true,
                 filter: "[NormalizedUserName] IS NOT NULL");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ExpertDisabilities_ExpertId",
+                table: "ExpertDisabilities",
+                column: "ExpertId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ExpertDisabilityAids_ExpertId",
+                table: "ExpertDisabilityAids",
+                column: "ExpertId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Experts_GuardianId",
+                table: "Experts",
+                column: "GuardianId");
         }
 
         /// <inheritdoc />
@@ -258,13 +372,28 @@ namespace AccessibilityWebsiteProject.Migrations
                 name: "Companies");
 
             migrationBuilder.DropTable(
-                name: "Experts");
+                name: "ExpertDisabilities");
+
+            migrationBuilder.DropTable(
+                name: "ExpertDisabilityAids");
 
             migrationBuilder.DropTable(
                 name: "AspNetRoles");
 
             migrationBuilder.DropTable(
+                name: "Disabilities");
+
+            migrationBuilder.DropTable(
+                name: "DisabilityAids");
+
+            migrationBuilder.DropTable(
+                name: "Experts");
+
+            migrationBuilder.DropTable(
                 name: "AspNetUsers");
+
+            migrationBuilder.DropTable(
+                name: "Guardians");
         }
     }
 }

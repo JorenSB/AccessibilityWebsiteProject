@@ -1,0 +1,23 @@
+/* BenaderInfo.css */
+
+.benaderInfo {
+    margin-top: 15vh;
+    display: flex;
+    justify-content: space-around; /* Ruimte tussen de kolommen */
+  }
+  
+  .left, .right {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .benaderInfo p {
+    margin-bottom: 25px; /* Ruimte onder elke paragraaf */
+  }
+  
+  .checkbox {
+    margin-bottom: 15px;
+    width: 35px;
+    height: 35px;
+  }
+  

@@ -6,6 +6,7 @@ import Login from './components/LoginPortaal/Login';
 import RegisterCompany from './components/RegistreerPortaal/RegisterCompany';
 import RegisterExpert from './components/RegistreerPortaal/RegisterExpert';
 import TestPagina from './components/TestPagina';
+import DeskundigeProfiel from './components/DeskundigePortaal/DeskundigeProfiel';
 
 function App() {
   return (
@@ -29,6 +30,7 @@ function App() {
           <Route path='/' element={<Login/>}/>
           <Route path='/registreerbedrijf' element={<RegisterCompany/>}/>
           <Route path='/registreerdeskundige' element={<RegisterExpert/>}/>
+          <Route path='/deskundigeprofiel/:userId' element={<DeskundigeProfiel/>}/>
         </Routes>
     
   );
