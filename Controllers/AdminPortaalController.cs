@@ -15,8 +15,10 @@ public class AdminPortaalController : ControllerBase
 {
     // variables
     private readonly ApplicationDbContext _dbContext;
+    private readonly UserManager<User> _userManager;
 
-    public AdminPortaalController(ApplicationDbContext dbContext) {
+    public AdminPortaalController(ApplicationDbContext dbContext, UserManager<User> userManager) {
+        _userManager = userManager;
         _dbContext = dbContext;
     }
 
@@ -27,7 +29,7 @@ public class AdminPortaalController : ControllerBase
         var authAdmin = ValidationController.authAdmin(Request.Headers["Authorization"].FirstOrDefault());
 
         if (!authAdmin) {
-            return BadRequest("Invalid or Expired Token");
+            return Unauthorized("Invalid or Expired Token");
         }
 
         var companies = _dbContext.Companies.ToList();
@@ -39,7 +41,7 @@ public class AdminPortaalController : ControllerBase
     {
         var authAdmin = ValidationController.authAdmin(Request.Headers["Authorization"].FirstOrDefault());
         if (!authAdmin) {
-            return BadRequest("Invalid or Expired Token");
+            return Unauthorized("Invalid or Expired Token");
         }
 
         if (id == null || !ModelState.IsValid)
@@ -55,11 +57,11 @@ public class AdminPortaalController : ControllerBase
         }
     }
     [HttpPut("companies/{id}")]
-    public IActionResult PutCompany(string? id)
+    public async Task<IActionResult> PutCompany(string? id, [FromBody] CompanyViewModel companyEditModel)
     {
         var authAdmin = ValidationController.authAdmin(Request.Headers["Authorization"].FirstOrDefault());
         if (!authAdmin) {
-            return BadRequest("Invalid or Expired Token");
+            return Unauthorized("Invalid or Expired Token");
         }
 
         if (id == null || !ModelState.IsValid)
@@ -67,13 +69,64 @@ public class AdminPortaalController : ControllerBase
             return BadRequest(ModelState);
         }
 
-        // TODO
-        // add een viewmodel met de edit info
-        // add de edit functionality van joren / hook het
+        // Retrieve the company based on the user ID
+        Company company = _dbContext.Companies.FirstOrDefault(c => c.Id == id);
 
+        if (company != null)
+        {
+            if (!string.IsNullOrEmpty(companyEditModel.Information))
+            {
+                company.Information = companyEditModel.Information;
+            }
 
-        return Ok();
-       
+            if (!string.IsNullOrEmpty(companyEditModel.CompanyName))
+            {
+                company.CompanyName = companyEditModel.CompanyName;
+            }
+
+            if (!string.IsNullOrEmpty(companyEditModel.Email) && ValidationController.IsValidEmail(companyEditModel.Email))
+            {
+                company.Email = companyEditModel.Email;
+            }
+
+            if (!string.IsNullOrEmpty(companyEditModel.NewPassword) && ValidationController.IsValidPassword(companyEditModel.NewPassword))
+            {
+                // Update the user's password directly
+                var newPasswordHash = _userManager.PasswordHasher.HashPassword(company, companyEditModel.NewPassword);
+                company.PasswordHash = newPasswordHash;
+            }
+
+            if (!string.IsNullOrEmpty(companyEditModel.Url))
+            {
+                company.Url = string.IsNullOrEmpty(companyEditModel.Url) ? null : companyEditModel.Url;
+            }
+
+            if (companyEditModel.KvkNumber.HasValue)
+            {
+                company.KvkNumber = companyEditModel.KvkNumber.Value;
+            }
+
+            if (!string.IsNullOrEmpty(companyEditModel.Address))
+            {
+                company.Address = companyEditModel.Address;
+            }
+
+            _dbContext.Companies.Update(company);
+
+            try
+            {
+                await _dbContext.SaveChangesAsync();
+                return Ok("Success");
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                return BadRequest("Error while updating the information");
+            }
+        }
+        else
+        {
+            return NotFound("Company not found or invalid CompanyViewModel");
+        }
     }
     
     // een get all experts

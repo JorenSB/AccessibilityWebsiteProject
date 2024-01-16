@@ -15,6 +15,7 @@ import AdminPortaalBedrijven from "./components/AdminPortaal/Bedrijven/Bedrijven
 import AdminPortaalEditBedrijf from "./components/AdminPortaal/Bedrijven/BedrijfEditView";
 import AdminPortaalExperts from "./components/AdminPortaal/Deskundige/ExpertsView";
 import AdminPortaalEditExpert from "./components/AdminPortaal/Deskundige/ExpertEditView.js";
+import CreateUser from "./components/AdminPortaal/component/Create/CreateUser.js";
 
 import Example from "./components/AdminPortaal/Example.js";
 
@@ -41,6 +42,8 @@ function App() {
 
             <Route path='/admin/deskundigen' element={<AdminPortaalExperts/>} />
             <Route path='/admin/deskundigen/:id' element={<AdminPortaalEditExpert/>} />
+
+            <Route path='/admin/aanmaken/:userType' element={<CreateUser/>} />
           </Route>
           
           <Route path='/admin/example' element={<Example/>} />
@@ -49,15 +52,7 @@ function App() {
           <Route path='/' element={<Login/>}/>
           <Route path='/registreerbedrijf' element={<RegisterCompany/>}/>
           <Route path='/registreerdeskundige' element={<RegisterExpert/>}/>
-<<<<<<< HEAD
-      </Routes>
-      
-       
-=======
-          
-        </Routes>
-    
->>>>>>> dev
+      </Routes>  
   );
 }
 

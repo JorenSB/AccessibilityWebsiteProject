@@ -6,11 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace AccessibilityWebsiteProject.Migrations
 {
     /// <inheritdoc />
-<<<<<<< HEAD:Migrations/20240115092759_Initial.cs
     public partial class Initial : Migration
-=======
-    public partial class initialCreate : Migration
->>>>>>> dev:Migrations/20240115092746_initialCreate.cs
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -56,9 +52,6 @@ namespace AccessibilityWebsiteProject.Migrations
                 });
 
             migrationBuilder.CreateTable(
-<<<<<<< HEAD:Migrations/20240115092759_Initial.cs
-                name: "Guardian",
-=======
                 name: "Disabilities",
                 columns: table => new
                 {
@@ -84,7 +77,6 @@ namespace AccessibilityWebsiteProject.Migrations
 
             migrationBuilder.CreateTable(
                 name: "Guardians",
->>>>>>> dev:Migrations/20240115092746_initialCreate.cs
                 columns: table => new
                 {
                     GuardianId = table.Column<string>(type: "nvarchar(450)", nullable: false),
@@ -95,11 +87,7 @@ namespace AccessibilityWebsiteProject.Migrations
                 },
                 constraints: table =>
                 {
-<<<<<<< HEAD:Migrations/20240115092759_Initial.cs
-                    table.PrimaryKey("PK_Guardian", x => x.GuardianId);
-=======
                     table.PrimaryKey("PK_Guardians", x => x.GuardianId);
->>>>>>> dev:Migrations/20240115092746_initialCreate.cs
                 });
 
             migrationBuilder.CreateTable(
@@ -270,12 +258,8 @@ namespace AccessibilityWebsiteProject.Migrations
                     Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     FirstName = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     LastName = table.Column<string>(type: "nvarchar(max)", nullable: false),
-<<<<<<< HEAD:Migrations/20240115092759_Initial.cs
-                    ContactPreferences = table.Column<string>(type: "nvarchar(max)", nullable: false),
-=======
                     EmailPreference = table.Column<bool>(type: "bit", nullable: true),
                     PhonePreference = table.Column<bool>(type: "bit", nullable: true),
->>>>>>> dev:Migrations/20240115092746_initialCreate.cs
                     CommercialContact = table.Column<bool>(type: "bit", nullable: false),
                     BirthDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     ProfileComplete = table.Column<bool>(type: "bit", nullable: false),
@@ -291,15 +275,9 @@ namespace AccessibilityWebsiteProject.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-<<<<<<< HEAD:Migrations/20240115092759_Initial.cs
-                        name: "FK_Experts_Guardian_GuardianId",
-                        column: x => x.GuardianId,
-                        principalTable: "Guardian",
-=======
                         name: "FK_Experts_Guardians_GuardianId",
                         column: x => x.GuardianId,
                         principalTable: "Guardians",
->>>>>>> dev:Migrations/20240115092746_initialCreate.cs
                         principalColumn: "GuardianId");
                 });
 
@@ -326,8 +304,6 @@ namespace AccessibilityWebsiteProject.Migrations
                         column: x => x.ResultID,
                         principalTable: "Results",
                         principalColumn: "ResultID");
-<<<<<<< HEAD:Migrations/20240115092759_Initial.cs
-=======
                 });
 
             migrationBuilder.CreateTable(
@@ -376,7 +352,6 @@ namespace AccessibilityWebsiteProject.Migrations
                         principalTable: "Experts",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
->>>>>>> dev:Migrations/20240115092746_initialCreate.cs
                 });
 
             migrationBuilder.CreateIndex(
@@ -419,8 +394,6 @@ namespace AccessibilityWebsiteProject.Migrations
                 filter: "[NormalizedUserName] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
-<<<<<<< HEAD:Migrations/20240115092759_Initial.cs
-=======
                 name: "IX_ExpertDisabilities_ExpertId",
                 table: "ExpertDisabilities",
                 column: "ExpertId");
@@ -431,7 +404,6 @@ namespace AccessibilityWebsiteProject.Migrations
                 column: "ExpertId");
 
             migrationBuilder.CreateIndex(
->>>>>>> dev:Migrations/20240115092746_initialCreate.cs
                 name: "IX_Experts_GuardianId",
                 table: "Experts",
                 column: "GuardianId");
@@ -476,9 +448,6 @@ namespace AccessibilityWebsiteProject.Migrations
                 name: "Studies");
 
             migrationBuilder.DropTable(
-                name: "Studies");
-
-            migrationBuilder.DropTable(
                 name: "AspNetRoles");
 
             migrationBuilder.DropTable(
@@ -497,14 +466,7 @@ namespace AccessibilityWebsiteProject.Migrations
                 name: "AspNetUsers");
 
             migrationBuilder.DropTable(
-<<<<<<< HEAD:Migrations/20240115092759_Initial.cs
-                name: "Guardian");
-
-            migrationBuilder.DropTable(
-                name: "Results");
-=======
                 name: "Guardians");
->>>>>>> dev:Migrations/20240115092746_initialCreate.cs
         }
     }
 }

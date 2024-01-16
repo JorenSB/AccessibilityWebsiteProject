@@ -31,8 +31,8 @@ const FetchExperts = () => {
    
     <div className='row listviewer'>
     {expertData.map(expert => (
-      <div key={expert.id} className="card col-lg-6 col-md-6 col-12 card-figma my-1">
-        <div className="card-body">
+      <div key={expert.id} className="card col-lg-6 col-md-6 col-12 card-figma md-3">
+        <div className="card-body w-100">
           <div className='row'>
             <div className='col-lg-3 col-12 d-flex align-items-center justify-content-center'>
                 <img alt='placeholder profile img mb-2' height={80} width={80} src={placeholder} className='img-rond'></img>

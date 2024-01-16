@@ -56,9 +56,9 @@ public class ApplicationDbContext : IdentityDbContext<User>
         var password = Environment.GetEnvironmentVariable("DB_PASSWORD") ?? "default_password";
 
         //var connectionString = $"Server=tcp:{DBhost},{DBport};Initial Catalog={DBname};Persist Security Info=False;User ID={username};Password={password};MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;";
-        //optionsBuilder.UseSqlServer(connectionString, providerOptions => providerOptions.CommandTimeout(60));
-
-        optionsBuilder.UseSqlServer(connectionString, providerOptions => providerOptions.CommandTimeout(60));
+        
+         //Local
+        optionsBuilder.UseSqlServer("Server=localhost\\SQLEXPRESS02;Database=Accessibility2;Trusted_Connection=True;TrustServerCertificate=True;Connection Timeout=30;");
     }
 
     

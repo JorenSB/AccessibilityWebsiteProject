@@ -11,13 +11,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace AccessibilityWebsiteProject.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-<<<<<<< HEAD:Migrations/20240115092759_Initial.Designer.cs
-    [Migration("20240115092759_Initial")]
+    [Migration("20240115104743_Initial")]
     partial class Initial
-=======
-    [Migration("20240115092746_initialCreate")]
-    partial class initialCreate
->>>>>>> dev:Migrations/20240115092746_initialCreate.Designer.cs
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -192,8 +187,6 @@ namespace AccessibilityWebsiteProject.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
-<<<<<<< HEAD:Migrations/20240115092759_Initial.Designer.cs
-=======
             modelBuilder.Entity("Model.Users.Expert.Disability", b =>
                 {
                     b.Property<string>("DisabilityId")
@@ -224,7 +217,6 @@ namespace AccessibilityWebsiteProject.Migrations
                     b.ToTable("DisabilityAids", (string)null);
                 });
 
->>>>>>> dev:Migrations/20240115092746_initialCreate.Designer.cs
             modelBuilder.Entity("Model.Users.Expert.Guardian", b =>
                 {
                     b.Property<string>("GuardianId")
@@ -249,11 +241,7 @@ namespace AccessibilityWebsiteProject.Migrations
 
                     b.HasKey("GuardianId");
 
-<<<<<<< HEAD:Migrations/20240115092759_Initial.Designer.cs
-                    b.ToTable("Guardian");
-=======
                     b.ToTable("Guardians", (string)null);
->>>>>>> dev:Migrations/20240115092746_initialCreate.Designer.cs
                 });
 
             modelBuilder.Entity("Result", b =>
@@ -438,14 +426,8 @@ namespace AccessibilityWebsiteProject.Migrations
                     b.Property<bool>("CommercialContact")
                         .HasColumnType("bit");
 
-<<<<<<< HEAD:Migrations/20240115092759_Initial.Designer.cs
-                    b.Property<string>("ContactPreferences")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-=======
                     b.Property<bool?>("EmailPreference")
                         .HasColumnType("bit");
->>>>>>> dev:Migrations/20240115092746_initialCreate.Designer.cs
 
                     b.Property<string>("FirstName")
                         .IsRequired()
@@ -458,12 +440,9 @@ namespace AccessibilityWebsiteProject.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-<<<<<<< HEAD:Migrations/20240115092759_Initial.Designer.cs
-=======
                     b.Property<bool?>("PhonePreference")
                         .HasColumnType("bit");
 
->>>>>>> dev:Migrations/20240115092746_initialCreate.Designer.cs
                     b.Property<bool>("ProfileComplete")
                         .HasColumnType("bit");
 
@@ -562,7 +541,6 @@ namespace AccessibilityWebsiteProject.Migrations
                     b.Navigation("Result");
                 });
 
-<<<<<<< HEAD:Migrations/20240115092759_Initial.Designer.cs
             modelBuilder.Entity("Admin", b =>
                 {
                     b.HasOne("User", null)
@@ -572,8 +550,6 @@ namespace AccessibilityWebsiteProject.Migrations
                         .IsRequired();
                 });
 
-=======
->>>>>>> dev:Migrations/20240115092746_initialCreate.Designer.cs
             modelBuilder.Entity("Company", b =>
                 {
                     b.HasOne("User", null)

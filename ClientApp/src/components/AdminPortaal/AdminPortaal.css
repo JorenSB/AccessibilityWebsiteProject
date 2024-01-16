@@ -2,7 +2,7 @@
 #adminNav {
     background-color: #21CEA1;
 }
-#navBrand:hover {
+#navBrand:hover, #navBrand > img {
     text-decoration: none !important;
 }
 
