@@ -1,9 +1,6 @@
-using System.Collections;
-using System.Security.Cryptography.Xml;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Model.Users.Expert;
-using Swashbuckle.AspNetCore.SwaggerGen;
 
 public class ApplicationDbContext : IdentityDbContext<User>
 {
