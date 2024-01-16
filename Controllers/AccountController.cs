@@ -42,7 +42,7 @@ public class AccountController : ControllerBase
                 issuer: HttpContext.Request.Scheme + "://" + HttpContext.Request.Host,
                 audience: HttpContext.Request.Scheme + "://" + HttpContext.Request.Host,
                 claims: claims,
-                expires: DateTime.Now.AddMinutes(5),
+                expires: DateTime.Now.AddMinutes(50),
                 signingCredentials: creds
             );
 
@@ -142,5 +142,30 @@ public class AccountController : ControllerBase
             return Ok();
         }
         return BadRequest(new { Message = "Er is iets misgegaan bij de registratie van het bedrijf" });
+    }
+
+    [HttpPost("registerAdmin")]
+    public async Task<IActionResult> RegisterAdmin([FromBody] RegisterAdminViewModel model)
+    {
+        var admin = new Admin
+        {
+            Email = model.Email,
+            EmailConfirmed = true,
+            UserName = model.Email,
+            FirstName = model.FirstName, 
+            LastName = model.LastName
+        };
+
+        var result = await _userManager.CreateAsync(admin, model.Password);
+
+        if (result.Succeeded)
+        {
+            // Geef de rol "Admin" aan de nieuwe gebruiker
+            await _userManager.AddToRoleAsync(admin, "Admin");
+
+            return Ok("Admin geregistreerd");
+        }
+
+        return BadRequest("Er is iets misgegaan bij de toevoegen van een Admin");
     }
 }

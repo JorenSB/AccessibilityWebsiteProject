@@ -1,0 +1,36 @@
+/* Nav Edits */
+#adminNav {
+    background-color: #21CEA1;
+}
+#navBrand:hover, #navBrand > img {
+    text-decoration: none !important;
+}
+
+/* Bedrijven Edit page */
+.fill { 
+    height: 90vh;
+    max-height: 90vh;
+}
+
+/* AdminPanel Listview Styles */
+.img-rond {
+    border-top-left-radius: 50% 50%; 
+    border-top-right-radius: 50% 50%; 
+    border-bottom-right-radius: 50% 50%; 
+    border-bottom-left-radius: 50% 50%;
+}
+
+.card-figma {
+    background-color: #FF7D00;
+    border-radius: 1rem;
+}
+
+.figma-bg-white-rounded {
+    background-color: white;
+    border-radius: 2rem;
+}
+
+.listviewer > [class*="col-"] {
+    background-clip: padding-box;
+    border: 10px solid transparent;
+}

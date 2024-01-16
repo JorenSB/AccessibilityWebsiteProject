@@ -11,8 +11,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace AccessibilityWebsiteProject.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20240115092746_initialCreate")]
-    partial class initialCreate
+    [Migration("20240115104743_Initial")]
+    partial class Initial
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -378,6 +378,21 @@ namespace AccessibilityWebsiteProject.Migrations
                     b.UseTptMappingStrategy();
                 });
 
+            modelBuilder.Entity("Admin", b =>
+                {
+                    b.HasBaseType("User");
+
+                    b.Property<string>("FirstName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("LastName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.ToTable("Admins", (string)null);
+                });
+
             modelBuilder.Entity("Company", b =>
                 {
                     b.HasBaseType("User");
@@ -524,6 +539,15 @@ namespace AccessibilityWebsiteProject.Migrations
                         .HasForeignKey("ResultID");
 
                     b.Navigation("Result");
+                });
+
+            modelBuilder.Entity("Admin", b =>
+                {
+                    b.HasOne("User", null)
+                        .WithOne()
+                        .HasForeignKey("Admin", "Id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("Company", b =>

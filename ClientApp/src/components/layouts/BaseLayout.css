@@ -2,7 +2,6 @@
 /* Important */
 #navBar {
   background-color: #21CEA1;
-  height: 4rem;
 }
 
 
@@ -11,10 +10,6 @@
   #nav-modal {
     background-color: #1CA883;
   }
-}
-
-.filler {
-  height: 4rem;
 }
 
 /* end */

@@ -10,6 +10,7 @@ public class ApplicationDbContext : IdentityDbContext<User>
     public DbSet<Guardian> Guardians { get; set; }
     public DbSet<Disability> Disabilities { get; set; }
     public DbSet<DisabilityAid> DisabilityAids { get; set; }
+    public DbSet<Admin> Admins { get; set; }
     public DbSet<Study> Studies { get; set; }
     public DbSet<Result> Results { get; set; }
 
@@ -43,28 +44,21 @@ public class ApplicationDbContext : IdentityDbContext<User>
         .UsingEntity(j => j.ToTable("ExpertDisabilityAids"));
         modelBuilder.Entity<Study>(entity => entity.ToTable("Studies"));
         modelBuilder.Entity<Result>(entity => entity.ToTable("Results"));
+        modelBuilder.Entity<Admin>(entity => entity.ToTable("Admins"));
         // Voeg eventueel andere configuraties toe
     }
 
     //prod connection
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
-        var IP = Environment.GetEnvironmentVariable("DB_IP") ?? "default_ip";
-        var port = Environment.GetEnvironmentVariable("DB_PORT") ?? "default_port";
-        var database = Environment.GetEnvironmentVariable("DB_NAME") ?? "default_datbase";
+
         var username = Environment.GetEnvironmentVariable("DB_USERNAME") ?? "default_username";
         var password = Environment.GetEnvironmentVariable("DB_PASSWORD") ?? "default_password";
 
-        //local db connection
-        var connectionString = "Server=LAPTOP-06LLPTJA\\SQLEXPRESS;Database=accesibilityProj;Trusted_Connection=True;TrustServerCertificate=True;Connection Timeout=30;";
-
-
-        //prod db connection
+        //var connectionString = $"Server=tcp:{DBhost},{DBport};Initial Catalog={DBname};Persist Security Info=False;User ID={username};Password={password};MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;";
         
-        //var connectionString = $"Server=tcp:accessibility1.database.windows.net,1433;Initial Catalog=Accessibility2;Persist Security Info=False;User ID={username};Password={password};MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;";
-
-        optionsBuilder.UseSqlServer(connectionString, providerOptions => providerOptions.CommandTimeout(60));
-        
+         //Local
+        optionsBuilder.UseSqlServer("Server=localhost\\SQLEXPRESS02;Database=Accessibility2;Trusted_Connection=True;TrustServerCertificate=True;Connection Timeout=30;");
     }
 
     
