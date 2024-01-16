@@ -1,22 +1,20 @@
 import React from 'react';
-import { BrowserRouter as Router, Routes, Route} from 'react-router-dom'
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
 import PrivateRoutes from './PrivateRoutes';
-
 import Login from './components/LoginPortaal/Login';
 import RegisterCompany from './components/RegistreerPortaal/RegisterCompany';
 import RegisterExpert from './components/RegistreerPortaal/RegisterExpert';
-import TestPagina from './components/TestPagina';
+import Deskundige from './components/DeskundigePortaal/Deskundige';
 import DeskundigeProfiel from './components/DeskundigePortaal/DeskundigeProfiel';
-
-import Deskundige from "./components/DeskundigePortaal/Deskundige.js"
-
+import Company from './components/CompanyPortal/Company';
+import CompanyProfile from './components/CompanyPortal/CompanyProfile';
+import TestPagina from './components/TestPagina';
 import AdminPortaalProfiel from "./components/AdminPortaal/Profiel/AdminProfielView.js";
 import AdminPortaalBedrijven from "./components/AdminPortaal/Bedrijven/BedrijvenView.js";
 import AdminPortaalEditBedrijf from "./components/AdminPortaal/Bedrijven/BedrijfEditView";
 import AdminPortaalExperts from "./components/AdminPortaal/Deskundige/ExpertsView";
 import AdminPortaalEditExpert from "./components/AdminPortaal/Deskundige/ExpertEditView.js";
 import CreateUser from "./components/AdminPortaal/component/Create/CreateUser.js";
-
 import Example from "./components/AdminPortaal/Example.js";
 
 
@@ -27,11 +25,12 @@ function App() {
           <Route element={<PrivateRoutes role={'Expert'} />}>
               <Route path='/deskundige' element={<Deskundige/>} />
               <Route path='/deskundigeprofiel/:jwt' element={<DeskundigeProfiel/>}/>
-          </Route>
-          {/* zet hier onder alle routes van de bedrijven */}
-          <Route element={<PrivateRoutes role={'Company'} />}>
-          <Route path='/test' element={<TestPagina/>} />
-          </Route>
+           </Route>
+      {/* zet hier onder alle routes van de bedrijven */}
+      <Route element={<PrivateRoutes role={'Company'} />}>
+        <Route path='/company' element={<Company />} />
+        <Route path='/companyprofile/:jwt' element={<CompanyProfile />} />
+      </Route>
 
           {/* zet hieronder alle routes van de admins */}
           <Route element={<PrivateRoutes role={'Admin'} />}>

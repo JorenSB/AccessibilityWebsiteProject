@@ -1,0 +1,28 @@
+.profileContainer{
+    display: flex;
+    flex-direction: row;
+    width: 88vw;
+    height: 90vh;
+}
+
+/* .col1, .col2, .col3 {
+    display: flex;
+    flex-direction: column;
+    width: 30%;
+    padding-left: 10px;
+    padding-right: 10px;
+} */
+
+/* @media screen and (max-width: 768px) {
+    .profileContainer {
+        flex-direction: column;
+        width: 100%;
+    }
+
+    .col1, .col2, .col3 {
+        width: 100%;
+        padding: 0;
+    }
+} */
+
+

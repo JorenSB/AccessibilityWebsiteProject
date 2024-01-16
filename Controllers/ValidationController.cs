@@ -15,7 +15,7 @@ public class ValidationController
         }
         // The regex pattern to match the email against
         string emailPattern = @"^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$";
-        return Regex.IsMatch(email, emailPattern);
+        return Regex.IsMatch(email!, emailPattern);
     }
 
     public static bool IsValidPassword(string? password)
@@ -26,7 +26,7 @@ public class ValidationController
             return false;
         }
         // Checks if the password is at least 8 characters long
-        if (password.Length < 8)
+        if (password!.Length < 8)
         {
             return false;
         }
