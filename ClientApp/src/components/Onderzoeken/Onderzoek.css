@@ -1,38 +1,44 @@
 .onderzoek {
     margin: 10px;
-    background-color: #FF7D00;
     padding: 10px;
     display: flex;
-    flex-direction: column; 
+    flex-direction: column;
     align-items: left;
     width: 40rem;
-    height: 15rem;
+    background-color: #A9A9A9;
 }
 
-.onderzoek h1 {
+.onderzoek h1, .onderzoek p {
     background-color: #FFF;
     width: 12rem;
     border-radius: 4%;
-    font-size: 1.5rem;
+    font-size: 1rem;
 }
 
-.upperhalf{
-    display: flex;
-    flex-direction: row;
-    height: 80%;
+.onderzoek.active, .onderzoek.actief {
+    background-color: #FF7D00;
 }
-.infoItem{
-    width: 75%;
+
+/* 
+.onderzoek.inactive {
+    background-color: #A9A9A9;
+}
+
+.onderzoek.completed {
+    background-color: #A9A9A9;
+} */
+
+.upperhalf, .lowerhalf {
+    display: flex;
+    justify-content: space-between;
+    padding-left: 10px;
+    padding-right: 10px;
+}
+
+.infoItem {
+    width: 100%;
     display: flex;
     flex-direction: column;
     align-items: start;
     padding: 10px;
-}
-
-.lowerhalf{
-    height: 20%;
-    display: flex;
-    justify-content: space-between; 
-    padding-left: 10px;
-    padding-right: 10px ;
 }
