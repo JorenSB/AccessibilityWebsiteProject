@@ -36,7 +36,7 @@ export default class CompanyNavBar extends React.Component {
               <div className="collapse navbar-collapse flex-grow-1 text-right" id="myNavbar7">
                   <ul className="navbar-nav ms-auto flex-nowrap">
                       <li className="nav-item">
-                          <Link className='nav-link text-dark' to='/'>Mijn Onderzoeken</Link>
+                          <Link className='nav-link text-dark' to='/company'>Mijn Onderzoeken</Link>
                       </li>
                       <li className="nav-item">
                           <Link className='nav-link text-dark' to='/'>Onderzoek Starten</Link>
