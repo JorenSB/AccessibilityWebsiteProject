@@ -20,38 +20,38 @@ import Example from "./components/AdminPortaal/Example.js";
 
 function App() {
   return (
-      <Routes>
-          {/* zet hier onder alle routes van de experts */}
-          <Route element={<PrivateRoutes role={'Expert'} />}>
-              <Route path='/deskundige' element={<Deskundige/>} />
-              <Route path='/deskundigeprofiel/:jwt' element={<DeskundigeProfiel/>}/>
-           </Route>
+    <Routes>
+      {/* zet hier onder alle routes van de experts */}
+      <Route element={<PrivateRoutes role={'Expert'} />}>
+        <Route path='/deskundige' element={<Deskundige />} />
+        <Route path='/deskundigeprofiel/:jwt' element={<DeskundigeProfiel />} />
+      </Route>
       {/* zet hier onder alle routes van de bedrijven */}
       <Route element={<PrivateRoutes role={'Company'} />}>
         <Route path='/company' element={<Company />} />
-        <Route path='/companyprofile/:jwt' element={<CompanyProfile />} />
+        <Route path='/company/profile' element={<CompanyProfile />} />
       </Route>
 
-          {/* zet hieronder alle routes van de admins */}
-          <Route element={<PrivateRoutes role={'Admin'} />}>
-            <Route path='/admin/profiel' element={<AdminPortaalProfiel/>} />
+      {/* zet hieronder alle routes van de admins */}
+      <Route element={<PrivateRoutes role={'Admin'} />}>
+        <Route path='/admin/profiel' element={<AdminPortaalProfiel />} />
 
-            <Route path='/admin/bedrijven' element={<AdminPortaalBedrijven/>} />
-            <Route path='/admin/bedrijven/:id' element={<AdminPortaalEditBedrijf/>} />
+        <Route path='/admin/bedrijven' element={<AdminPortaalBedrijven />} />
+        <Route path='/admin/bedrijven/:id' element={<AdminPortaalEditBedrijf />} />
 
-            <Route path='/admin/deskundigen' element={<AdminPortaalExperts/>} />
-            <Route path='/admin/deskundigen/:id' element={<AdminPortaalEditExpert/>} />
+        <Route path='/admin/deskundigen' element={<AdminPortaalExperts />} />
+        <Route path='/admin/deskundigen/:id' element={<AdminPortaalEditExpert />} />
 
-            <Route path='/admin/aanmaken/:userType' element={<CreateUser/>} />
-          </Route>
-          
-          <Route path='/admin/example' element={<Example/>} />
+        <Route path='/admin/aanmaken/:userType' element={<CreateUser />} />
+      </Route>
 
-          {/* dit zijn publieke routes */}
-          <Route path='/' element={<Login/>}/>
-          <Route path='/registreerbedrijf' element={<RegisterCompany/>}/>
-          <Route path='/registreerdeskundige' element={<RegisterExpert/>}/>
-      </Routes>  
+      <Route path='/admin/example' element={<Example />} />
+
+      {/* dit zijn publieke routes */}
+      <Route path='/' element={<Login />} />
+      <Route path='/registreerbedrijf' element={<RegisterCompany />} />
+      <Route path='/registreerdeskundige' element={<RegisterExpert />} />
+    </Routes>
   );
 }
 
