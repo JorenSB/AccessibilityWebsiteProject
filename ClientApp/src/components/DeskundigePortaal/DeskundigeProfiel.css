@@ -24,5 +24,22 @@
         padding: 0;
     }
 }
+.safeButton{
+    background-color: #FF7D00;
+    margin-top: 10px;
+    width: 18vw;
+    height: 5vh;
+    margin-bottom: 10px; 
+    border-radius: 10px;
+    font-weight: bold;
+    font-size: 25px;
+    border: none;
+    margin-left: 14%;
+  }
+  
+  .safeButton:hover{
+    background-color: #ff9d42;
+  }
+  
 
 

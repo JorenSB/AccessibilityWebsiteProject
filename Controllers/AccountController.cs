@@ -42,7 +42,7 @@ public class AccountController : ControllerBase
                 issuer: HttpContext.Request.Scheme + "://" + HttpContext.Request.Host,
                 audience: HttpContext.Request.Scheme + "://" + HttpContext.Request.Host,
                 claims: claims,
-                expires: DateTime.Now.AddMinutes(5),
+                expires: DateTime.Now.AddMinutes(20),
                 signingCredentials: creds
             );
 
