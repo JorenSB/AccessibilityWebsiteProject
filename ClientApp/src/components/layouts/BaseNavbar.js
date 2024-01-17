@@ -1,81 +1,57 @@
 import React from 'react';
-import {
-  Collapse,
-  Navbar,
-  NavbarToggler,
-  NavbarBrand,
-  Nav,
-  NavItem,
-  NavLink,
-  UncontrolledDropdown,
-  DropdownToggle,
-  DropdownMenu,
-  DropdownItem,
-  NavbarText,
-  Button,
-} from 'reactstrap';
-import PropTypes from 'prop-types';
-import LogOutButton from '../layouts/LogoutButton';
+import { Link } from 'react-router-dom';
+import brandLogo from '../media/logo.png';
+import LogoutButton from '../layouts/LogoutButton';
 
-export default class BaseNavbar extends React.Component {
+import './BaseLayout.css';
+
+export default class BaseNavBar extends React.Component {
   constructor(props) {
     super(props);
+
     this.toggle = this.toggle.bind(this);
     this.state = {
       isOpen: false
     };
-    
   }
-
   toggle() {
     this.setState({
       isOpen: !this.state.isOpen
     });
   }
-
   render() {
-
     return (
-      <header>
-        <Navbar id='navBar' light expand="xxl" container="fluid">
-          <NavbarBrand href="/">Gekke test Nav</NavbarBrand>
-          <NavbarToggler onClick={this.toggle} />
-          <Collapse id='nav-modal' className='text-center' isOpen={this.state.isOpen} navbar>
-            <Nav className="me-auto" navbar>
-              <NavItem>
-                <NavLink href="/components/">Components</NavLink>
-              </NavItem>
-              <NavItem>
-                <NavLink href="https://github.com/reactstrap/reactstrap">
-                  GitHub
-                </NavLink>
-              </NavItem>
-              <UncontrolledDropdown nav inNavbar>
-                <DropdownToggle nav caret>
-                  Options
-                </DropdownToggle>
-                <DropdownMenu end>
-                  <DropdownItem>Option 1</DropdownItem>
-                  <DropdownItem>Option 2</DropdownItem>
-                  <DropdownItem divider />
-                  <DropdownItem>Reset</DropdownItem>
-                </DropdownMenu>
-              </UncontrolledDropdown>
-            </Nav>
-            <NavbarText tag={LogOutButton}>Uitloggen</NavbarText>
-          </Collapse>
-        </Navbar>
-      </header>
+    <header>
+      <nav id='navBar' className="navbar navbar-expand-lg ">
+          <div id='AdminNav' className="container-fluid">
+              <div className="d-flex flex-grow-1">
+                  <span className="w-100 d-lg-none d-block"/>
+                  <a id='navBrand' className="navbar-brand text-decoration-none fw-bold text-dark" href="/"><img alt='Logo van Accessibility in NavigatieBalk' src={brandLogo} className='img im-fluid' style={{width : "10rem"}}></img>  Admin Portaal </a>
+                  <div className="w-100 text-right">
+                      <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#myNavbar7">
+                          <span className="navbar-toggler-icon"></span>
+                      </button>
+                  </div>
+              </div>  	
+              <div className="collapse navbar-collapse flex-grow-1 text-right" id="myNavbar7">
+                  <ul className="navbar-nav ms-auto flex-nowrap">
+                      <li className="nav-item">
+                          <Link className='nav-link text-dark' to='/admin/bedrijven'>Bedrijven</Link>
+                      </li>
+                      <li className="nav-item">
+                          <Link className='nav-link text-dark' to='/admin/deskundigen'>ErvaringsDeskundigen</Link>
+                      </li>
+                      <li className="nav-item">
+                          <Link className='nav-link text-dark' to='/admin/profiel'>Mijn Profiel</Link>
+                      </li>
+                      <li className="nav-item">
+                          <LogoutButton />
+                      </li>
+                  </ul>
+              </div>
+          </div>
+      </nav>
+    </header>
     );
   }
 }
-
-BaseNavbar.propTypes = {
-  light: PropTypes.bool,
-  dark: PropTypes.bool,
-  fixed: PropTypes.string,
-  color: PropTypes.string,
-  role: PropTypes.string,
-  expand: PropTypes.oneOfType([PropTypes.bool, PropTypes.string]),
-  tag: PropTypes.oneOfType([PropTypes.func, PropTypes.string]),
-};

@@ -2,7 +2,7 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 
 
-const LogOutButton = () => {
+const LogoutButton = () => {
 
   const navigate = useNavigate();
     async function logout(){
@@ -19,7 +19,6 @@ const LogOutButton = () => {
           console.log('Uitloggen uitgevoerd');
           localStorage.removeItem('jwtToken');
           
-          // Gebruik de navigate instantie om te redirecten
           navigate("/");
         } else {
           console.error('Fout tijdens uitloggen:', response.statusText);
@@ -41,4 +40,4 @@ const LogOutButton = () => {
   );
 };
 
-export default LogOutButton;
+export default LogoutButton;

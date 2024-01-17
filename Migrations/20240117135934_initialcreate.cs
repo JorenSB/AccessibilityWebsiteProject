@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace AccessibilityWebsiteProject.Migrations
 {
     /// <inheritdoc />
-    public partial class initialCreate : Migration
+    public partial class initialcreate : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -73,21 +73,6 @@ namespace AccessibilityWebsiteProject.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_DisabilityAids", x => x.DisabilityAidId);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Guardians",
-                columns: table => new
-                {
-                    GuardianId = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    FirstName = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    LastName = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Email = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    PhoneNumber = table.Column<string>(type: "nvarchar(max)", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Guardians", x => x.GuardianId);
                 });
 
             migrationBuilder.CreateTable(
@@ -239,12 +224,15 @@ namespace AccessibilityWebsiteProject.Migrations
                     Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     FirstName = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     LastName = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    EmailPreference = table.Column<bool>(type: "bit", nullable: true),
-                    PhonePreference = table.Column<bool>(type: "bit", nullable: true),
+                    EmailPreference = table.Column<bool>(type: "bit", nullable: false),
+                    PhonePreference = table.Column<bool>(type: "bit", nullable: false),
                     CommercialContact = table.Column<bool>(type: "bit", nullable: false),
                     BirthDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     ProfileComplete = table.Column<bool>(type: "bit", nullable: false),
-                    GuardianId = table.Column<string>(type: "nvarchar(450)", nullable: true)
+                    GuardianFirstName = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    GuardianLastName = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    GuardianEmail = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    GuardianPhoneNumber = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -255,11 +243,6 @@ namespace AccessibilityWebsiteProject.Migrations
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_Experts_Guardians_GuardianId",
-                        column: x => x.GuardianId,
-                        principalTable: "Guardians",
-                        principalColumn: "GuardianId");
                 });
 
             migrationBuilder.CreateTable(
@@ -385,11 +368,6 @@ namespace AccessibilityWebsiteProject.Migrations
                 column: "ExpertId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Experts_GuardianId",
-                table: "Experts",
-                column: "GuardianId");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_Studies_ResultID",
                 table: "Studies",
                 column: "ResultID");
@@ -442,9 +420,6 @@ namespace AccessibilityWebsiteProject.Migrations
 
             migrationBuilder.DropTable(
                 name: "AspNetUsers");
-
-            migrationBuilder.DropTable(
-                name: "Guardians");
         }
     }
 }

@@ -1,25 +1,71 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import './BenaderInfo.css';
 
+function BenaderInfo(props) {
+  const [benaderIsChecked, setBenaderIsChecked] = useState(false);
+  const [emailpreferenceIsChecked, setEmailPrefereneceIsChecked] = useState(false);
+  const [phonePreferenceIsChecked, setPhonePreferenceIsChecked] = useState(false);
 
-function BenaderInfo (){
+  useEffect(() => {
+    setBenaderIsChecked(props.commercial);
+    if (props.commercial) {
+      setEmailPrefereneceIsChecked(props.emailPreference);
+      setPhonePreferenceIsChecked(props.phonePreference);
+    }
+  }, [props.commercial, props.emailPreference, props.phonePreference]);
+
+  useEffect(() => {
+    handleDataUpdate({
+      benaderIsChecked: benaderIsChecked,
+      emailpreferenceIsChecked: emailpreferenceIsChecked,
+      phonePreferenceIsChecked: phonePreferenceIsChecked,
+    });
+  }, [benaderIsChecked, emailpreferenceIsChecked, phonePreferenceIsChecked]);
+
+  const handleDataUpdate = (updatedData) => {
+    if (props.onUpdateData) {
+      props.onUpdateData(updatedData);
+    }
+  };
 
   return (
     <div className='benaderInfo'>
-        <div className='left'>
-            <p>wilt u benaderd worden door commerciële partijen?</p>
-            <p>u wilt telefonisch benaderd worden</p>
-            <p>u wilt via de email benaderd worden</p>
-        </div>
+      <div className='left'>
+        <p>Wilt u benaderd worden door commerciële partijen?</p>
+        {benaderIsChecked && (
+          <>
+            <p>U wilt telefonisch benaderd worden</p>
+            <p>U wilt via de email benaderd worden</p>
+          </>
+        )}
+      </div>
 
-        <div className='right'>
-            <input className='checkbox' type="checkbox"></input>
-            <input className='checkbox' type="checkbox"></input>
-            <input className='checkbox' type="checkbox"></input>
-        </div>
+      <div className='right'>
+        <input
+          className='checkbox'
+          onChange={() => setBenaderIsChecked((prev) => !prev)}
+          checked={benaderIsChecked}
+          type="checkbox"
+        />
+        {benaderIsChecked && (
+          <>
+            <input
+              className='checkbox'
+              onChange={() => setPhonePreferenceIsChecked((prev) => !prev)}
+              checked={phonePreferenceIsChecked}
+              type="checkbox"
+            />
+            <input
+              className='checkbox'
+              onChange={() => setEmailPrefereneceIsChecked((prev) => !prev)}
+              checked={emailpreferenceIsChecked}
+              type="checkbox"
+            />
+          </>
+        )}
+      </div>
     </div>
-
   );
-};
+}
 
 export default BenaderInfo;

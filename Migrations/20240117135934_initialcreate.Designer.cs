@@ -11,8 +11,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace AccessibilityWebsiteProject.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20240115092746_initialCreate")]
-    partial class initialCreate
+    [Migration("20240117135934_initialcreate")]
+    partial class initialcreate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -23,6 +23,20 @@ namespace AccessibilityWebsiteProject.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
+
+            modelBuilder.Entity("DisabilityAid", b =>
+                {
+                    b.Property<string>("DisabilityAidId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("DisabilityAidName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("DisabilityAidId");
+
+                    b.ToTable("DisabilityAids", (string)null);
+                });
 
             modelBuilder.Entity("DisabilityAidExpert", b =>
                 {
@@ -202,48 +216,6 @@ namespace AccessibilityWebsiteProject.Migrations
                     b.ToTable("Disabilities", (string)null);
                 });
 
-            modelBuilder.Entity("Model.Users.Expert.DisabilityAid", b =>
-                {
-                    b.Property<string>("DisabilityAidId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<string>("DisabilityAidName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("DisabilityAidId");
-
-                    b.ToTable("DisabilityAids", (string)null);
-                });
-
-            modelBuilder.Entity("Model.Users.Expert.Guardian", b =>
-                {
-                    b.Property<string>("GuardianId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<string>("Email")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("FirstName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("LastName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("PhoneNumber")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("GuardianId");
-
-                    b.ToTable("Guardians", (string)null);
-                });
-
             modelBuilder.Entity("Result", b =>
                 {
                     b.Property<int>("ResultID")
@@ -411,34 +383,41 @@ namespace AccessibilityWebsiteProject.Migrations
                     b.Property<bool>("CommercialContact")
                         .HasColumnType("bit");
 
-                    b.Property<bool?>("EmailPreference")
+                    b.Property<bool>("EmailPreference")
                         .HasColumnType("bit");
 
                     b.Property<string>("FirstName")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("GuardianId")
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<string>("GuardianEmail")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("GuardianFirstName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("GuardianLastName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("GuardianPhoneNumber")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("LastName")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<bool?>("PhonePreference")
+                    b.Property<bool>("PhonePreference")
                         .HasColumnType("bit");
 
                     b.Property<bool>("ProfileComplete")
                         .HasColumnType("bit");
-
-                    b.HasIndex("GuardianId");
 
                     b.ToTable("Experts", (string)null);
                 });
 
             modelBuilder.Entity("DisabilityAidExpert", b =>
                 {
-                    b.HasOne("Model.Users.Expert.DisabilityAid", null)
+                    b.HasOne("DisabilityAid", null)
                         .WithMany()
                         .HasForeignKey("DisabilityAidsDisabilityAidId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -537,17 +516,11 @@ namespace AccessibilityWebsiteProject.Migrations
 
             modelBuilder.Entity("Expert", b =>
                 {
-                    b.HasOne("Model.Users.Expert.Guardian", "guardian")
-                        .WithMany()
-                        .HasForeignKey("GuardianId");
-
                     b.HasOne("User", null)
                         .WithOne()
                         .HasForeignKey("Expert", "Id")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.Navigation("guardian");
                 });
 #pragma warning restore 612, 618
         }

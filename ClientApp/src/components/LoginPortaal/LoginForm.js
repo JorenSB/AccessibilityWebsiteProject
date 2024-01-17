@@ -35,7 +35,7 @@ function LoginForm() {
                     const role = decodedToken['http://schemas.microsoft.com/ws/2008/06/identity/claims/role'] || '';
     
                     if (role === "Expert") {
-                        navigate("/deskundige");
+                        navigate("/deskundige/profiel");
                     } else if (role === "Company") {
                         navigate("/test");
                     } else {

@@ -25,3 +25,18 @@
     font-weight: bold;
   }
   
+  .cardInput input{
+    margin-bottom:10px ;
+    border: 2px solid #FFF;
+    background-color: #1CA883;
+    border-radius: 8px;
+    color: black;
+    width: 70%;
+    height: 5.5vh;
+  }
+  .card input::placeholder {
+    color: black;
+    font-weight: bold;
+    font-size: 20px;
+    text-align: center;
+  }
