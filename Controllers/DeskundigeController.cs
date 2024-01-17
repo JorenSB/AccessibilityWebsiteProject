@@ -6,14 +6,11 @@ using Model.Users.Expert;
 [Route("api/deskundige")]
 public class DeskundigeController : ControllerBase
 {
-
      private readonly ApplicationDbContext _context;
-
     public DeskundigeController(ApplicationDbContext context)
     {
         _context = context;
     }
-
 
    [HttpGet("getuser")]
     public IActionResult GetUserData()
@@ -50,7 +47,7 @@ public class DeskundigeController : ControllerBase
                 BirthDate = expert.BirthDate,
                 Disabilities = expert.Disabilities.Select(d => d.DisabilityName).ToList(),
                 DisabilityAids = expert.DisabilityAids.Select(a => a.DisabilityAidName).ToList(),
-                Commercial = expert.CommercialContact,
+                CommercialContact = expert.CommercialContact,
                 PhonePreference = expert.PhonePreference,
                 EmailPreference = expert.EmailPreference
             };
@@ -90,7 +87,7 @@ public class DeskundigeController : ControllerBase
             // Check if the expert was found
             if (expert == null)
             {
-                return NotFound($"Expert with ID {userId} not found." );
+                return NotFound($"Expert with ID {userId} not found." );    
             }
 
             // Use reflection to iterate through the properties of UpdatedExpertProfileModel
@@ -117,6 +114,7 @@ public class DeskundigeController : ControllerBase
                         // For non-DateTime properties or properties to be excluded, update normally
                         expertProperty?.SetValue(expert, value);
                     }
+                    
                 }
             }
 

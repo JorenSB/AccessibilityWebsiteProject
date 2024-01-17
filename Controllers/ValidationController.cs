@@ -42,6 +42,7 @@ public class ValidationController
         }
         return true;
     }
+    
     public static string? getIdentifierFromJWT(string JWTToken)
     {
         if (JWTToken.IsNullOrEmpty()) {

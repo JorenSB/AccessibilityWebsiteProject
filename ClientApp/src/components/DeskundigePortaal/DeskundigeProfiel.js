@@ -45,12 +45,12 @@
           body: JSON.stringify({
             Email: updatedData.email,
             FirstName: updatedData.firstName,
-            Password: updatedData.password, 
-            PhoneNumber: updatedData.phoneNumber, 
+            Password: updatedData.password,
+            PhoneNumber: updatedData.phoneNumber,
             BirthDate: updatedData.birthDate,
             Disabilities: updatedData.disabilities,
             disabilityAids: updatedData.disabilityAids,
-            Commercial: updatedData.benaderIsChecked,
+            CommercialContact: updatedData.benaderIsChecked,
             PhonePreference: updatedData.phonePreferenceIsChecked,
             EmailPreference: updatedData.emailpreferenceIsChecked
 
@@ -64,6 +64,7 @@
         } else {
           console.error('Fout bijwerken gebruikersgegevens:', response.statusText);
           console.log(response.message);
+          console.log(updatedData);
           // Voer hier eventueel extra logica uit bij een fout bij het bijwerken
         }
       } catch (error) {

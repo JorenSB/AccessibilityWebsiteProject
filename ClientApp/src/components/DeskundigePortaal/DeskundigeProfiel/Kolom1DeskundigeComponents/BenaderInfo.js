@@ -43,7 +43,7 @@ function BenaderInfo(props) {
       <div className='right'>
         <input
           className='checkbox'
-          onChange={() => setBenaderIsChecked((prev) => !prev)}
+          onChange={() => setBenaderIsChecked(!benaderIsChecked)}
           checked={benaderIsChecked}
           type="checkbox"
         />
@@ -51,13 +51,13 @@ function BenaderInfo(props) {
           <>
             <input
               className='checkbox'
-              onChange={() => setPhonePreferenceIsChecked((prev) => !prev)}
+              onChange={() => setPhonePreferenceIsChecked(!phonePreferenceIsChecked)}
               checked={phonePreferenceIsChecked}
               type="checkbox"
             />
             <input
               className='checkbox'
-              onChange={() => setEmailPrefereneceIsChecked((prev) => !prev)}
+              onChange={() => setEmailPrefereneceIsChecked(!emailpreferenceIsChecked)}
               checked={emailpreferenceIsChecked}
               type="checkbox"
             />

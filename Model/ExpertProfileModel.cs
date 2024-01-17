@@ -7,7 +7,7 @@ public class ExpertProfileModel
     public string LastName { get; set; }
     public string PhoneNumber { get; set; }
     public DateTime BirthDate { get; set; }
-    public bool Commercial {get;set;}
+    public bool CommercialContact {get;set;}
     public bool PhonePreference {get;set;}
     public bool EmailPreference {get;set;}
 

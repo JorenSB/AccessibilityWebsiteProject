@@ -22,7 +22,6 @@ function VoogdGegevens(props) {
         setVolwassen(true);
       }
       
-    
   }, []);
 
   useEffect(() => {
