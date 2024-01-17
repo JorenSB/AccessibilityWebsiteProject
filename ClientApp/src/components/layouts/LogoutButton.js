@@ -2,7 +2,7 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 
 
-const LogOutButton = () => {
+const LogoutButton = () => {
 
   const navigate = useNavigate();
     async function logout(){
@@ -41,4 +41,4 @@ const LogOutButton = () => {
   );
 };
 
-export default LogOutButton;
+export default LogoutButton;
