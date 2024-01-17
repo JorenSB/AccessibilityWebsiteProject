@@ -29,9 +29,9 @@ builder.Services.AddAuthorization(options =>
 {
     options.AddPolicy("RequireAdminRole", policy =>
         policy.RequireRole("Admin"));
-    options.AddPolicy("RequireExpertRole", policy => 
+    options.AddPolicy("RequireExpertRole", policy =>
         policy.RequireRole("Expert"));
-    options.AddPolicy("RequireCompanyRole", policy => 
+    options.AddPolicy("RequireCompanyRole", policy =>
         policy.RequireRole("Company"));
 });
 
@@ -57,7 +57,7 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             {
                 var claims = context.Principal.Claims.ToList();
                 var roles = claims.Where(c => c.Type == ClaimTypes.Role).Select(c => c.Value).ToList();
-                
+
                 var identity = context.Principal.Identity as ClaimsIdentity;
                 if (identity != null)
                 {
@@ -74,15 +74,6 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             }
         };
     });
-
-builder.Services.AddAuthorization(options =>
-{
-    options.AddPolicy("AdminPolicy", policy =>
-    {
-        policy.RequireAuthenticatedUser();
-        policy.RequireRole("Admin"); // Adjust the role as needed
-    });
-});
 
 builder.Services.AddSwaggerGen();
 
