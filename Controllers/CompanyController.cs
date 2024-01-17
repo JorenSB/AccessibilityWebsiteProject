@@ -2,7 +2,6 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Identity;
 
-[Authorize]
 [Route("api/[controller]")]
 [ApiController]
 public class CompanyController : ControllerBase
@@ -18,12 +17,12 @@ public class CompanyController : ControllerBase
     // <summary>Gets the data from the Company Based on the JWTToken.</summary>
     // <param name="JWTToken">The token obtained on successful login.</param>
     // <returns>Returns the Company's data encapsulated in a CompanyViewModel for security purposes as a JSON.</returns>
-    [HttpGet("GetCompany/{JWTToken}")]
-    [Authorize(Roles = "Company")]
-    public IActionResult GetCompanyData(string JWTToken)
+    [HttpGet("GetCompany")]
+    public IActionResult GetCompanyData()
     {
+        var JWTToken = Request.Headers["JWTToken"].FirstOrDefault();
         //Gets the UserID from the databsae from the JWTToken
-        var userIdFromToken = ValidationController.getIdentifierFromJWT(JWTToken);
+        var userIdFromToken = ValidationController.getIdentifierFromJWT(JWTToken!);
 
         // Checks if a valid token has been found
         if (userIdFromToken == null)
@@ -41,17 +40,19 @@ public class CompanyController : ControllerBase
             return Ok(new CompanyViewModel(company));
         }
         // Returns if no Company has been found
-        return NotFound("Company not found");
+        return BadRequest("Company not found");
     }
 
     // <summary>Updates the given information if it meets the requirements.</summary>
     // <param name="JWTToken">The token obtained on successful login.</param>
     // <param name="companyViewModel">A limited version of the Company class so only certain properties can be changed.</param>
     // <returns>Returns a HTTP status code with an error/success message.</returns>
-    [HttpPut("UpdateCompany/{JWTToken}")]
+    [HttpPut("UpdateCompany")]
     [Authorize(Roles = "Company")]
-    public async Task<IActionResult> UpdateCompany(string JWTToken, CompanyViewModel? companyViewModel)
+    public async Task<IActionResult> UpdateCompany(CompanyViewModel? companyViewModel)
     {
+        var JWTToken = Request.Headers["JWTToken"].FirstOrDefault();
+
         if (companyViewModel == null)
         {
             // Returns nothing if no data is provided
@@ -59,7 +60,7 @@ public class CompanyController : ControllerBase
         }
 
         // Gets the UserID from the database from the JWTToken
-        var userIdFromToken = ValidationController.getIdentifierFromJWT(JWTToken);
+        var userIdFromToken = ValidationController.getIdentifierFromJWT(JWTToken!);
 
         // Checks if a valid token has been found
         if (userIdFromToken == null)

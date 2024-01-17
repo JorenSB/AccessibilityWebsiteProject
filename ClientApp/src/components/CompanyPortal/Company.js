@@ -1,5 +1,5 @@
 import React, {useEffect} from 'react';
-import BaseLayout from '../layouts/BaseLayout.js';
+import CompanyLayout from './CompanyLayout';
 import Onderzoek from '../Onderzoeken/Onderzoek.js';
 import { jwtIsValid } from '../../Auth.js';
 import { useNavigate } from 'react-router-dom';
@@ -17,7 +17,7 @@ const Company = () => {
   },[]) 
   return (
    
-        <BaseLayout>
+        <CompanyLayout>
         <div className='titleContainer'>
           <h1 className='titleOnderzoek'>Lopende Onderzoeken</h1>
         </div>
@@ -30,7 +30,7 @@ const Company = () => {
         <div className='titleContainer'>
           <h1 className='titleOnderzoek'>Afgeronde Onderzoeken</h1>
         </div>
-        </BaseLayout>
+        </CompanyLayout>
   
   );
 };
