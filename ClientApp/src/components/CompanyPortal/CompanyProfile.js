@@ -1,11 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import CompanyLayout from './CompanyLayout';
-import { useParams } from 'react-router-dom';
-
-
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import './CompanyProfile.css';
-
 
 const CompanyProfile = () => {
   const navigate = useNavigate();
@@ -13,7 +9,6 @@ const CompanyProfile = () => {
   const { userId } = useParams();
 
   useEffect(() => {
-
     const fetchUserData = async () => {
       try {
         const response = await fetch("https://localhost:7101/api/Company/GetCompany", {
@@ -29,7 +24,6 @@ const CompanyProfile = () => {
       }
     };
     fetchUserData();
-
   }, [userId, navigate]);
 
   return (
