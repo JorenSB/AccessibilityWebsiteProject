@@ -21,9 +21,19 @@ const Company = () => {
         });
         const data = await response.json();
 
-        // Split onderzoeken based on status
-        const activeStudies = data.filter((study) => study.status.toLowerCase() === 'active');
-        const completedStudies = data.filter((study) => study.status.toLowerCase() !== 'active');
+        const includedStatuses = ['actief', 'active'];
+
+        const activeStudies = data.filter((study) =>
+          includedStatuses.includes(study.status.toLowerCase())
+        );
+
+        const completedStudies = data.filter((study) =>
+          !includedStatuses.includes(study.status.toLowerCase())
+        );
+
+        // // Split onderzoeken based on status
+        // const activeStudies = data.filter((study) => study.status.toLowerCase() in ['active', 'actief']);
+        // const completedStudies = data.filter((study) => !study.status.toLowerCase() in ['active', 'actief']);
 
         setActiveOnderzoeken(activeStudies);
         setCompletedOnderzoeken(completedStudies);
