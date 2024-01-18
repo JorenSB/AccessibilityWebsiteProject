@@ -30,8 +30,15 @@ public class ApplicationDbContext : IdentityDbContext<User>
         modelBuilder.Entity<Guardian>(entity => entity.ToTable("Guardians"));
         modelBuilder.Entity<Disability>(entity => entity.ToTable("Disabilities"));
         modelBuilder.Entity<DisabilityAid>(entity => entity.ToTable("DisabilityAids"));
-
+        modelBuilder.Entity<Admin>(entity => entity.ToTable("Admins"));
+        modelBuilder.Entity<Study>(entity => entity.ToTable("Studies"));
+        modelBuilder.Entity<Result>(entity => entity.ToTable("Results"));
         // relaties
+        modelBuilder.Entity<Study>()
+        .HasOne(e => e.Result)
+        .WithOne(e => e.Study)
+        .HasForeignKey<Result>(e => e.StudyID)
+        .IsRequired(false);
 
         modelBuilder.Entity<Expert>()
              .HasMany(e => e.Disabilities)
@@ -39,12 +46,9 @@ public class ApplicationDbContext : IdentityDbContext<User>
              .UsingEntity(j => j.ToTable("ExpertDisabilities"));
 
         modelBuilder.Entity<Expert>()
-        .HasMany(e => e.DisabilityAids)
-        .WithMany()
-        .UsingEntity(j => j.ToTable("ExpertDisabilityAids"));
-        modelBuilder.Entity<Study>(entity => entity.ToTable("Studies"));
-        modelBuilder.Entity<Result>(entity => entity.ToTable("Results"));
-        modelBuilder.Entity<Admin>(entity => entity.ToTable("Admins"));
+            .HasMany(e => e.DisabilityAids)
+            .WithMany()
+            .UsingEntity(j => j.ToTable("ExpertDisabilityAids"));
         // Voeg eventueel andere configuraties toe
     }
 
