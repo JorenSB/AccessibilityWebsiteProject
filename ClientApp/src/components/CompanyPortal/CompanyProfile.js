@@ -27,13 +27,24 @@ const CompanyProfile = () => {
   }, [userId, navigate]);
 
   return (
-
     <CompanyLayout>
       <div className='profileContainer'>
-        <p>test {userData.companyName}</p>
+        <div className='col1'>
+          <p><strong>Information:</strong> {userData.information}</p>
+          <p><strong>Company Name:</strong> {userData.companyName}</p>
+          <p><strong>Email:</strong> {userData.email}</p>
+          {/* Add other properties as needed */}
+        </div>
+        <div className='col2'>
+          <p><strong>Address:</strong> {userData.address}</p>
+          <p><strong>Kvk Number:</strong> {userData.kvkNumber}</p>
+          {/* Add other properties as needed */}
+        </div>
+        <div className='col3'>
+          {/* Add other properties as needed */}
+        </div>
       </div>
     </CompanyLayout>
-
   );
 };
 
