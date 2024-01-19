@@ -1,43 +1,22 @@
-import React, { useState, useEffect } from 'react';
 import CompanyLayout from './CompanyLayout';
-import { useNavigate, useParams } from 'react-router-dom';
 import './CompanyProfile.css';
+import FetchCompanyProfile from './FetchCompanyProfile';
 
 const CompanyProfile = () => {
-  const navigate = useNavigate();
-  const [userData, setUserData] = useState({});
-  const { userId } = useParams();
-
-  useEffect(() => {
-    const fetchUserData = async () => {
-      try {
-        const response = await fetch("https://localhost:7101/api/Company/GetCompany", {
-          method: "GET",
-          headers: {
-            JWTToken: `${localStorage.getItem('jwtToken')}`,
-          },
-        });
-        const data = await response.json();
-        setUserData(data);
-      } catch (error) {
-        console.error('Error fetching user data:', error);
-      }
-    };
-    fetchUserData();
-  }, [userId, navigate]);
-
+  const { CompanyData, setUserData } = FetchCompanyProfile();
+  
   return (
     <CompanyLayout>
       <div className='profileContainer'>
         <div className='col1'>
-          <p><strong>Information:</strong> {userData.information}</p>
-          <p><strong>Company Name:</strong> {userData.companyName}</p>
-          <p><strong>Email:</strong> {userData.email}</p>
+          <p><strong>Information:</strong> {CompanyData.information}</p>
+          <p><strong>Company Name:</strong> {CompanyData.companyName}</p>
+          <p><strong>Email:</strong> {CompanyData.email}</p>
           {/* Add other properties as needed */}
         </div>
         <div className='col2'>
-          <p><strong>Address:</strong> {userData.address}</p>
-          <p><strong>Kvk Number:</strong> {userData.kvkNumber}</p>
+          <p><strong>Address:</strong> {CompanyData.address}</p>
+          <p><strong>Kvk Number:</strong> {CompanyData.kvkNumber}</p>
           {/* Add other properties as needed */}
         </div>
         <div className='col3'>
