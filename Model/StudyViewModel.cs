@@ -1,5 +1,6 @@
 public class StudyViewModel
 {
+    public int StudyID { get; set; }
     public string Title { get; set; }
     public string Status { get; set; }
     public double Reward { get; set; }
@@ -13,6 +14,7 @@ public class StudyViewModel
     }
     public StudyViewModel(Study study)
     {
+        StudyID = study.StudyID;
         Title = study.Title;
         Status = study.Status;
         Reward = study.Reward;

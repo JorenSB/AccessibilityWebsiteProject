@@ -1,5 +1,6 @@
 public class CompanyViewModel
 {
+    public string CompanyID { get; set; }
     public string? Information { get; set; }
     public string? CompanyName { get; set; }
     public string? CurrentPassword { get; set; }
@@ -14,6 +15,7 @@ public class CompanyViewModel
     }
     public CompanyViewModel(Company company) 
     {
+        CompanyID = company.Id;
         Information = company.Information;
         CompanyName = company.CompanyName;
         Email = company.Email;
