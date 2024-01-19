@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { useParams} from 'react-router-dom';
+import React, { useState } from 'react';
+import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
 
 const AdminForm = () => {
     const [admin, setAdmin] = useState({
@@ -9,12 +9,15 @@ const AdminForm = () => {
         newPassword: '',
     });
 
-    const handleChange = (e) => {
+    const [modal2, setModal2] = useState(false);
+    const toggleAdmin = () => setModal2(!modal2);
+
+    const handleAdminChange = (e) => {
         const { id, value } = e.target;
         setAdmin((prevAdmin) => ({ ...prevAdmin, [id]: value }));
     };
 
-    const handleSubmit = async (e) => {
+    const handleAdminSubmit = async (e) => {
         e.preventDefault();
         try {
             const jwtToken = localStorage.getItem('jwtToken');
@@ -38,73 +41,96 @@ const AdminForm = () => {
     };
 
     return (
+        <>
         <div>
-            <form onSubmit={handleSubmit}>
-                <div className="mb-3">
-                    <div className="input-group">
-                        <span className="input-group-text" id="inputGroup-sizing-lg">
-                            Voornaam
-                        </span>
-                        <input
-                            type="text"
-                            className="form-control"
-                            id="firstName"
-                            value={admin.firstName}
-                            onChange={handleChange}
-                        />
-                    </div>
-                </div>
-
-                <div className="mb-3">
-                    <div className="input-group">
-                        <span className="input-group-text" id="inputGroup-sizing-lg">
-                           Achternaam
-                        </span>
-                        <input
-                            type="text"
-                            className="form-control"
-                            id="lastName"
-                            value={admin.lastName}
-                            onChange={handleChange}
-                        />
-                    </div>
-                </div>
-
-                <div className="mb-3">
-                    <div className="input-group">
-                        <span className="input-group-text" id="inputGroup-sizing-lg">
-                            Email
-                        </span>
-                        <input
-                            type="email"
-                            className="form-control"
-                            id="email"
-                            value={admin.email}
-                            onChange={handleChange}
-                        />
-                    </div>
-                </div>
-
-                <div className="mb-3">
-                    <div className="input-group">
-                        <span className="input-group-text" id="inputGroup-sizing-lg">
-                            Wachtwoord
-                        </span>
-                        <input
-                            type="password"
-                            className="form-control"
-                            id="newPassword"
-                            value={admin.newPassword}
-                            onChange={handleChange}
-                        />
-                    </div>
-                </div>
-
-                <button type="submit" className="btn btn-primary">
-                    aanmaken
-                </button>
-            </form>
+            <button className='btn btn-success ' onClick={toggleAdmin}>Nieuw +</button>
         </div>
+
+      <Modal isOpen={modal2} toggle={toggleAdmin}>
+        <ModalHeader toggle={toggleAdmin}>Admin aanmaken</ModalHeader>
+        <ModalBody>
+        <div className='card'>
+            <div className='card-body'>
+                <form>
+                    <div className="mb-3">
+                        <div className="input-group">
+                            <span className="input-group-text" id="inputGroup-sizing-lg">
+                                Voornaam
+                            </span>
+                            <input
+                                type="text"
+                                className="form-control"
+                                id="firstName"
+                                value={admin.firstName}
+                                onChange={handleAdminChange}
+                            />
+                        </div>
+                    </div>
+
+                    <div className="mb-3">
+                        <div className="input-group">
+                            <span className="input-group-text" id="inputGroup-sizing-lg">
+                            Achternaam
+                            </span>
+                            <input
+                                type="text"
+                                className="form-control"
+                                id="lastName"
+                                value={admin.lastName}
+                                onChange={handleAdminChange}
+                            />
+                        </div>
+                    </div>
+
+                    <div className="mb-3">
+                        <div className="input-group">
+                            <span className="input-group-text" id="inputGroup-sizing-lg">
+                                Email
+                            </span>
+                            <input
+                                type="email"
+                                className="form-control"
+                                id="email"
+                                value={admin.email}
+                                onChange={handleAdminChange}
+                            />
+                        </div>
+                    </div>
+
+                    <div className="mb-3">
+                        <div className="input-group">
+                            <span className="input-group-text" id="inputGroup-sizing-lg">
+                                Wachtwoord
+                            </span>
+                            <input
+                                type="password"
+                                className="form-control"
+                                id="newPassword"
+                                value={admin.newPassword}
+                                onChange={handleAdminChange}
+                            />
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+        </ModalBody>
+        <ModalFooter>
+          <Button color="success" onClick={() => { 
+            toggleAdmin(); 
+            handleAdminSubmit();
+            this.props.fetchData();
+            }}>
+            Aanmaken Admin!
+          </Button>{' '}
+          <Button color="secondary" onClick={() => { 
+            toggleAdmin();
+            }}>
+            Sluiten
+          </Button>
+        </ModalFooter>
+      </Modal>
+      </>
     );
 };
 

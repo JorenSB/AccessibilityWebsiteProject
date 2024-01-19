@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { useParams, Link } from 'react-router-dom';
+import { useParams, Link, useNavigate } from 'react-router-dom';
+import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
 
 import placeholderImg from '../../media/placeholder.svg';
 
 const FetchBedrijfEdit = () => {
   const { id } = useParams();
+  const navigate = useNavigate();
   const [currentBedrijf, setCurrentBedrijf] = useState({
     companyName: '',
     email: '',
@@ -14,6 +16,8 @@ const FetchBedrijfEdit = () => {
     kvkNumber: 0,
     information: '',
     });
+  const [modal, setModal] = useState(false);
+  const toggle = () => setModal(!modal);
     
   const handleChange = (e) => {
     const { id, value } = e.target;
@@ -43,8 +47,8 @@ const FetchBedrijfEdit = () => {
   };
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
     try {
+      e.preventDefault();
       const jwtToken = localStorage.getItem('jwtToken');
       const response = await fetch(`https://localhost:7101/api/portaal/admin/companies/${id}`, {
         method: "PUT",
@@ -60,11 +64,35 @@ const FetchBedrijfEdit = () => {
       } else {
         console.log("succes?!")
       }
-    
-      // Handle success, if needed
     } catch (error) {
       console.error('Error:', error);
     }
+  };
+
+  const HandleDelete = async () => {
+    try {
+      const jwtToken = localStorage.getItem('jwtToken');
+      const response = await fetch(`https://localhost:7101/api/portaal/admin/companies/${id}`, {
+        method: "DELETE",
+        headers: {
+          Authorization: `${jwtToken}`,
+          'Content-Type': 'application/json', // Make sure to set the content type
+        },
+        body: JSON.stringify(currentBedrijf),
+      });
+    
+      if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`);
+      } else {
+        console.log("succes?!")
+      }
+    } catch (error) {
+      console.error('Error:', error);
+    }
+  };
+
+  const redirectToOverview = () => {
+    navigate('/admin/bedrijven');
   };
 
   useEffect(() => {
@@ -76,6 +104,7 @@ const FetchBedrijfEdit = () => {
   }, [currentBedrijf]);
 
   return (
+    <>
     <div className='row fill'>
       <div className='col-6 d-flex align-items-stretch'>
         {currentBedrijf && (
@@ -85,12 +114,12 @@ const FetchBedrijfEdit = () => {
             </div>
             <div className="card-body">
               <div>
-                <h3 className="card-title">{currentBedrijf.companyName || 'Could not load the data'}</h3>
+                <h3 className="card-title">{currentBedrijf.companyName || 'Bedrijfsnaam'}</h3>
                 <hr width='35%'></hr>
               </div>
               <div>
                 <h4>Over ons</h4>
-                <p>{currentBedrijf.information ? currentBedrijf.information : "Momenteel geen Over ons informatie"}</p>
+                <p style={{fontWeight: 'normal'}}>{currentBedrijf.information ? currentBedrijf.information : "Geen informatie"}</p>
                 <hr width='35%'></hr>
               </div>
 
@@ -124,7 +153,6 @@ const FetchBedrijfEdit = () => {
                         className="form-control"
                         id="email"
                         value={currentBedrijf.email}
-                        defaultValue='no email found'
                         onChange={handleChange}
                       />
                     </div>
@@ -140,7 +168,6 @@ const FetchBedrijfEdit = () => {
                         className="form-control"
                         id="newPassword"
                         value={currentBedrijf.newPassword}
-                        defaultValue=''
                         onChange={handleChange}
                       />
                     </div>
@@ -172,7 +199,6 @@ const FetchBedrijfEdit = () => {
                         className="form-control"
                         id="address"
                         value={currentBedrijf.address}
-                        defaultValue='No adress found'
                         onChange={handleChange}
                       />
                     </div>
@@ -188,7 +214,6 @@ const FetchBedrijfEdit = () => {
                         className="form-control"
                         id="url"
                         value={currentBedrijf.url}
-                        defaultValue='No website-url found'
                         onChange={handleChange}
                       />
                     </div>
@@ -204,16 +229,29 @@ const FetchBedrijfEdit = () => {
                         className="form-control"
                         id="kvkNumber"
                         value={currentBedrijf.kvkNumber}
-                        defaultValue={0}
                         onChange={handleChange}
                       />
                     </div>
                   </div>
 
                   <div className="mb-3 text-center">
-                    <button type="submit" className="btn btn-primary">
-                      Opslaan
-                    </button>
+                    <div className='row'>
+                      <div className='col-3'>
+                      <button type="submit" className="btn btn-primary">
+                        Opslaan
+                      </button>
+                      </div>
+                      <div className='col-6'>
+                        <div className="mb-3 text-center">
+                          <Link className='btn btn-secondary' to={'/admin/bedrijven'}>Terug naar overzicht</Link>
+                        </div>
+                      </div>
+                      <div className='col-3'>
+                        <div className='mb-3 text-center'>
+                          <button className='btn btn-danger ' onClick={toggle}>Verwijderen</button>
+                        </div>
+                      </div>
+                    </div>
                   </div>
                 </form>
               </div>
@@ -228,6 +266,27 @@ const FetchBedrijfEdit = () => {
             Mobile design ontbreekt?
         </div>
     </div>
+
+    <Modal isOpen={modal} toggle={toggle} >
+        <ModalHeader toggle={toggle}>Weet u het zeker!</ModalHeader>
+        <ModalBody>
+          Verwijderen is permanent!
+        </ModalBody>
+        <ModalFooter>
+          <Button color="danger" onClick={() => {
+          HandleDelete();
+          toggle();
+          redirectToOverview();
+          }}>
+            Verwijderen
+          </Button>{' '}
+          <Button color="secondary" onClick={toggle}>
+            Sluiten
+          </Button>
+        </ModalFooter>
+      </Modal>
+
+    </>
   );
 };
 
