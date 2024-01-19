@@ -16,7 +16,7 @@ import AdminPortaalExperts from "./components/AdminPortaal/Deskundige/ExpertsVie
 import AdminPortaalEditExpert from "./components/AdminPortaal/Deskundige/ExpertEditView.js";
 import CreateUser from "./components/AdminPortaal/component/Create/CreateUser.js";
 import Example from "./components/AdminPortaal/Example.js";
-
+import OnderzoekView from './components/Onderzoeken/OnderzoekView.js';
 
 function App() {
   return (
@@ -30,6 +30,8 @@ function App() {
       <Route element={<PrivateRoutes role={'Company'} />}>
         <Route path='/company' element={<Company />} />
         <Route path='/company/profile' element={<CompanyProfile />} />
+        {/* <Route path='/onderzoek/start' element={<OnderzoekStart />} /> */}
+        <Route path='/company/:CompanyID/onderzoek/:studyID' element={<OnderzoekView />} />
       </Route>
 
       {/* zet hieronder alle routes van de admins */}
