@@ -6,40 +6,38 @@ using Model.Users.Expert;
 [Route("api/deskundige")]
 public class DeskundigeController : ControllerBase
 {
-     private readonly ApplicationDbContext _context;
-    public DeskundigeController(ApplicationDbContext context)
+    private readonly ApplicationDbContext _context;
+    private readonly ValidationController _validationController;
+    public DeskundigeController(ApplicationDbContext context, ValidationController validationController)
     {
         _context = context;
+        _validationController = validationController;
     }
 
-   [HttpGet("getuser")]
+    [HttpGet("getuser")]
     public IActionResult GetUserData()
     {
         try
         {
-            var userId = ValidationController.getIdentifierFromJWT(Request.Headers["Authorization"].FirstOrDefault());
-            // Check if the header contains the 'id' information
+            var userId = _validationController.getIdentifierFromJWT(Request.Headers["Authorization"].FirstOrDefault());
+
             if (string.IsNullOrEmpty(userId))
             {
-                return BadRequest("token is invalid.");
+                return BadRequest();
             }
 
-            // Your logic to fetch user data based on the ID
             Expert expert = _context.Experts
                 .Include(e => e.Disabilities)
-                .Include(e => e.DisabilityAids) 
+                .Include(e => e.DisabilityAids)
                 .FirstOrDefault(c => c.Id == userId);
 
-            // Check if the expert was found
             if (expert == null)
             {
                 return NotFound($"Expert with ID {userId} not found.");
             }
-
-            // Create an ExpertProfileModel and populate it with data
             var userData = new ExpertProfileModel
             {
-                
+
                 Email = expert.UserName,
                 FirstName = expert.FirstName,
                 LastName = expert.LastName,
@@ -51,18 +49,14 @@ public class DeskundigeController : ControllerBase
                 PhonePreference = expert.PhonePreference,
                 EmailPreference = expert.EmailPreference
             };
-
-            // Return the user data in the response
             return Ok(userData);
         }
         catch (Exception ex)
         {
-            // Log the exception or handle it accordingly
-            // You might want to return a more informative error message
             return StatusCode(500, $"An error occurred: {ex.Message}");
         }
     }
-    
+
 
 
     [HttpPut("updateuser")]
@@ -70,24 +64,20 @@ public class DeskundigeController : ControllerBase
     {
         try
         {
-            var userId = ValidationController.getIdentifierFromJWT(Request.Headers["Authorization"].FirstOrDefault());
+            var userId = _validationController.getIdentifierFromJWT(Request.Headers["Authorization"].FirstOrDefault());
 
-            // Check if the header contains the 'id' information
             if (string.IsNullOrEmpty(userId))
             {
                 return BadRequest("Token is invalid.");
             }
-
-            // Your logic to fetch the expert based on the ID
             Expert expert = _context.Experts
                 .Include(e => e.Disabilities)
                 .Include(e => e.DisabilityAids)
                 .FirstOrDefault(c => c.Id == userId);
 
-            // Check if the expert was found
             if (expert == null)
             {
-                return NotFound($"Expert with ID {userId} not found." );    
+                return NotFound($"Expert with ID {userId} not found.");
             }
 
             // Use reflection to iterate through the properties of UpdatedExpertProfileModel
@@ -103,23 +93,21 @@ public class DeskundigeController : ControllerBase
 
                     // Check if the property is DateTime
                     if (expertProperty != null && expertProperty.PropertyType == typeof(DateTime))
-                        
+
                     {
-                        // Set the time to midnight (12:00 AM) if it's a DateTime property
                         var dateTimeValue = (DateTime)value;
                         expertProperty.SetValue(expert, dateTimeValue.Date.Add(new TimeSpan(0, 0, 0)));
                     }
-                    else if(expertProperty != null && expertProperty.Name != "DisabilityAids" && expertProperty.Name != "Disabilities")
+                    else if (expertProperty != null && expertProperty.Name != "DisabilityAids" && expertProperty.Name != "Disabilities")
                     {
-                        // For non-DateTime properties or properties to be excluded, update normally
                         expertProperty?.SetValue(expert, value);
                     }
-                    
+
                 }
             }
 
 
-            expert.Disabilities.Clear(); // Clear existing disabilities
+            expert.Disabilities.Clear(); 
 
             foreach (var disabilityName in updatedUserData.Disabilities)
             {
@@ -137,7 +125,7 @@ public class DeskundigeController : ControllerBase
                 }
             }
 
-            expert.DisabilityAids.Clear(); // Clear existing disabilityAids
+            expert.DisabilityAids.Clear(); 
 
             foreach (var disabilityAidName in updatedUserData.DisabilityAids)
             {
@@ -155,16 +143,12 @@ public class DeskundigeController : ControllerBase
                 }
             }
 
-            // Save changes to the database
             _context.SaveChanges();
 
-            // Return a success response
             return Ok("User data successfully updated.");
         }
         catch (Exception ex)
         {
-            // Log the exception or handle it accordingly
-            // You might want to return a more informative error message
             return StatusCode(500, $"An error occurred: {ex.Message}");
         }
     }
@@ -174,19 +158,16 @@ public class DeskundigeController : ControllerBase
     {
         try
         {
-            var disabilities = _context.Disabilities.Select(d => d.DisabilityName).Distinct().ToList();    
-
-            // Check if the result is null or empty
+            var disabilities = _context.Disabilities.Select(d => d.DisabilityName).Distinct().ToList();
             if (disabilities == null || disabilities.Count == 0)
             {
-                return NotFound( new {message = "No disabilities found."});
+                return NotFound("No disabilities found." );
             }
 
             return Ok(disabilities);
         }
         catch (Exception ex)
         {
-            // Log the exception or handle it as needed
             return StatusCode(500, "An error occurred while fetching disabilities data.");
         }
     }
@@ -196,19 +177,17 @@ public class DeskundigeController : ControllerBase
     {
         try
         {
-            var disabilityAids = _context.DisabilityAids.Select(d => d.DisabilityAidName).Distinct().ToList();    
+            var disabilityAids = _context.DisabilityAids.Select(d => d.DisabilityAidName).Distinct().ToList();
 
-            // Check if the result is null or empty
             if (disabilityAids == null || disabilityAids.Count == 0)
             {
-                return NotFound( new {message = "No disability aids found."});
+                return NotFound("No disability aids found." );
             }
 
             return Ok(disabilityAids);
         }
         catch (Exception ex)
         {
-            // Log the exception or handle it as needed
             return StatusCode(500, "An error occurred while fetching disability aids data.");
         }
     }

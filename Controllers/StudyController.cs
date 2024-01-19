@@ -15,10 +15,13 @@ namespace AccessibilityWebsiteProject.Controllers
     public class StudyController : ControllerBase
     {
         private readonly ApplicationDbContext _context;
+        private readonly ValidationController _validationController;
 
-        public StudyController(ApplicationDbContext context)
+        public StudyController(ApplicationDbContext context, ValidationController validationController)
         {
             _context = context;
+            _validationController = validationController;
+
         }
 
         // GET: api/Study
@@ -36,7 +39,7 @@ namespace AccessibilityWebsiteProject.Controllers
         [HttpGet("MyStudies")]
         public async Task<ActionResult<IEnumerable<Study>>> GetMyStudies(string JWTToken)
         {
-            var idClaim = ValidationController.getIdentifierFromJWT(JWTToken);
+            var idClaim = _validationController.getIdentifierFromJWT(JWTToken);
 
             if (string.IsNullOrEmpty(idClaim))
             {
@@ -78,7 +81,7 @@ namespace AccessibilityWebsiteProject.Controllers
         [HttpPut()]
         public async Task<IActionResult> UpdateStudy(int id, StudyViewModel studyViewModel, string JWTToken)
         {
-            var userIdFromToken = ValidationController.getIdentifierFromJWT(JWTToken);
+            var userIdFromToken = _validationController.getIdentifierFromJWT(JWTToken);
 
             if (string.IsNullOrEmpty(userIdFromToken))
             {
@@ -129,7 +132,7 @@ namespace AccessibilityWebsiteProject.Controllers
         [HttpPost]
         public async Task<ActionResult<Study>> AddStudy(StudyViewModel studyViewModel, string JWTToken)
         {
-            var userIdFromToken = ValidationController.getIdentifierFromJWT(JWTToken);
+            var userIdFromToken = _validationController.getIdentifierFromJWT(JWTToken);
 
             if (string.IsNullOrEmpty(userIdFromToken))
             {
@@ -155,7 +158,7 @@ namespace AccessibilityWebsiteProject.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteStudy(int id, string JWTToken)
         {
-            var userIdFromToken = ValidationController.getIdentifierFromJWT(JWTToken);
+            var userIdFromToken = _validationController.getIdentifierFromJWT(JWTToken);
 
             if (string.IsNullOrEmpty(userIdFromToken))
             {

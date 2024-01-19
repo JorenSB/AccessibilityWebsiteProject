@@ -13,17 +13,6 @@
     padding-right: 10px;
 }
 
-@media screen and (max-width: 768px) {
-    .profileContainer {
-        flex-direction: column;
-        width: 100%;
-    }
-
-    .col1, .col2, .col3 {
-        width: 100%;
-        padding: 0;
-    }
-}
 .safeButton{
     background-color: #FF7D00;
     margin-top: 10px;
@@ -40,6 +29,24 @@
   .safeButton:hover{
     background-color: #ff9d42;
   }
+
+@media screen and (max-width: 600px) {
+    .profileContainer {
+        flex-direction: column;
+        width: 100%;
+    }
+
+    .col1, .col2, .col3 {
+        width: 100%;
+        padding: 0;
+    }
+
+    .safeButton{
+        width: 70%;
+        margin-left: 15%;
+      }
+}
+
   
 
 

@@ -15,10 +15,14 @@ public class CompanyController : ControllerBase
 {
     private readonly UserManager<User> _userManager;
     private readonly ApplicationDbContext _context;
-    public CompanyController(UserManager<User> userManager, ApplicationDbContext dbContext)
+    private readonly ValidationController _validationController;
+
+    public CompanyController(UserManager<User> userManager, ApplicationDbContext dbContext, ValidationController validationController)
     {
         _userManager = userManager;
         _context = dbContext;
+        _validationController = validationController;
+
     }
 
     private bool IsStringNotNullOrEmptyOrDefault(string? input)
@@ -37,7 +41,7 @@ public class CompanyController : ControllerBase
     [Authorize(Roles = "Company")]
     public IActionResult GetCompanyData(string JWTToken)
     {
-        var userIdFromToken = ValidationController.getIdentifierFromJWT(JWTToken);
+        var userIdFromToken = _validationController.getIdentifierFromJWT(JWTToken);
 
         if (string.IsNullOrEmpty(userIdFromToken))
         {
@@ -67,7 +71,7 @@ public class CompanyController : ControllerBase
     [Authorize(Roles = "Company")]
     public async Task<IActionResult> UpdateCompany(string JWTToken, CompanyViewModel companyViewModel)
     {
-        var userIdFromToken = ValidationController.getIdentifierFromJWT(JWTToken);
+        var userIdFromToken = _validationController.getIdentifierFromJWT(JWTToken);
 
         if (string.IsNullOrEmpty(userIdFromToken))
         {

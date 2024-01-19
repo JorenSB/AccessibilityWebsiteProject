@@ -7,12 +7,12 @@ function BenaderInfo(props) {
   const [phonePreferenceIsChecked, setPhonePreferenceIsChecked] = useState(false);
 
   useEffect(() => {
-    setBenaderIsChecked(props.commercial);
-    if (props.commercial) {
+    setBenaderIsChecked(props.commercialContact);
+    if (props.commercialContact) {
       setEmailPrefereneceIsChecked(props.emailPreference);
       setPhonePreferenceIsChecked(props.phonePreference);
     }
-  }, [props.commercial, props.emailPreference, props.phonePreference]);
+  }, [props.commercialContact, props.emailPreference, props.phonePreference]);
 
   useEffect(() => {
     handleDataUpdate({

@@ -20,4 +20,17 @@
   padding-bottom: 5px;
   border-bottom: 3px solid #1CA883;
 }
+
+
+@media only screen and (max-width: 600px) {
+  .accountGegevensContainer input {
+    height: 6vh;
+    
+  }
+
+  .accountGegevensContainer h2{
+    width: 53%;
+  }
+
+}
   

@@ -10,6 +10,8 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 builder.Services.AddScoped<IRoleService, RoleService>();
+builder.Services.AddScoped<ValidationController>();
+
 
 
 builder.Services.AddIdentity<User, IdentityRole>(options =>
