@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import Nav from '../layouts/DeskundigeNavbar';
+import DeskundigeNavBar from './DeskundigeNavBar';
 import SideBar from '../layouts/ChatSideBar';
 import PropTypes from 'prop-types';
 import { jwtIsValid } from '../../Auth'; 
@@ -12,7 +12,7 @@ export default function DeskundigePortaalLayout({ children }) {
 
   useEffect(() => {
     if (!jwtIsValid()) {
-      navigate('/');
+      navigate('/');  
     }
   }, [navigate]);
 
@@ -20,7 +20,7 @@ export default function DeskundigePortaalLayout({ children }) {
     <div>
       <div className='row'>
         <div className='col-12'>
-          <Nav />
+          <DeskundigeNavBar />
         </div>
       </div>
       <div className='row'>

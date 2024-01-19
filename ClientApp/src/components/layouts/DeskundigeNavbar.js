@@ -5,7 +5,7 @@ import LogoutButton from './LogoutButton';
 
 import './DeskundigeBaseLayout.css';
 
-export default class BaseNavBar extends React.Component {
+export default class DeskundigeNavBar extends React.Component {
   constructor(props) {
     super(props);
 
