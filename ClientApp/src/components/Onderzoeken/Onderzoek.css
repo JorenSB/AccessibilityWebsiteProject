@@ -9,30 +9,23 @@
 }
 
 .onderzoek h1, .onderzoek p {
-    background-color: #FFF;
+    background-color: #EFEFEF;
     width: 12rem;
     border-radius: 4%;
     font-size: 1rem;
+    padding: 8px; /* Add padding to the text elements */
+    margin: 4px; /* Add margin for spacing */
 }
 
 .onderzoek.active, .onderzoek.actief {
     background-color: #FF7D00;
 }
 
-/* 
-.onderzoek.inactive {
-    background-color: #A9A9A9;
-}
-
-.onderzoek.completed {
-    background-color: #A9A9A9;
-} */
-
 .upperhalf, .lowerhalf {
     display: flex;
     justify-content: space-between;
     padding-left: 10px;
-    padding-right: 10px;
+    padding-right: 10px;   
 }
 
 .infoItem {
@@ -41,4 +34,5 @@
     flex-direction: column;
     align-items: start;
     padding: 10px;
+    
 }
