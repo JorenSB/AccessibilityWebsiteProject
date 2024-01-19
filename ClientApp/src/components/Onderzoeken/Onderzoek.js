@@ -1,8 +1,11 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import './Onderzoek.css';
 
-const Onderzoek = ({ study }) => {
+const Onderzoek = ({ study, CompanyID }) => {
+
   const {
+    studyID,
     title,
     status,
     reward,
@@ -15,7 +18,7 @@ const Onderzoek = ({ study }) => {
   const statusClass = status.toLowerCase();
 
   return (
-    <div className={`onderzoek ${statusClass}`}>
+    <div className={`onderzoek ${status}`}>
       <div className='upperhalf'>
         <div className='infoItem'>
           <h1>{title}</h1>
@@ -34,7 +37,7 @@ const Onderzoek = ({ study }) => {
       <div className='lowerhalf'>
         <p>Taal: {language}</p>
         <p>Beperking: {beperking}</p>
-        <h1><a href='#'>Bekijk onderzoek</a></h1>
+        <Link to={`/company/${CompanyID}/onderzoek/${studyID}`}>Bekijk onderzoek</Link>
       </div>
     </div>
   );
