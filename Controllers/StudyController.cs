@@ -55,6 +55,7 @@ namespace AccessibilityWebsiteProject.Controllers
 
             foreach (Study study in matchingStudies)
             {
+                study.Result = _context.Results.First(x => x.StudyID == study.StudyID);
                 studies.Add(new StudyViewModel(study));
             }
 
@@ -76,6 +77,7 @@ namespace AccessibilityWebsiteProject.Controllers
             {
                 return BadRequest();
             }
+            study.Result = _context.Results.First(x => x.StudyID == id); // Bit hacky but it works <3 -W
 
             return Ok(new StudyViewModel(study));
         }
