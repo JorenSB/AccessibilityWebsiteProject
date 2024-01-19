@@ -55,7 +55,10 @@ namespace AccessibilityWebsiteProject.Controllers
 
             foreach (Study study in matchingStudies)
             {
-                study.Result = _context.Results.First(x => x.StudyID == study.StudyID);
+                if (study.Result != null)
+                {
+                    study.Result = _context.Results.First(x => x.StudyID == study.StudyID);
+                }
                 studies.Add(new StudyViewModel(study));
             }
 
@@ -161,7 +164,7 @@ namespace AccessibilityWebsiteProject.Controllers
             _context.Studies.Add(study);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetStudy", new { id = study.StudyID }, study);
+            return CreatedAtAction("Created successfully", study);
         }
 
         // DELETE: api/Study/5
