@@ -1,66 +1,37 @@
-import React, { useEffect, useState } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
 import CompanyLayout from './CompanyLayout';
 import Onderzoek from '../Onderzoeken/Onderzoek.js';
 import './Company.css';
+import FetchMyStudies from './FetchMyStudies.js';
+import FetchCompanyProfile from './FetchCompanyProfile';
 
 const Company = () => {
-  const navigate = useNavigate();
-  const [activeOnderzoeken, setActiveOnderzoeken] = useState([]);
-  const [completedOnderzoeken, setCompletedOnderzoeken] = useState([]);
-  const { userId } = useParams();
+  const CompanyData = FetchCompanyProfile();
 
-  useEffect(() => {
-    const fetchUserData = async () => {
-      try {
-        const response = await fetch("https://localhost:7101/api/Study/GetMyStudies", {
-          method: "GET",
-          headers: {
-            JWTToken: `${localStorage.getItem('jwtToken')}`,
-          },
-        });
-        const data = await response.json();
+  const onderzoekenData = FetchMyStudies();
 
-        const includedStatuses = ['actief', 'active'];
-
-        const activeStudies = data.filter((study) =>
-          includedStatuses.includes(study.status.toLowerCase())
-        );
-
-        const completedStudies = data.filter((study) =>
-          !includedStatuses.includes(study.status.toLowerCase())
-        );
-
-        // // Split onderzoeken based on status
-        // const activeStudies = data.filter((study) => study.status.toLowerCase() in ['active', 'actief']);
-        // const completedStudies = data.filter((study) => !study.status.toLowerCase() in ['active', 'actief']);
-
-        setActiveOnderzoeken(activeStudies);
-        setCompletedOnderzoeken(completedStudies);
-      } catch (error) {
-        console.error('Error fetching user data:', error);
-      }
-    };
-
-    fetchUserData();
-  }, [userId, navigate]);
+  const activeOnderzoeken = onderzoekenData.filter(study =>
+    ['actief', 'active'].includes(study.status.toLowerCase())
+  );
+  const completedOnderzoeken = onderzoekenData.filter(study =>
+    !['actief', 'active'].includes(study.status.toLowerCase())
+  );
 
   return (
     <CompanyLayout>
       <div className='titleContainer'>
-        <h1 className='titleOnderzoek'>Mijn Onderzoeken</h1>
+        <h1 className='titleOnderzoek'>{CompanyData.companyName}'s Actieve Onderzoeken</h1>
       </div>
       <div className='onderzoekContainer'>
         {activeOnderzoeken.map((study, index) => (
-          <Onderzoek key={index} study={study} />
+          <Onderzoek key={index} study={study} CompanyID={CompanyData.companyID} />
         ))}
       </div>
       <div className='titleContainer'>
-        <h1 className='titleOnderzoek'>Afgeronde Onderzoeken</h1>
+        <h1 className='titleOnderzoek'>{CompanyData.companyName}'s Afgeronde Onderzoeken</h1>
       </div>
       <div className='onderzoekContainer'>
         {completedOnderzoeken.map((study, index) => (
-          <Onderzoek key={index} study={study} />
+          <Onderzoek key={index} study={study} CompanyID={CompanyData.companyID} />
         ))}
       </div>
     </CompanyLayout>
