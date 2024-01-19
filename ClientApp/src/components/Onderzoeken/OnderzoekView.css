@@ -1,0 +1,38 @@
+.onderzoek {
+    margin: 10px;
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: left;
+    width: 40rem;
+    background-color: #A9A9A9;
+}
+
+.onderzoek h1, .onderzoek p {
+    background-color: #EFEFEF;
+    width: 12rem;
+    border-radius: 4%;
+    font-size: 1rem;
+    padding: 8px;
+    margin: 4px;
+}
+
+.onderzoek.Active, .onderzoek.Actief {
+    background-color: #FF7D00;
+}
+
+.upperhalf, .lowerhalf {
+    display: flex;
+    justify-content: space-between;
+    padding-left: 10px;
+    padding-right: 10px;   
+}
+
+.infoItem {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: start;
+    padding: 10px;
+    
+}

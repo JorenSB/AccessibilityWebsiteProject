@@ -6,6 +6,8 @@ public class Result
     [Key]
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
     public int ResultID { get; set; }
+    public int? StudyID { get; set; }
+    public Study Study { get; set; }
     public int Score { get; set; }
     public string Feedback { get; set; }
 

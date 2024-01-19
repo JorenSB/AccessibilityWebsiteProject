@@ -37,8 +37,10 @@ function LoginForm() {
                     if (role === "Expert") {
                         navigate("/deskundige/profiel");
                     } else if (role === "Company") {
-                        navigate("/test");
-                    } else {
+                        navigate("/company");
+                    } else if (role === "Admin") {
+                        navigate("/admin/deskundigen");
+                    }else {
                         console.log("mislukt tijdens het inloggen", "role = " + role);
                     }
                 } else {
@@ -59,10 +61,12 @@ function LoginForm() {
           if (isAuthenticated()) {
             const role = getUserRole();
       
-            if (role === 'Expert') {
-              navigate('/deskundige');
-            } else if (role === 'Company') {
-              navigate('/test');
+            if (role === "Expert") {
+                navigate("/deskundige");
+            } else if (role === "Company") {
+                navigate("/company");
+            } else if (role === "Admin") {
+                navigate("/admin")
             }
           }
         };

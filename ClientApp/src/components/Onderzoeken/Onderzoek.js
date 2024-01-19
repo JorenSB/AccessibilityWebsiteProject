@@ -1,24 +1,45 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import './Onderzoek.css';
 
-const Onderzoek = () => {
+const Onderzoek = ({ study, CompanyID }) => {
+
+  const {
+    studyID,
+    title,
+    status,
+    reward,
+    language,
+    beperking,
+    date,
+    result,
+  } = study;
+
+  const statusClass = status.toLowerCase();
+
   return (
-   
-      <div className='onderzoek'>
-        <div className='upperhalf'>
-            <div className='imageItem'>
-                <img src="#" alt="foto van het contact persoon" />
-            </div> 
-            <div className='infoItem'>
-                <h1>Titel onderzoek</h1>
-                <h1>Naam bedrijf</h1>
-            </div>
+    <div className={`onderzoek ${status}`}>
+      <div className='upperhalf'>
+        <div className='infoItem'>
+          <h1>{title}</h1>
+          <h1>Status: {status}</h1>
+          <h1>Datum: {new Date(date).toLocaleDateString()}</h1>
+          <h1>Beloning: €{reward}</h1>
         </div>
-        <div className='lowerhalf'>
-            <h1>Status</h1>
-            <h1><a href='#'>Bekijk onderzoek</a></h1>
-        </div>
+        {result && (
+          <div className='reviewItem'>
+            <h1>Review:</h1>
+            <p>Score: {result.Score}</p>
+            <p>Feedback: {result.Feedback}</p>
+          </div>
+        )}
       </div>
+      <div className='lowerhalf'>
+        <p>Taal: {language}</p>
+        <p>Beperking: {beperking}</p>
+        <Link to={`/company/${CompanyID}/onderzoek/${studyID}`}>Bekijk onderzoek</Link>
+      </div>
+    </div>
   );
 };
 

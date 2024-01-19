@@ -1,14 +1,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.IdentityModel.Tokens;
-using System.IdentityModel.Tokens.Jwt;
-using System.Text;
-using System.Security.Claims;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity;
-using System.Runtime.CompilerServices;
 
-[Authorize]
 [Route("api/[controller]")]
 [ApiController]
 public class CompanyController : ControllerBase
@@ -21,149 +14,182 @@ public class CompanyController : ControllerBase
         _context = dbContext;
     }
 
-    private bool IsStringNotNullOrEmptyOrDefault(string? input)
+    // <summary>Gets the data from the Company Based on the JWTToken.</summary>
+    // <param name="JWTToken">The token obtained on successful login.</param>
+    // <returns>Returns the Company's data encapsulated in a CompanyViewModel for security purposes as a JSON.</returns>
+    [HttpGet("GetCompany")]
+    public IActionResult GetCompanyData()
     {
-        if (!string.IsNullOrEmpty(input))
+        var JWTToken = Request.Headers["JWTToken"].FirstOrDefault();
+        //Gets the UserID from the databsae from the JWTToken
+        var userIdFromToken = ValidationController.getIdentifierFromJWT(JWTToken!);
+
+        // Checks if a valid token has been found
+        if (userIdFromToken == null)
         {
-            if (!input.Equals("string"))
-            {
-                return true;
-            }
+            return BadRequest("Invalid token");
         }
-        return false;
+
+        // Gets the Company object from the UserID
+        var company = _context.Companies.FirstOrDefault(c => c.Id == userIdFromToken);
+
+        // Checks if a Company has been found
+        if (company != null)
+        {
+            // Returns the information the user should be able to see through a CompanyViewModel
+            return Ok(new CompanyViewModel(company));
+        }
+        // Returns if no Company has been found
+        return BadRequest("Company not found");
     }
 
-    [HttpGet("GetCompany/{JWTToken}")]
+    // <summary>Updates the given information if it meets the requirements.</summary>
+    // <param name="JWTToken">The token obtained on successful login.</param>
+    // <param name="companyViewModel">A limited version of the Company class so only certain properties can be changed.</param>
+    // <returns>Returns a HTTP status code with an error/success message.</returns>
+    [HttpPut("UpdateCompany")]
     [Authorize(Roles = "Company")]
-    public IActionResult GetCompanyData(string JWTToken)
+    public async Task<IActionResult> UpdateCompany(CompanyViewModel? companyViewModel)
     {
-        var userIdFromToken = ValidationController.getIdentifierFromJWT(JWTToken);
+        var JWTToken = Request.Headers["JWTToken"].FirstOrDefault();
 
-        if (string.IsNullOrEmpty(userIdFromToken))
+        if (companyViewModel == null)
         {
-            return BadRequest("Invalid or missing ID claim in the token");
+            // Returns nothing if no data is provided
+            return NoContent();
         }
 
-        Company company = _context.Companies.FirstOrDefault(c => c.Id == userIdFromToken);
+        // Gets the UserID from the database from the JWTToken
+        var userIdFromToken = ValidationController.getIdentifierFromJWT(JWTToken!);
 
+        // Checks if a valid token has been found
+        if (userIdFromToken == null)
+        {
+            return BadRequest("Invalid token");
+        }
+
+        // Gets the Company object from the UserID
+        var company = _context.Companies.FirstOrDefault(c => c.Id == userIdFromToken);
+
+        // Checks if a Company has been found
         if (company == null)
         {
-            return NotFound("Company not found");
+            return BadRequest("Company not found");
         }
 
-        CompanyViewModel companyViewModel = new CompanyViewModel
+        // Checks if the Information field was filled in
+        if (companyViewModel.Information != null)
         {
-            Information = company.Information,
-            CompanyName = company.CompanyName,
-            Email = company.Email,
-            Url = company.Url,
-            KvkNumber = company.KvkNumber,
-            Address = company.Address
-        };
-        return Ok(companyViewModel);
-    }
-
-    [HttpPut("UpdateCompany/{JWTToken}")]
-    [Authorize(Roles = "Company")]
-    public async Task<IActionResult> UpdateCompany(string JWTToken, CompanyViewModel companyViewModel)
-    {
-        var userIdFromToken = ValidationController.getIdentifierFromJWT(JWTToken);
-
-        if (string.IsNullOrEmpty(userIdFromToken))
+            // Checks if an empty string was provided
+            if (companyViewModel.Information.Equals(""))
+            {
+                // Updates the Information field to null
+                company.Information = null;
+            }
+            else
+            {
+                // Updates the Information field
+                company.Information = companyViewModel.Information;
+            }
+        }
+        // Checks if the CompanyName field was filled in
+        if (companyViewModel.CompanyName != null)
         {
-            return BadRequest("Invalid or missing ID claim in the token");
+            // Updates the CompanyName field
+            company.CompanyName = companyViewModel.CompanyName;
         }
 
-        Company company = _context.Companies.FirstOrDefault(c => c.Id == userIdFromToken);
-
-        if (company != null && companyViewModel != null)
+        // Checks if the Email field was filled in
+        if (companyViewModel.Email != null)
         {
-            if (companyViewModel.Information != null)
+            // Checks if the Email meets the requirements
+            if (ValidationController.IsValidEmail(companyViewModel.Email))
             {
-                if (companyViewModel.Information.Equals(""))
-                {
-                    company.Information = null;
-                }
-                else
-                {
-                    company.Information = companyViewModel.Information;
-                }
-            }
-
-            if (IsStringNotNullOrEmptyOrDefault(companyViewModel.CompanyName))
-            {
-                company.CompanyName = companyViewModel.CompanyName;
-            }
-
-            if (IsStringNotNullOrEmptyOrDefault(companyViewModel.Email) && ValidationController.IsValidEmail(companyViewModel.Email))
-            {
-                var existingUser = await _userManager.FindByEmailAsync(companyViewModel.Email);
+                // Checks if any user already is using the given Email
+                var existingUser = await _userManager.FindByEmailAsync(companyViewModel.Email!);
                 if (existingUser != null)
                 {
-                    return BadRequest(new { Message = "Dit e-mailadres is al geregistreerd" });
+                    // Returns if the email is already in use
+                    return BadRequest(new { Message = "Email already in use." });
                 }
+                // Updates the Fields 
                 company.Email = companyViewModel.Email;
-                company.NormalizedEmail = companyViewModel.Email.ToUpper();
+                company.NormalizedEmail = companyViewModel.Email!.ToUpper();
                 company.UserName = companyViewModel.Email;
                 company.NormalizedUserName = companyViewModel.Email.ToUpper();
             }
-
-            if (IsStringNotNullOrEmptyOrDefault(companyViewModel.NewPassword))
+            else
             {
-                if (ValidationController.IsValidPassword(companyViewModel.NewPassword))
-                    if (IsStringNotNullOrEmptyOrDefault(companyViewModel.CurrentPassword))
-                    {
-                        User user = _context.Users.FirstOrDefault(u => u.Id == userIdFromToken);
-
-                        await _userManager.ChangePasswordAsync(user, companyViewModel.CurrentPassword, companyViewModel.NewPassword);
-                    }
-                    else
-                    {
-                        return BadRequest("Required new & old password to change password");
-                    }
-                else
-                {
-                    return BadRequest("Password does not meet requirements");
-                }
-            }
-
-            if (companyViewModel.Url != null)
-            {
-                if (companyViewModel.Url.Equals(""))
-                {
-                    company.Url = null;
-                }
-                else
-                {
-                    company.Url = companyViewModel.Url;
-                }
-            }
-
-            if (companyViewModel.KvkNumber.HasValue)
-            {
-                company.KvkNumber = companyViewModel.KvkNumber.Value;
-            }
-
-            if (IsStringNotNullOrEmptyOrDefault(companyViewModel.Address))
-            {
-                company.Address = companyViewModel.Address;
-            }
-
-            _context.Companies.Update(company);
-
-            try
-            {
-                await _context.SaveChangesAsync();
-                return Ok("Success");
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                return BadRequest("Error while updating the information");
+                // Returns if email doesnt meet requirements
+                return BadRequest("Email does not meet requirements.");
             }
         }
-        else
+
+        // Checks if the Password field was filled in
+        if (companyViewModel.NewPassword != null)
         {
-            return BadRequest("Invalid company or companyViewModel");
+            // Checks if NewPassword meets requirements
+            if (ValidationController.IsValidPassword(companyViewModel.NewPassword))
+            {
+                // Checks if the CurrentPassword is filled in
+                if (companyViewModel.CurrentPassword != null)
+                {
+                    // Tries to change the password
+                    await _userManager.ChangePasswordAsync(company, companyViewModel.CurrentPassword, companyViewModel.NewPassword);
+                }
+                else
+                {
+                    // Returns if the CurrentPassword is not filled in
+                    return BadRequest("New and current password are required to change password.");
+                }
+            }
+            else
+            {
+                // Returns if the NewPassword doesnt meet the requirements
+                return BadRequest("Password does not meet requirements.");
+            }
+        }
+
+        // Checks if the Url field was filled in
+        if (companyViewModel.Url != null)
+        {
+            // Checks if an empty string was provided
+            if (companyViewModel.Url.Equals(""))
+            {
+                // Updates the Url field to null
+                company.Url = null;
+            }
+            else
+            {
+                // Updates the Url field to filled in value
+                company.Url = companyViewModel.Url;
+            }
+        }
+
+        // Checks if the KvkNumber field was filled in
+        if (companyViewModel.KvkNumber.HasValue)
+        {
+            // Updates the KnkNumber field
+            company.KvkNumber = companyViewModel.KvkNumber.Value;
+        }
+
+        // Checks if the Address field was filled in
+        if (companyViewModel.Address != null)
+        {
+            // Updates the Address field
+            company.Address = companyViewModel.Address;
+        }
+
+        // Tries to update the company and save it to the database
+        try
+        {
+            _context.Companies.Update(company);
+            await _context.SaveChangesAsync();
+            return Ok("Company successfully updated.");
+        }
+        catch (Exception)
+        {
+            return BadRequest("Company failed to update.");
         }
     }
 }
