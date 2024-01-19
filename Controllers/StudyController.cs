@@ -9,10 +9,13 @@ namespace AccessibilityWebsiteProject.Controllers
     public class StudyController : ControllerBase
     {
         private readonly ApplicationDbContext _context;
+        private readonly ValidationController _validationController;
 
-        public StudyController(ApplicationDbContext context)
+        public StudyController(ApplicationDbContext context, ValidationController validationController)
         {
             _context = context;
+            _validationController = validationController;
+
         }
 
         // GET: api/Study

@@ -12,8 +12,9 @@ function LoginForm() {
 
     const navigate = useNavigate();
 
-    const handleLogin = async () => {
-        setLoginMessage("U word ingelogd een ogenblik geduld...");
+    const handleLogin = async (e) => {
+        e.preventDefault();
+        console.log(email, password);
         try {
             const response = await fetch('https://localhost:7101/api/account/login', {
                 method: 'POST',
@@ -24,16 +25,16 @@ function LoginForm() {
             });
             const contentType = response.headers.get('content-type');
             const data = contentType && contentType.includes('application/json') ? await response.json() : null;
-    
+
             if (response.ok) {
                 var jwtToken = data.token || '';
-    
+
                 if (jwtToken) {
                     localStorage.setItem('jwtToken', jwtToken);
-    
+
                     const decodedToken = jwtDecode(jwtToken);
                     const role = decodedToken['http://schemas.microsoft.com/ws/2008/06/identity/claims/role'] || '';
-    
+
                     if (role === "Expert") {
                         navigate("/deskundige/profiel");
                     } else if (role === "Company") {
@@ -47,14 +48,14 @@ function LoginForm() {
                     console.log("Geen JWT-token ontvangen na succesvol inloggen");
                 }
             } else {
-                console.log("er is iets fout gegaan tijdens het inloggen", data);
+                console.log(setLoginMessage(data.message));
             }
         } catch (error) {
             console.error('Error during login:', error);
             setLoginMessage('Er is iets fout gegaan. Neem contact op met ons.');
         }
 
-        
+
     };
     useEffect(() => {
         const checkLocalStorage = () => {
@@ -69,14 +70,22 @@ function LoginForm() {
                 navigate("/admin")
             }
           }
-        };
-      
-        checkLocalStorage();
-      }, []);
+            if (isAuthenticated()) {
+                const role = getUserRole();
 
+                if (role === 'Expert') {
+                    navigate('/deskundige/profiel');
+                } else if (role === 'Company') {
+                    navigate('/company/profile');
+                }
+            }
+        };
+
+        checkLocalStorage();
+    }, []);
     return (
         <div className='wrapper'>
-            <form>
+            <form onSubmit={handleLogin}>
                 <img className='logo-img' src={Logo} alt='logo accessibilty.nl'></img>
                 <div className='input-box'>
                     <input className='input' type='text' placeholder='E-mail' required onChange={(e) => setEmail(e.target.value)} />
@@ -88,7 +97,7 @@ function LoginForm() {
                     <a href='#'>Wachtwoord vergeten</a>
                     <Link to='/registreerdeskundige'>Registreer</Link>
                 </div>
-                <button className='LoginButton' type='button' onClick={handleLogin}>Login</button>
+                <button className='LoginButton' type='submit'>Login</button>
             </form>
 
             <p className='loginMessage'>{loginMessage}</p>

@@ -52,7 +52,7 @@ public class AccountController : ControllerBase
         }
         else
         {
-            return BadRequest(new { Message = "Login failed" });
+            return BadRequest(new { Message = "E-mail of wachtwoord verkeerd ingevoerd." });
         }
     }
 

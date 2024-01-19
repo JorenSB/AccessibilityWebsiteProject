@@ -16,23 +16,16 @@ function VoogdGegevens(props) {
 
     return age;
   };
-  useEffect(() => {
-      const age = calculateAge(props.birthDate);
-      if (age >= 18) {
-        setVolwassen(true);
-      }
-      
-  }, []);
 
   useEffect(() => {
-      const age = calculateAge(props.birthDateData);
-      if (age >= 18) {
-        setVolwassen(true);
-      } else {
-        setVolwassen(false);
-      }
+    const age = calculateAge(props.birthDate);
+    setVolwassen(age >= 18);
+  }, [props.birthDate]);
+
+  useEffect(() => {
+    const age = calculateAge(props.birthDateData);
+    setVolwassen(age >= 18);
   }, [props.birthDateData]);
-
 
   return (
     <div className='voogdGegevensContainer'>
