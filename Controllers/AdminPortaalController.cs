@@ -14,32 +14,34 @@ using Microsoft.IdentityModel.Tokens;
 public class AdminPortaalController : ControllerBase
 {
     // variables
-    private readonly ApplicationDbContext _dbContext;
     private readonly UserManager<User> _userManager;
+    private readonly ApplicationDbContext _context;
+    private readonly ValidationController _validationController;
 
-    public AdminPortaalController(ApplicationDbContext dbContext, UserManager<User> userManager) {
+    public AdminPortaalController(UserManager<User> userManager, ApplicationDbContext dbContext, ValidationController validationController)
+    {
         _userManager = userManager;
-        _dbContext = dbContext;
+        _context = dbContext;
+        _validationController = validationController;
     }
-
 
     [HttpGet("companies")]
     public IActionResult GetAllCompanies()
     {
-        var authAdmin = ValidationController.authAdmin(Request.Headers["Authorization"].FirstOrDefault());
+        var authAdmin = _validationController.authAdmin(Request.Headers["Authorization"].FirstOrDefault());
 
         if (!authAdmin) {
             return Unauthorized("Invalid or Expired Token");
         }
 
-        var companies = _dbContext.Companies.ToList();
+        var companies = _context.Companies.ToList();
         return Ok(companies);
     }
     
     [HttpGet("companies/{id}")]
     public IActionResult GetCompany(string? id)
     {
-        var authAdmin = ValidationController.authAdmin(Request.Headers["Authorization"].FirstOrDefault());
+        var authAdmin = _validationController.authAdmin(Request.Headers["Authorization"].FirstOrDefault());
         if (!authAdmin) {
             return Unauthorized("Invalid or Expired Token");
         }
@@ -50,7 +52,7 @@ public class AdminPortaalController : ControllerBase
         }
 
         try {
-            Company company = _dbContext.Companies.Where(c => c.Id == id).FirstOrDefault();
+            Company company = _context.Companies.Where(c => c.Id == id).FirstOrDefault();
             return Ok(company);
         } catch {
             return NotFound("Company not found pik");
@@ -59,7 +61,7 @@ public class AdminPortaalController : ControllerBase
     [HttpPut("companies/{id}")]
     public async Task<IActionResult> PutCompany(string? id, [FromBody] CompanyViewModel companyEditModel)
     {
-        var authAdmin = ValidationController.authAdmin(Request.Headers["Authorization"].FirstOrDefault());
+        var authAdmin = _validationController.authAdmin(Request.Headers["Authorization"].FirstOrDefault());
         if (!authAdmin) {
             return Unauthorized("Invalid or Expired Token");
         }
@@ -70,7 +72,7 @@ public class AdminPortaalController : ControllerBase
         }
 
         // Retrieve the company based on the user ID
-        Company company = _dbContext.Companies.FirstOrDefault(c => c.Id == id);
+        Company company = _context.Companies.FirstOrDefault(c => c.Id == id);
 
         if (company != null)
         {
@@ -84,12 +86,12 @@ public class AdminPortaalController : ControllerBase
                 company.CompanyName = companyEditModel.CompanyName;
             }
 
-            if (!string.IsNullOrEmpty(companyEditModel.Email) && ValidationController.IsValidEmail(companyEditModel.Email))
+            if (!string.IsNullOrEmpty(companyEditModel.Email) && _validationController.IsValidEmail(companyEditModel.Email))
             {
                 company.Email = companyEditModel.Email;
             }
 
-            if (!string.IsNullOrEmpty(companyEditModel.NewPassword) && ValidationController.IsValidPassword(companyEditModel.NewPassword))
+            if (!string.IsNullOrEmpty(companyEditModel.NewPassword) && _validationController.IsValidPassword(companyEditModel.NewPassword))
             {
                 // Update the user's password directly
                 var newPasswordHash = _userManager.PasswordHasher.HashPassword(company, companyEditModel.NewPassword);
@@ -111,11 +113,11 @@ public class AdminPortaalController : ControllerBase
                 company.Address = companyEditModel.Address;
             }
 
-            _dbContext.Companies.Update(company);
+            _context.Companies.Update(company);
 
             try
             {
-                await _dbContext.SaveChangesAsync();
+                await _context.SaveChangesAsync();
                 return Ok("Success");
             }
             catch (DbUpdateConcurrencyException)
@@ -133,19 +135,19 @@ public class AdminPortaalController : ControllerBase
     [HttpGet("experts")]
     public IActionResult GetAllExperts()
     {
-        var authAdmin = ValidationController.authAdmin(Request.Headers["Authorization"].FirstOrDefault());
+        var authAdmin = _validationController.authAdmin(Request.Headers["Authorization"].FirstOrDefault());
         if (!authAdmin) {
             return BadRequest("Invalid or Expired Token");
         }
 
-        var experts = _dbContext.Experts.ToList();
+        var experts = _context.Experts.ToList();
         return Ok(experts);
     }
 
     [HttpGet("experts/{id}")]
     public IActionResult GetExpert(string? id)
     {
-        var authAdmin = ValidationController.authAdmin(Request.Headers["Authorization"].FirstOrDefault());
+        var authAdmin = _validationController.authAdmin(Request.Headers["Authorization"].FirstOrDefault());
         if (!authAdmin) {
             return BadRequest("Invalid or Expired Token");
         }
@@ -156,7 +158,7 @@ public class AdminPortaalController : ControllerBase
         }
         
         try {
-            Expert expert = _dbContext.Experts.Where(e => e.Id == id).FirstOrDefault();
+            Expert expert = _context.Experts.Where(e => e.Id == id).FirstOrDefault();
             return Ok(expert);
         } catch {
             return NotFound("Company not found pik");

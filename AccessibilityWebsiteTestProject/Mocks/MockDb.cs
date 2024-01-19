@@ -57,7 +57,7 @@ public class MockDbContextFactory
                     PhoneNumber = "123456789",
                     BirthDate = new DateTime(1990, 1, 1),
                     Disabilities = new List<Disability> { new Disability { DisabilityName = "doof" } },
-                    DisabilityAids = new List<DisabilityAid>{new DisabilityAid { DisabilityAidId = "1",  DisabilityAidName = "gehoor apparaat"}},
+                    DisabilityAids = new List<DisabilityAid>{new DisabilityAid { DisabilityAidId = 1,  DisabilityAidName = "gehoor apparaat"}},
                     CommercialContact = true,
                     PhonePreference = true,
                     EmailPreference = false
@@ -68,7 +68,7 @@ public class MockDbContextFactory
             {
                 new Disability
                 {
-                    DisabilityId = "2",
+                    DisabilityId = 2,
                     DisabilityName = "doof"
                 }
             });
@@ -77,7 +77,7 @@ public class MockDbContextFactory
             {
                 new DisabilityAid
                 {
-                    DisabilityAidId = "2",
+                    DisabilityAidId = 2,
                     DisabilityAidName = "gehoor apparaat"
                 }
             });

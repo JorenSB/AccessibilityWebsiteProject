@@ -6,7 +6,7 @@ using System.Security.Claims;
 
 public class ValidationController
 {
-    public static bool IsValidEmail(string? email)
+    public bool IsValidEmail(string? email)
     {
         if (email.IsNullOrEmpty())
         {
@@ -16,7 +16,7 @@ public class ValidationController
         return Regex.IsMatch(email!, emailPattern);
     }
 
-    public static bool IsValidPassword(string? password)
+    public bool IsValidPassword(string? password)
     {
         if (password.IsNullOrEmpty())
         {
@@ -88,7 +88,7 @@ public class ValidationController
         }
     }
 
-    public static bool authAdmin(string? tokenJWT) {
+    public bool authAdmin(string? tokenJWT) {
         var secret = Environment.GetEnvironmentVariable("SECRET_KEY") ?? "default_key";
         var key = Encoding.ASCII.GetBytes(secret);
 

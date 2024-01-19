@@ -11,11 +11,13 @@ public class AccountController : ControllerBase
 {
     private readonly UserManager<User> _userManager;
     private readonly SignInManager<User> _signInManager;
+    private readonly ValidationController _validationController;
 
-    public AccountController(UserManager<User> userManager, SignInManager<User> signInManager)
+    public AccountController(UserManager<User> userManager, SignInManager<User> signInManager, ValidationController validationController)
     {
         _userManager = userManager;
         _signInManager = signInManager;
+        _validationController = validationController;
     }
 
     [HttpPost("login")]
@@ -67,9 +69,9 @@ public class AccountController : ControllerBase
     public async Task<IActionResult> RegisterExpert([FromBody] RegisterExpertViewModel model)
     {
         // check of de email en password geldig zijn
-        if (!ValidationController.IsValidEmail(model.Email) || !ValidationController.IsValidPassword(model.Password))
+        if (!_validationController.IsValidEmail(model.Email) || !_validationController.IsValidPassword(model.Password))
         {
-            if (!ValidationController.IsValidEmail(model.Email))
+            if (!_validationController.IsValidEmail(model.Email))
             {
                 return BadRequest(new { Message = "Ongeldig e-mailadres" });
 
@@ -110,9 +112,9 @@ public class AccountController : ControllerBase
     [HttpPost("registerCompany")]
     public async Task<IActionResult> RegisterCompany([FromBody] RegisterCompanyViewModel model)
     {
-        if (!ValidationController.IsValidEmail(model.Email) || !ValidationController.IsValidPassword(model.Password))
+        if (!_validationController.IsValidEmail(model.Email) || !_validationController.IsValidPassword(model.Password))
         {
-            if (!ValidationController.IsValidEmail(model.Email))
+            if (!_validationController.IsValidEmail(model.Email))
             {
                 return BadRequest(new { Message = "Ongeldig e-mailadres" });
             }

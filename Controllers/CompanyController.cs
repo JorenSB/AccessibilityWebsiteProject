@@ -25,7 +25,7 @@ public class CompanyController : ControllerBase
     {
         var JWTToken = Request.Headers["JWTToken"].FirstOrDefault();
         //Gets the UserID from the databsae from the JWTToken
-        var userIdFromToken = validationController.getIdentifierFromJWT(JWTToken!);
+        var userIdFromToken = _validationController.getIdentifierFromJWT(JWTToken!);
 
         // Checks if a valid token has been found
         if (userIdFromToken == null)
@@ -63,7 +63,7 @@ public class CompanyController : ControllerBase
         }
 
         // Gets the UserID from the database from the JWTToken
-        var userIdFromToken = validationController.getIdentifierFromJWT(JWTToken!);
+        var userIdFromToken = _validationController.getIdentifierFromJWT(JWTToken!);
 
         // Checks if a valid token has been found
         if (userIdFromToken == null)
@@ -106,7 +106,7 @@ public class CompanyController : ControllerBase
         if (companyViewModel.Email != null)
         {
             // Checks if the Email meets the requirements
-            if (validationController.IsValidEmail(companyViewModel.Email))
+            if (_validationController.IsValidEmail(companyViewModel.Email))
             {
                 // Checks if any user already is using the given Email
                 var existingUser = await _userManager.FindByEmailAsync(companyViewModel.Email!);
@@ -132,7 +132,7 @@ public class CompanyController : ControllerBase
         if (companyViewModel.NewPassword != null)
         {
             // Checks if NewPassword meets requirements
-            if (validationController.IsValidPassword(companyViewModel.NewPassword))
+            if (_validationController.IsValidPassword(companyViewModel.NewPassword))
             {
                 // Checks if the CurrentPassword is filled in
                 if (companyViewModel.CurrentPassword != null)

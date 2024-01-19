@@ -35,7 +35,7 @@ namespace AccessibilityWebsiteProject.Controllers
         {
             var JWTToken = Request.Headers["JWTToken"].FirstOrDefault();
 
-            var idClaim = ValidationController.getIdentifierFromJWT(JWTToken!);
+            var idClaim = _validationController.getIdentifierFromJWT(JWTToken!);
 
             if (string.IsNullOrEmpty(idClaim))
             {
@@ -87,7 +87,7 @@ namespace AccessibilityWebsiteProject.Controllers
         {
             var JWTToken = Request.Headers["JWTToken"].FirstOrDefault();
 
-            var userIdFromToken = ValidationController.getIdentifierFromJWT(JWTToken!);
+            var userIdFromToken = _validationController.getIdentifierFromJWT(JWTToken!);
 
             if (string.IsNullOrEmpty(userIdFromToken))
             {
@@ -140,7 +140,7 @@ namespace AccessibilityWebsiteProject.Controllers
         {
             var JWTToken = Request.Headers["JWTToken"].FirstOrDefault();
 
-            var userIdFromToken = ValidationController.getIdentifierFromJWT(JWTToken!);
+            var userIdFromToken = _validationController.getIdentifierFromJWT(JWTToken!);
 
             if (string.IsNullOrEmpty(userIdFromToken))
             {
@@ -168,7 +168,7 @@ namespace AccessibilityWebsiteProject.Controllers
         {
             var JWTToken = Request.Headers["JWTToken"].FirstOrDefault();
 
-            var userIdFromToken = ValidationController.getIdentifierFromJWT(JWTToken!);
+            var userIdFromToken = _validationController.getIdentifierFromJWT(JWTToken!);
 
             if (string.IsNullOrEmpty(userIdFromToken))
             {
