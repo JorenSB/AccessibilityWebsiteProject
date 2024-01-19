@@ -3,7 +3,7 @@ import './CompanyProfile.css';
 import FetchCompanyProfile from './FetchCompanyProfile';
 
 const CompanyProfile = () => {
-  const { CompanyData, setUserData } = FetchCompanyProfile();
+  const CompanyData = FetchCompanyProfile();
   
   return (
     <CompanyLayout>
