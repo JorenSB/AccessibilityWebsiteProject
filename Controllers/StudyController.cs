@@ -9,10 +9,13 @@ namespace AccessibilityWebsiteProject.Controllers
     public class StudyController : ControllerBase
     {
         private readonly ApplicationDbContext _context;
+        private readonly ValidationController _validationController;
 
-        public StudyController(ApplicationDbContext context)
+        public StudyController(ApplicationDbContext context, ValidationController validationController)
         {
             _context = context;
+            _validationController = validationController;
+
         }
 
         // GET: api/Study
@@ -32,7 +35,7 @@ namespace AccessibilityWebsiteProject.Controllers
         {
             var JWTToken = Request.Headers["JWTToken"].FirstOrDefault();
 
-            var idClaim = ValidationController.getIdentifierFromJWT(JWTToken!);
+            var idClaim = _validationController.getIdentifierFromJWT(JWTToken!);
 
             if (string.IsNullOrEmpty(idClaim))
             {
@@ -84,7 +87,7 @@ namespace AccessibilityWebsiteProject.Controllers
         {
             var JWTToken = Request.Headers["JWTToken"].FirstOrDefault();
 
-            var userIdFromToken = ValidationController.getIdentifierFromJWT(JWTToken!);
+            var userIdFromToken = _validationController.getIdentifierFromJWT(JWTToken!);
 
             if (string.IsNullOrEmpty(userIdFromToken))
             {
@@ -137,7 +140,7 @@ namespace AccessibilityWebsiteProject.Controllers
         {
             var JWTToken = Request.Headers["JWTToken"].FirstOrDefault();
 
-            var userIdFromToken = ValidationController.getIdentifierFromJWT(JWTToken!);
+            var userIdFromToken = _validationController.getIdentifierFromJWT(JWTToken!);
 
             if (string.IsNullOrEmpty(userIdFromToken))
             {
@@ -165,7 +168,7 @@ namespace AccessibilityWebsiteProject.Controllers
         {
             var JWTToken = Request.Headers["JWTToken"].FirstOrDefault();
 
-            var userIdFromToken = ValidationController.getIdentifierFromJWT(JWTToken!);
+            var userIdFromToken = _validationController.getIdentifierFromJWT(JWTToken!);
 
             if (string.IsNullOrEmpty(userIdFromToken))
             {

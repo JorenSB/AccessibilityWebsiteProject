@@ -19,6 +19,19 @@ const Dropdown = (props) => {
   };
 
   useEffect(() => {
+    handleDataUpdate({
+      disabilities: selectedOptions
+    });
+  }, [selectedOptions]);
+  
+  const handleDataUpdate = (updatedData) => {
+    if (props.onUpdateData) {
+      props.onUpdateData(updatedData);
+    }
+  };
+  
+
+  useEffect(() => {
     const fetchUserData = async () => {
       try {
         const response = await fetch(`https://localhost:7101/api/deskundige/getdisabilities`, {

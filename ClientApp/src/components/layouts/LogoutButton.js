@@ -19,7 +19,6 @@ const LogoutButton = () => {
           console.log('Uitloggen uitgevoerd');
           localStorage.removeItem('jwtToken');
           
-          // Gebruik de navigate instantie om te redirecten
           navigate("/");
         } else {
           console.error('Fout tijdens uitloggen:', response.statusText);

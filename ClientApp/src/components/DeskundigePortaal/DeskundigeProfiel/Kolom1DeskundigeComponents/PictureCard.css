@@ -25,3 +25,31 @@
     font-weight: bold;
   }
   
+  .cardInput input{
+    margin-bottom:10px ;
+    border: 2px solid #FFF;
+    background-color: #1CA883;
+    border-radius: 8px;
+    color: black;
+    width: 70%;
+    height: 5.5vh;
+    margin-left: 3.5vw;
+  }
+  .card input::placeholder {
+    color: black;
+    font-weight: bold;
+    font-size: 20px;
+    text-align: center;
+  }
+
+
+  @media only screen and (max-width: 600px) {
+    .pic{
+      width: 43%;
+
+    }
+
+    .cardInput input{
+      margin-left: 14vw;
+    }
+}

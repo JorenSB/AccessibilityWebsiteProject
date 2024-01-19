@@ -7,7 +7,6 @@ public class ApplicationDbContext : IdentityDbContext<User>
     //hieronder sets die je nodig hebt toevoegen.
     public DbSet<Company> Companies { get; set; }
     public DbSet<Expert> Experts { get; set; }
-    public DbSet<Guardian> Guardians { get; set; }
     public DbSet<Disability> Disabilities { get; set; }
     public DbSet<DisabilityAid> DisabilityAids { get; set; }
     public DbSet<Admin> Admins { get; set; }
@@ -27,7 +26,6 @@ public class ApplicationDbContext : IdentityDbContext<User>
         // Tabelnamen configureren
         modelBuilder.Entity<Company>(entity => entity.ToTable("Companies"));
         modelBuilder.Entity<Expert>(entity => entity.ToTable("Experts"));
-        modelBuilder.Entity<Guardian>(entity => entity.ToTable("Guardians"));
         modelBuilder.Entity<Disability>(entity => entity.ToTable("Disabilities"));
         modelBuilder.Entity<DisabilityAid>(entity => entity.ToTable("DisabilityAids"));
         modelBuilder.Entity<Admin>(entity => entity.ToTable("Admins"));
