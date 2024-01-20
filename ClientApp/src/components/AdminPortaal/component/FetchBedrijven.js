@@ -33,6 +33,7 @@ const FetchBedrijven = () => {
   }, []);
 
   return (
+    <>
     <div className='row listviewer'>
       {bedrijfData.map((data) => (
         <div key={data.id} className="card col-lg-6 col-md-6 col-12 card-figma md-3">
@@ -52,13 +53,17 @@ const FetchBedrijven = () => {
                   
               </div>
               <div className='col-lg-3 col-12 d-flex align-items-center justify-content-center'>
-                <Link to={`/admin/bedrijven/${data.id}`} className="card-link figma-bg-white-rounded px-3 text-decoraction-none text-decoration-none font-weight-bold">Bekijk ></Link>
+                <Link to={`/admin/bedrijven/${data.id}`} className="card-link figma-bg-white-rounded px-3 text-decoraction-none text-decoration-none font-weight-bold text-dark">Bekijken {">"}</Link>
               </div>
             </div>
           </div>
         </div>
       ))}
     </div>
+    <div className='row'>
+      <div className='col-12 text-center'><button className='btn btn-primary' onClick={fetchData}>Herladen</button></div>
+    </div>
+  </>
   );
 };
 
