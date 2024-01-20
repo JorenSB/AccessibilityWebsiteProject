@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import PostStudy from './PostStudy';
 import CompanyLayout from '../CompanyPortal/CompanyLayout';
+import './OnderzoekStart.css';
 
 const OnderzoekStart = () => {
     const [studyData, setStudyData] = useState({
@@ -9,7 +10,7 @@ const OnderzoekStart = () => {
         Reward: 0,
         Language: '',
         Beperking: '',
-        Date: new Date().toISOString().split('T')[0]
+        Date: new Date().toISOString().split('T')[0],
     });
 
     const { addStudy, createdStudy } = PostStudy(studyData);
@@ -22,33 +23,73 @@ const OnderzoekStart = () => {
         });
     };
 
-    const handleAddStudy = () => {
+    const [buttonColor, setButtonColor] = useState('green');
+
+    const handleSaveClick = () => {
+        setButtonColor('orange');
+
         addStudy();
-        // Optionally, you can handle the createdStudy state here
+
+        setTimeout(() => {
+            setButtonColor('green');
+        }, 400);
     };
 
     return (
         <CompanyLayout>
-            <div>
-                <label>Title:</label>
-                <input type="text" name="Title" value={studyData.Title} onChange={handleInputChange} />
+            <div className="container">
+                <div className="col1">
+                    <label><strong>Title:</strong></label>
+                    <input
+                        type="text"
+                        name="Title"
+                        value={studyData.Title}
+                        onChange={handleInputChange}
+                    />
 
-                <label>Status:</label>
-                <input type="text" name="Status" value={studyData.Status} onChange={handleInputChange} />
+                    <label><strong>Status:</strong></label>
+                    <input
+                        type="text"
+                        name="Status"
+                        value={studyData.Status}
+                        onChange={handleInputChange}
+                    />
 
-                <label>Reward:</label>
-                <input type="number" name="Reward" value={studyData.Reward} onChange={handleInputChange} />
+                    <label><strong>Reward:</strong></label>
+                    <input
+                        type="number"
+                        name="Reward"
+                        value={studyData.Reward}
+                        onChange={handleInputChange}
+                    />
 
-                <label>Language:</label>
-                <input type="text" name="Language" value={studyData.Language} onChange={handleInputChange} />
+                    <label><strong>Language:</strong></label>
+                    <input
+                        type="text"
+                        name="Language"
+                        value={studyData.Language}
+                        onChange={handleInputChange}
+                    />
 
-                <label>Beperking:</label>
-                <input type="text" name="Beperking" value={studyData.Beperking} onChange={handleInputChange} />
+                    <label><strong>Beperking:</strong></label>
+                    <input
+                        type="text"
+                        name="Beperking"
+                        value={studyData.Beperking}
+                        onChange={handleInputChange}
+                    />
 
-                <label>Date:</label>
-                <input type="date" name="Date" value={studyData.Date} onChange={handleInputChange} />
-
-                <button onClick={handleAddStudy}>Add Study</button>
+                    <label><strong>Date:</strong></label>
+                    <input
+                        type="date"
+                        name="Date"
+                        value={studyData.Date}
+                        onChange={handleInputChange}
+                    />
+                </div>
+                <button className={`saveButton ${buttonColor}`} onClick={handleSaveClick}>
+                    Add Study
+                </button>
             </div>
         </CompanyLayout>
     );
