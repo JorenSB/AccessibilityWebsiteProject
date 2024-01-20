@@ -14,7 +14,6 @@ function LoginForm() {
 
     const handleLogin = async (e) => {
         e.preventDefault();
-        console.log(email, password);
         try {
             const response = await fetch('https://localhost:7101/api/account/login', {
                 method: 'POST',
