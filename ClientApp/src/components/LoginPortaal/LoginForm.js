@@ -37,7 +37,7 @@ function LoginForm() {
                     if (role === "Expert") {
                         navigate("/deskundige");
                     } else if (role === "Company") {
-                        navigate("/test");
+                        navigate("/company");
                     } else if (role === "Admin") {
                         navigate("/admin/deskundigen");
                     }else {
@@ -61,10 +61,12 @@ function LoginForm() {
           if (isAuthenticated()) {
             const role = getUserRole();
       
-            if (role === 'Expert') {
-              navigate('/deskundige');
-            } else if (role === 'Company') {
-              navigate('/test');
+            if (role === "Expert") {
+                navigate("/deskundige");
+            } else if (role === "Company") {
+                navigate("/company");
+            } else if (role === "Admin") {
+                navigate("/admin")
             }
           }
         };
