@@ -2,6 +2,13 @@ namespace AccessibilityWebsiteTestProject;
 
 public class ValidationControllerTests
 {
+       private readonly ValidationController _validationController;
+
+    public ValidationControllerTests (ValidationController validationController)
+    {
+        _validationController = validationController;
+    }
+
     [Fact]
     public void IsValidEmail_ShouldReturnTrueForValidEmail()
     {
@@ -9,7 +16,7 @@ public class ValidationControllerTests
         string validEmail = "test@example.com";
 
         // Act
-        bool result = ValidationController.IsValidEmail(validEmail);
+        bool result = _validationController.IsValidEmail(validEmail);
 
         // Assert
         Assert.True(result);
@@ -22,7 +29,7 @@ public class ValidationControllerTests
         string invalidEmail = "invalid_email";
 
         // Act
-        bool result = ValidationController.IsValidEmail(invalidEmail);
+        bool result = _validationController.IsValidEmail(invalidEmail);
 
         // Assert
         Assert.False(result);
@@ -36,8 +43,8 @@ public class ValidationControllerTests
         string emptyEmail = string.Empty;
 
         // Act
-        bool resultNullOrEmpty = ValidationController.IsValidEmail(nullOrEmptyEmail);
-        bool resultEmpty = ValidationController.IsValidEmail(emptyEmail);
+        bool resultNullOrEmpty = _validationController.IsValidEmail(nullOrEmptyEmail);
+        bool resultEmpty = _validationController.IsValidEmail(emptyEmail);
 
         // Assert
         Assert.False(resultNullOrEmpty);

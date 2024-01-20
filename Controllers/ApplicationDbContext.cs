@@ -9,6 +9,7 @@ public class ApplicationDbContext : IdentityDbContext<User>
     public DbSet<Expert> Experts { get; set; }
     public DbSet<Disability> Disabilities { get; set; }
     public DbSet<DisabilityAid> DisabilityAids { get; set; }
+    public DbSet<Admin> Admins { get; set; }
     public DbSet<Study> Studies { get; set; }
     public DbSet<Result> Results { get; set; }
 
@@ -27,45 +28,53 @@ public class ApplicationDbContext : IdentityDbContext<User>
         modelBuilder.Entity<Expert>(entity => entity.ToTable("Experts"));
         modelBuilder.Entity<Disability>(entity => entity.ToTable("Disabilities"));
         modelBuilder.Entity<DisabilityAid>(entity => entity.ToTable("DisabilityAids"));
+        modelBuilder.Entity<Admin>(entity => entity.ToTable("Admins"));
         modelBuilder.Entity<Study>(entity => entity.ToTable("Studies"));
         modelBuilder.Entity<Result>(entity => entity.ToTable("Results"));
-
         // relaties
-       
-       modelBuilder.Entity<Expert>()
-            .HasMany(e => e.Disabilities)
-            .WithMany()
-            .UsingEntity(j => j.ToTable("ExpertDisabilities"));
+        modelBuilder.Entity<Study>()
+        .HasOne(e => e.Result)
+        .WithOne(e => e.Study)
+        .HasForeignKey<Result>(e => e.StudyID)
+        .IsRequired(false);
 
         modelBuilder.Entity<Expert>()
-        .HasMany(e => e.DisabilityAids)
-        .WithMany()
-        .UsingEntity(j => j.ToTable("ExpertDisabilityAids"));
-        
+             .HasMany(e => e.Disabilities)
+             .WithMany()
+             .UsingEntity(j => j.ToTable("ExpertDisabilities"));
+
+        modelBuilder.Entity<Expert>()
+            .HasMany(e => e.DisabilityAids)
+            .WithMany()
+            .UsingEntity(j => j.ToTable("ExpertDisabilityAids"));
         // Voeg eventueel andere configuraties toe
     }
 
-    //prod connection
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
-        var IP = Environment.GetEnvironmentVariable("DB_IP") ?? "default_ip";
-        var port = Environment.GetEnvironmentVariable("DB_PORT") ?? "default_port";
-        var database = Environment.GetEnvironmentVariable("DB_NAME") ?? "default_datbase";
-        var username = Environment.GetEnvironmentVariable("DB_USERNAME") ?? "default_username";
-        var password = Environment.GetEnvironmentVariable("DB_PASSWORD") ?? "default_password";
+        // Gets the Variables from the .env file
+        var isProd = Environment.GetEnvironmentVariable("DB_PROD")?.Equals("true", StringComparison.OrdinalIgnoreCase) ?? false;
+        var database = Environment.GetEnvironmentVariable("DB_NAME");
+        var host = Environment.GetEnvironmentVariable("DB_HOST");
+        var username = Environment.GetEnvironmentVariable("DB_USERNAME");
+        var password = Environment.GetEnvironmentVariable("DB_PASSWORD");
+        var timeout = Environment.GetEnvironmentVariable("DB_TIMEOUT");
 
-        //local db connection
-        var connectionString = "Server=LAPTOP-06LLPTJA\\SQLEXPRESS;Database=accesibilityProj;Trusted_Connection=True;TrustServerCertificate=True;Connection Timeout=30;";
+        // Common options
+        var persistSecurityInfo = "False";
+        var multipleActiveResultSets = "False";
+        var connectionString = $"Server={host};Database={database};Timeout={timeout};Persist Security Info={persistSecurityInfo};MultipleActiveResultSets={multipleActiveResultSets};User ID={username};Password={password};";
 
+        // Environment-specific options
+        if (isProd)
+        {
+            connectionString += $";TrustServerCertificate=False;Encrypt=True;Trusted_Connection=False;";
+        }
+        else
+        {
+            connectionString += $";TrustServerCertificate=True;Encrypt=False;Trusted_Connection=True;";
+        }
 
-        //prod db connection
-        
-        //var connectionString = $"Server=tcp:accessibility1.database.windows.net,1433;Initial Catalog=Accessibility2;Persist Security Info=False;User ID={username};Password={password};MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;";
-
-        optionsBuilder.UseSqlServer(connectionString, providerOptions => providerOptions.CommandTimeout(60));
-        
+        optionsBuilder.UseSqlServer(connectionString);
     }
-
-    
-    
 }

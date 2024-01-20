@@ -11,11 +11,13 @@ public class AccountController : ControllerBase
 {
     private readonly UserManager<User> _userManager;
     private readonly SignInManager<User> _signInManager;
+    private readonly ValidationController _validationController;
 
-    public AccountController(UserManager<User> userManager, SignInManager<User> signInManager)
+    public AccountController(UserManager<User> userManager, SignInManager<User> signInManager, ValidationController validationController)
     {
         _userManager = userManager;
         _signInManager = signInManager;
+        _validationController = validationController;
     }
 
     [HttpPost("login")]
@@ -42,7 +44,7 @@ public class AccountController : ControllerBase
                 issuer: HttpContext.Request.Scheme + "://" + HttpContext.Request.Host,
                 audience: HttpContext.Request.Scheme + "://" + HttpContext.Request.Host,
                 claims: claims,
-                expires: DateTime.Now.AddMinutes(20),
+                expires: DateTime.Now.AddMinutes(50),
                 signingCredentials: creds
             );
 
@@ -67,9 +69,9 @@ public class AccountController : ControllerBase
     public async Task<IActionResult> RegisterExpert([FromBody] RegisterExpertViewModel model)
     {
         // check of de email en password geldig zijn
-        if (!ValidationController.IsValidEmail(model.Email) || !ValidationController.IsValidPassword(model.Password))
+        if (!_validationController.IsValidEmail(model.Email) || !_validationController.IsValidPassword(model.Password))
         {
-            if (!ValidationController.IsValidEmail(model.Email))
+            if (!_validationController.IsValidEmail(model.Email))
             {
                 return BadRequest(new { Message = "Ongeldig e-mailadres" });
 
@@ -110,9 +112,9 @@ public class AccountController : ControllerBase
     [HttpPost("registerCompany")]
     public async Task<IActionResult> RegisterCompany([FromBody] RegisterCompanyViewModel model)
     {
-        if (!ValidationController.IsValidEmail(model.Email) || !ValidationController.IsValidPassword(model.Password))
+        if (!_validationController.IsValidEmail(model.Email) || !_validationController.IsValidPassword(model.Password))
         {
-            if (!ValidationController.IsValidEmail(model.Email))
+            if (!_validationController.IsValidEmail(model.Email))
             {
                 return BadRequest(new { Message = "Ongeldig e-mailadres" });
             }
@@ -142,5 +144,30 @@ public class AccountController : ControllerBase
             return Ok();
         }
         return BadRequest(new { Message = "Er is iets misgegaan bij de registratie van het bedrijf" });
+    }
+
+    [HttpPost("registerAdmin")]
+    public async Task<IActionResult> RegisterAdmin([FromBody] RegisterAdminViewModel model)
+    {
+        var admin = new Admin
+        {
+            Email = model.Email,
+            EmailConfirmed = true,
+            UserName = model.Email,
+            FirstName = model.FirstName, 
+            LastName = model.LastName
+        };
+
+        var result = await _userManager.CreateAsync(admin, model.Password);
+
+        if (result.Succeeded)
+        {
+            // Geef de rol "Admin" aan de nieuwe gebruiker
+            await _userManager.AddToRoleAsync(admin, "Admin");
+
+            return Ok("Admin geregistreerd");
+        }
+
+        return BadRequest("Er is iets misgegaan bij de toevoegen van een Admin");
     }
 }

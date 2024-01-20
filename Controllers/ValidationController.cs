@@ -6,23 +6,24 @@ using System.Security.Claims;
 
 public class ValidationController
 {
-    public static bool IsValidEmail(string? email)
+    public bool IsValidEmail(string? email)
     {
         if (email.IsNullOrEmpty())
         {
             return false;
         }
         string emailPattern = @"^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$";
-        return Regex.IsMatch(email, emailPattern);
+        return Regex.IsMatch(email!, emailPattern);
     }
 
-    public static bool IsValidPassword(string? password)
+    public bool IsValidPassword(string? password)
     {
         if (password.IsNullOrEmpty())
         {
             return false;
         }
-        if (password.Length < 8)
+        // Checks if the password is at least 8 characters long
+        if (password!.Length < 8)
         {
             return false;
         }
@@ -87,4 +88,34 @@ public class ValidationController
         }
     }
 
+    public bool authAdmin(string? tokenJWT) {
+        var secret = Environment.GetEnvironmentVariable("SECRET_KEY") ?? "default_key";
+        var key = Encoding.ASCII.GetBytes(secret);
+
+        var handler = new JwtSecurityTokenHandler();
+        var validations = new TokenValidationParameters
+        {
+            ValidateIssuerSigningKey = true,
+            IssuerSigningKey = new SymmetricSecurityKey(key),
+            ValidateIssuer = false,
+            ValidateAudience = false
+        };
+
+        try {
+            // Validate the token
+            var claimsPrincipal = handler.ValidateToken(tokenJWT, validations, out var tokenSecure);
+           
+            var roleClaim = claimsPrincipal.Identities.First().Claims.First(o => o.Type == ClaimTypes.Role).Value;
+            
+            if (roleClaim == "Admin") {
+                return true;
+            } else {
+                return false;
+            }
+            
+        }
+        catch{
+            return false;
+        }
+    }
 }

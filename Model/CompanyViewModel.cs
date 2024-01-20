@@ -1,5 +1,6 @@
 public class CompanyViewModel
 {
+    public string CompanyID { get; set; }
     public string? Information { get; set; }
     public string? CompanyName { get; set; }
     public string? CurrentPassword { get; set; }
@@ -8,4 +9,18 @@ public class CompanyViewModel
     public string? Url { get; set; }
     public int? KvkNumber { get; set; }
     public string? Address { get; set; }
+    public CompanyViewModel()
+    {
+
+    }
+    public CompanyViewModel(Company company) 
+    {
+        CompanyID = company.Id;
+        Information = company.Information;
+        CompanyName = company.CompanyName;
+        Email = company.Email;
+        Url = company.Url;
+        KvkNumber = company.KvkNumber;
+        Address = company.Address;
+    }
 }

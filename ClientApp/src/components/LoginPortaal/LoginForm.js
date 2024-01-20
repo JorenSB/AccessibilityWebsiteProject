@@ -38,9 +38,11 @@ function LoginForm() {
                     if (role === "Expert") {
                         navigate("/deskundige/profiel");
                     } else if (role === "Company") {
-                        navigate("/test");
-                    } else {
-                        console.log("mislukt tijdens het inloggen");
+                        navigate("/company");
+                    } else if (role === "Admin") {
+                        navigate("/admin/deskundigen");
+                    }else {
+                        console.log("mislukt tijdens het inloggen", "role = " + role);
                     }
                 } else {
                     console.log("Geen JWT-token ontvangen na succesvol inloggen");
@@ -57,20 +59,30 @@ function LoginForm() {
     };
     useEffect(() => {
         const checkLocalStorage = () => {
+          if (isAuthenticated()) {
+            const role = getUserRole();
+      
+            if (role === "Expert") {
+                navigate("/deskundige");
+            } else if (role === "Company") {
+                navigate("/company");
+            } else if (role === "Admin") {
+                navigate("/admin")
+            }
+          }
             if (isAuthenticated()) {
                 const role = getUserRole();
 
                 if (role === 'Expert') {
                     navigate('/deskundige/profiel');
                 } else if (role === 'Company') {
-                    navigate('/test');
+                    navigate('/company/profile');
                 }
             }
         };
 
         checkLocalStorage();
     }, []);
-
     return (
         <div className='wrapper'>
             <form onSubmit={handleLogin}>

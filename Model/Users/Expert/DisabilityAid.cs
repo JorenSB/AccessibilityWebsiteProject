@@ -6,6 +6,6 @@ public class DisabilityAid
 {
     [Key]
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-    public string DisabilityAidId { get; set; }
+    public int DisabilityAidId { get; set; }
     public string DisabilityAidName { get; set; }
 }

@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using System.Security.Claims;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -30,9 +31,9 @@ builder.Services.AddAuthorization(options =>
 {
     options.AddPolicy("RequireAdminRole", policy =>
         policy.RequireRole("Admin"));
-    options.AddPolicy("RequireExpertRole", policy => 
+    options.AddPolicy("RequireExpertRole", policy =>
         policy.RequireRole("Expert"));
-    options.AddPolicy("RequireCompanyRole", policy => 
+    options.AddPolicy("RequireCompanyRole", policy =>
         policy.RequireRole("Company"));
 });
 
@@ -50,6 +51,29 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             ValidateIssuerSigningKey = true,
             ValidIssuer = "https://localhost:44432/",
             IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Environment.GetEnvironmentVariable("SECRET_KEY")))
+        };
+        // Optional: Add role claim to User.Identity
+        options.Events = new JwtBearerEvents
+        {
+            OnTokenValidated = context =>
+            {
+                var claims = context.Principal.Claims.ToList();
+                var roles = claims.Where(c => c.Type == ClaimTypes.Role).Select(c => c.Value).ToList();
+
+                var identity = context.Principal.Identity as ClaimsIdentity;
+                if (identity != null)
+                {
+                    identity.AddClaims(roles.Select(role => new Claim(ClaimTypes.Role, role)));
+                }
+
+                return Task.CompletedTask;
+            },
+            OnAuthenticationFailed = context =>
+            {
+                // Return a 401 status code instead of redirecting
+                context.Response.StatusCode = StatusCodes.Status401Unauthorized;
+                return Task.CompletedTask;
+            }
         };
     });
 
