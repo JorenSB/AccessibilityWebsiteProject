@@ -1,27 +1,79 @@
+import { useState, useEffect } from 'react';
 import CompanyLayout from './CompanyLayout';
 import './CompanyProfile.css';
 import FetchCompanyProfile from './FetchCompanyProfile';
 
 const CompanyProfile = () => {
-  const CompanyData = FetchCompanyProfile();
-  
+  var data = FetchCompanyProfile();
+
+  var [companyData, setCompanyData] = useState();
+
+  useEffect(() => {
+    setCompanyData(data);
+  }, [data])
+
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setCompanyData((prevData) => ({
+      ...prevData,
+      [name]: value,
+    }));
+  };
+
+  const [buttonColor, setButtonColor] = useState('green');
+
+  const handleSaveClick = () => {
+    setButtonColor('orange');
+
+
+
+    setTimeout(() => {
+      setButtonColor('green');
+    }, 400);
+  };
   return (
     <CompanyLayout>
-      <div className='profileContainer'>
-        <div className='col1'>
-          <p><strong>Information:</strong> {CompanyData.information}</p>
-          <p><strong>Company Name:</strong> {CompanyData.companyName}</p>
-          <p><strong>Email:</strong> {CompanyData.email}</p>
-          {/* Add other properties as needed */}
+      <div className="container">
+        <div className="col1">
+          <label><strong>Information:</strong></label>
+          <input
+            type="text"
+            name="information"
+            value={companyData?.information || ''}
+            onChange={handleInputChange}
+          />
+          <label><strong>Company Name:</strong></label>
+          <input
+            type="text"
+            name="companyName"
+            value={companyData?.companyName || ''}
+            onChange={handleInputChange}
+          />
+          <label><strong>Email:</strong></label>
+          <input
+            type="text"
+            name="email"
+            value={companyData?.email || ''}
+            onChange={handleInputChange}
+          />
+          <label><strong>Address:</strong></label>
+          <input
+            type="text"
+            name="address"
+            value={companyData?.address || ''}
+            onChange={handleInputChange}
+          />
+          <label><strong>Kvk Number:</strong></label>
+          <input
+            type="text"
+            name="kvkNumber"
+            value={companyData?.kvkNumber || ''}
+            onChange={handleInputChange}
+          />
         </div>
-        <div className='col2'>
-          <p><strong>Address:</strong> {CompanyData.address}</p>
-          <p><strong>Kvk Number:</strong> {CompanyData.kvkNumber}</p>
-          {/* Add other properties as needed */}
-        </div>
-        <div className='col3'>
-          {/* Add other properties as needed */}
-        </div>
+        <button className={`saveButton ${buttonColor}`} onClick={handleSaveClick}>
+          Save
+        </button>
       </div>
     </CompanyLayout>
   );

@@ -1,28 +1,32 @@
-.profileContainer{
-    display: flex;
-    flex-direction: row;
-    width: 88vw;
-    height: 90vh;
-}
-
-/* .col1, .col2, .col3 {
+.container {
     display: flex;
     flex-direction: column;
-    width: 30%;
-    padding-left: 10px;
-    padding-right: 10px;
-} */
-
-/* @media screen and (max-width: 768px) {
-    .profileContainer {
-        flex-direction: column;
-        width: 100%;
-    }
-
-    .col1, .col2, .col3 {
-        width: 100%;
-        padding: 0;
-    }
-} */
-
-
+    align-items: center;
+    justify-content: flex-start;
+    padding-top: 20px;
+  }
+  
+  .col1,
+  .col2 {
+    margin-bottom: 20px;
+  }
+  
+  .saveButton {
+    margin-top: 20px;
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+    border: none;
+    border-radius: 4px;
+    color: white;
+    transition: background-color 0.3s ease;
+  }
+  
+  .saveButton.green {
+    background-color: #21cea1;
+  }
+  
+  .saveButton.orange {
+    background-color: #FF7D00;
+  }
+  
