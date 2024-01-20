@@ -189,18 +189,6 @@ const FetchExpertEdit = (props) => {
                     </div>
 
                     <div className="mb-3">
-                    <div className="input-group">
-                        <span className="input-group-text" id="inputGroup-sizing-lg">
-                        Geboortedatum
-                        </span>
-                        <input
-                        type="date"
-                        className="form-control"
-                        id="birthDate"
-                        value={currentExpert.birthDate}
-                        onChange={handleChange}
-                        />
-                    </div>
                     </div>
 
                     <div class="input-group mb-3">

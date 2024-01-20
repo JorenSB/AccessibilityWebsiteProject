@@ -1,23 +1,92 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
+import { useParams, Link, useNavigate } from 'react-router-dom';
+import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
 import Layout from '../AdminPortaalLayout';
 
+import AdminForm from '../component/Create/AdminForm';
 import placeholderImg from '../../media/placeholder.svg';
 
-
-
-export default class Bedrijvenview extends React.Component {
-  render() {
+const AdminProfileView = () => {
+    const [admin, setAdmin] = useState({
+        firstName: '',
+        lastName: '',
+        email: '',
+        newPassword: '',
+    });
+        
+    const [modal, setModal] = useState(false);
+    const toggle = () => setModal(!modal);
+        
+    const handleChange = (e) => {
+        const { id, value } = e.target;
+        setAdmin((prevExpert) => ({ ...prevExpert, [id]: value }));
+        
+    };
+    
+    const FetchAdmin = async () => {
+        try {
+        const jwtToken = localStorage.getItem('jwtToken');
+        const response = await fetch(`https://localhost:7101/api/portaal/admin/profile`, {
+            method: "GET",
+            headers: {
+            Authorization: `${jwtToken}`,
+            },
+        });
+    
+        if (!response.ok) {
+            throw new Error(`HTTP error! Status: ${response.status}`);
+        } else {
+            const data = await response.json();
+            setAdmin(data);
+        }
+        } catch (error) {
+        console.error('Error:', error);
+        }
+    };
+    
+    const handleSubmit = async (e) => {
+        try {
+        e.preventDefault();
+        const jwtToken = localStorage.getItem('jwtToken');
+        const response = await fetch(`https://localhost:7101/api/portaal/admin/profile`, {
+            method: "PUT",
+            headers: {
+            Authorization: `${jwtToken}`,
+            'Content-Type': 'application/json', // Make sure to set the content type
+            },
+            body: JSON.stringify(admin),
+        });
+        
+        if (!response.ok) {
+            throw new Error(`HTTP error! Status: ${response.status}`);
+        } else {
+            console.log("succes?!")
+        }
+        } catch (error) {
+        console.error('Error:', error);
+        }
+    };
+    
+    useEffect(() => {
+        FetchAdmin();
+    }, []);
+    
+    useEffect(() => {
+        console.log("Updated Expert State:", admin);
+    }, [admin]);
+    
     return (
         <Layout>
             <div className='container-fluid'>
-              {/* Titel Row */}
-              <div className='row'>
-                <div className='col-12'><h1>Profiel Gegevens</h1></div>
-              </div>
-              {/* First fromulier row */}
-              <div className='row h-50'>
+                {/* Titel Row */}
+                <div className='row'>
+                <div className='col-8'><h1>Admin Gegevens</h1></div>
+                <div className='col-4'><AdminForm/></div>
+                </div>
+                {/* First fromulier row */}
+                <div className='row h-50'>
                 {/* column voor de profile card */}
-                <div className='col-4'>
+                <div className='col-5'>
                     <div className="card bg-primary">
                         <div className='d-flex justify-content-center align-items-center'>
                             <img className="img-rond p-3" height={300} width={300} src={placeholderImg} alt="test"/>
@@ -25,86 +94,101 @@ export default class Bedrijvenview extends React.Component {
                         <div className="card-body text-center">
                             <div className="input-group flex-nowrap">
                                 <span className="input-group-text disabled" id="addon-wrapping">@</span>
-                                <input type="text" className="form-control" placeholder="Gebruikersnaam..." aria-label="Username" aria-describedby="addon-wrapping"/>
+                                <input type="text" readOnly={true} className="form-control" value={admin.firstName + ' ' + admin.lastName + ' | ' + admin.email}  placeholder="Gebruikersnaam..." aria-label="Username" aria-describedby="addon-wrapping"/>
                             </div>
-                            <h3 className="card-text text-center">Telefoon nummer</h3>
                         </div>
                     </div>
                 </div>
+
+                {/* Fill Colmn */}
+                <div className='col-2'></div>
 
                 {/* Column voor de aanpasbare gegevens */}
-                <div className='col-4'>
-                    <h3 className='text-center'>Persoons gegevens</h3>
+                <div className='col-5'>
+                    <h3 className='text-center'>Aanpasbaren gegevens</h3>
 
-                    <div className="input-group mb-3">
-                        <span className="input-group-text" id="inputGroup-sizing-default">E-mail</span>
-                        <input type="text" className="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default"/>
+                    {/* EditForm */}
+                    <form onSubmit={handleSubmit}>
+                        <div className="mb-3">
+                        <div className="input-group">
+                            <span className="input-group-text" id="inputGroup-sizing-lg">
+                            Voornaam
+                            </span>
+                            <input
+                            type="text"
+                            className="form-control"
+                            id="firstName"
+                            value={admin.firstName}
+                            onChange={handleChange}
+                            />
+                        </div>
+                        </div>
+                        <div className="mb-3">
+                            <div className="input-group">
+                                <span className="input-group-text" id="inputGroup-sizing-lg">
+                                Achternaam
+                                </span>
+                                <input
+                                type="text"
+                                className="form-control"
+                                id="lastName"
+                                value={admin.lastName}
+                                onChange={handleChange}
+                                />
+                            </div>
+                        </div>
+
+                        <div className="mb-3">
+                            <div className="input-group">
+                                <span className="input-group-text" id="inputGroup-sizing-lg">
+                                E-mail
+                                </span>
+                                <input
+                                type="email"
+                                className="form-control"
+                                id="email"
+                                value={admin.email}
+                                onChange={handleChange}
+                                />
+                            </div>
+                        </div>
+
+                        <div className="mb-3">
+                            <div className="input-group">
+                                <span className="input-group-text" id="inputGroup-sizing-lg">
+                                Wachtwoord aanpassen
+                                </span>
+                                <input
+                                type="password"
+                                className="form-control"
+                                id="newPassword"
+                                value={admin.newPassword}
+                                onChange={handleChange}
+                                />
+                            </div>
+                        </div>
+                       
+                        <div className="mb-3 text-center">
+                            <div className='row'>
+                                <div class="d-grid gap-2 col-12 mx-auto">
+                                    <button type="submit" className="btn btn-success">
+                                    Opslaan
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+
+                    <div className='col-12'>
+                        <div className="mb-3 text-center">
+                          <Link className='btn btn-secondary' to={'/admin/bedrijven'}>Terug naar bedrijven overzicht</Link>
+                        </div>
                     </div>
                     
                 </div>
-
-                {/* Column voor de beperkingen */}
-                <div className='col-4'>
-                    <h3 className='text-center'>Beperkingen</h3>
-                    <div className="input-group mb-3">
-                        <select className="form-select" id="inputGroupBeperkingen">
-                            <option defaultValue={"Kies..."}>Kies...</option>
-                            <option value="1">Retarded</option>
-                            <option value="2">Doof</option>
-                            <option value="3">Joren</option>
-                        </select>
-                        <label className="input-group-text" for="inputGroupBeperkingen">Beperking Toevoegen</label>
-                    </div>
                 </div>
-              </div>
-              {/* Tweede Rij van de forms */}
-              <div className='row mt-5'>
-                {/* Keuze Select boxen */}
-                <div className='col-4'>
-                    {/* Commerciëel */}
-                    <div class="input-group mb-3">
-                        <div className="input-group-text">
-                            <input className="form-check-input mt-0"  id="Commercial" type="checkbox" value="" aria-label="Checkbox for following text input"/>
-                        </div>
-                        <label className="input-group-text" for="Commercial">U wilt benaderd worden door commerciele partijen</label>
-                    </div>
-                    {/* Telefonisch */}
-                    <div class="input-group mb-3">
-                        <div className="input-group-text">
-                            <input className="form-check-input mt-0" id="Telefonisch" type="checkbox" value="" aria-label="Checkbox for following text input"/>
-                        </div>
-                        <label className="input-group-text" for="Telefonisch">U wilt telefonisch benaderd worden</label>
-                    </div>
-                    {/* Email */}
-                    <div class="input-group mb-3">
-                        <div className="input-group-text">
-                            <input className="form-check-input mt-0" id="Email" type="checkbox" value="" aria-label="Checkbox for following text input"/>
-                        </div>
-                        <label className="input-group-text" for="Email">U wilt via de E-mail benaderd worden</label>
-                    </div>
-                </div>
-
-                {/* Voogd Gegevens - indien 18+ uitgrijzen */}
-                <div className='col-4'>
-                    
-
-                </div>
-
-                {/* Hulpmiddelen Selects */}
-                <div className='col-4'>
-                    <div className="input-group mb-3">
-                        <select className="form-select" id="inputGroupHulmiddel">
-                            <option selected>Kies...</option>
-                            <option value="1">Retarded</option>
-                            <option value="2">Doof</option>
-                            <option value="3">Joren</option>
-                        </select>
-                        <label className="input-group-text" for="inputGroupHulmiddel">Hulpmiddel(en)</label>
-                    </div>
-                </div>
-              </div>
             </div>
         </Layout>
     )
-  }66
 }
+export default AdminProfileView;

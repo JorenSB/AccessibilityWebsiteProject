@@ -39,7 +39,6 @@ const FetchBedrijfEdit = () => {
       } else {
         const data = await response.json();
         setCurrentBedrijf(data);
-        console.log(currentBedrijf);
       }
     } catch (error) {
       console.error('Error:', error);
