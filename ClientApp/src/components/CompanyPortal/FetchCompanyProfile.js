@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 
-const FetchCompanyProfile = () => {
+const  FetchCompanyProfile = () => {
     const [CompanyData, setCompanyData] = useState([]);
 
     useEffect(() => {
