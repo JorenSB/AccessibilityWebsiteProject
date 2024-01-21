@@ -53,28 +53,28 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Environment.GetEnvironmentVariable("SECRET_KEY")))
         };
         // Optional: Add role claim to User.Identity
-        options.Events = new JwtBearerEvents
-        {
-            OnTokenValidated = context =>
-            {
-                var claims = context.Principal.Claims.ToList();
-                var roles = claims.Where(c => c.Type == ClaimTypes.Role).Select(c => c.Value).ToList();
+        // options.Events = new JwtBearerEvents
+        // {
+        //     OnTokenValidated = context =>
+        //     {
+        //         var claims = context.Principal.Claims.ToList();
+        //         var roles = claims.Where(c => c.Type == ClaimTypes.Role).Select(c => c.Value).ToList();
 
-                var identity = context.Principal.Identity as ClaimsIdentity;
-                if (identity != null)
-                {
-                    identity.AddClaims(roles.Select(role => new Claim(ClaimTypes.Role, role)));
-                }
+        //         var identity = context.Principal.Identity as ClaimsIdentity;
+        //         if (identity != null)
+        //         {
+        //             identity.AddClaims(roles.Select(role => new Claim(ClaimTypes.Role, role)));
+        //         }
 
-                return Task.CompletedTask;
-            },
-            OnAuthenticationFailed = context =>
-            {
-                // Return a 401 status code instead of redirecting
-                context.Response.StatusCode = StatusCodes.Status401Unauthorized;
-                return Task.CompletedTask;
-            }
-        };
+        //         return Task.CompletedTask;
+        //     },
+        //     OnAuthenticationFailed = context =>
+        //     {
+        //         // Return a 401 status code instead of redirecting
+        //         context.Response.StatusCode = StatusCodes.Status401Unauthorized;
+        //         return Task.CompletedTask;
+        //     }
+        // };
     });
 
 builder.Services.AddSwaggerGen();
