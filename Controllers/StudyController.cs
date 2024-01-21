@@ -74,14 +74,19 @@ namespace AccessibilityWebsiteProject.Controllers
             {
                 return BadRequest();
             }
+
             var study = await _context.Studies.FindAsync(id);
 
             if (study == null)
             {
                 return BadRequest();
             }
-            study.Result = _context.Results.First(x => x.StudyID == id); // Bit hacky but it works <3 -W
 
+            if (study.Result != null)
+            {
+                study.Result = _context.Results.First(x => x.StudyID == id);
+            }
+            
             return Ok(new StudyViewModel(study));
         }
 
