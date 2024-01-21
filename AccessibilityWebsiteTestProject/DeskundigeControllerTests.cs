@@ -1,6 +1,7 @@
 namespace AccessibilityWebsiteTestProject
 {
     using Microsoft.AspNetCore.Http;
+    using Microsoft.AspNetCore.Identity;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.Extensions.Primitives;
     using System.Collections.Generic;
@@ -11,12 +12,13 @@ namespace AccessibilityWebsiteTestProject
     {
         //getUser tests
         [Fact]
-        public async Task GetUser_ReturnsOkResult()
+        public void GetUser_ReturnsOkResult()
         {
             // Arrange
             var mockDbContext = MockDbContextFactory.CreateMockContext();
             var mockValidationController = new MockValidationController();
             var controller = new DeskundigeController(mockDbContext, mockValidationController);
+
             var headerId = "2";
 
             // Een ControllerContext aanmaken met gesimuleerde headers
@@ -49,7 +51,7 @@ namespace AccessibilityWebsiteTestProject
 
 
         [Fact]
-        public async Task GetUser_WithNullHeader_ReturnsBadRequest()
+        public void GetUser_WithNullHeader_ReturnsBadRequest()
         {
             // Arrange
             var mockDbContext = MockDbContextFactory.CreateMockContext();
@@ -91,7 +93,7 @@ namespace AccessibilityWebsiteTestProject
             var okResult = Assert.IsType<OkObjectResult>(result);
             var disabilities = Assert.IsType<List<string>>(okResult.Value);
             Assert.NotEmpty(disabilities);
-            Assert.Equal(1, disabilities.Count);
+            Assert.Single(disabilities);
             Assert.Equal("doof", disabilities.First());
 
             mockDbContext.Dispose();
@@ -136,7 +138,7 @@ namespace AccessibilityWebsiteTestProject
             var okResult = Assert.IsType<OkObjectResult>(result);
             var disabilityAids = Assert.IsType<List<string>>(okResult.Value);
             Assert.NotEmpty(disabilityAids);
-            Assert.Equal(1, disabilityAids.Count);
+            Assert.Single(disabilityAids);
             Assert.Equal("gehoor apparaat", disabilityAids.First());
 
             mockDbContext.Dispose();
@@ -163,7 +165,7 @@ namespace AccessibilityWebsiteTestProject
         }
 
         [Fact]
-        public async Task UpdateUserData_ReturnsOkResult()
+        public void UpdateUserData_ReturnsOkResult()
         {
             // Arrange
             var mockDbContext = MockDbContextFactory.CreateMockContext();
@@ -190,13 +192,13 @@ namespace AccessibilityWebsiteTestProject
             Assert.Equal("User data successfully updated.", okResult.Value);
 
             var updatedExpert = mockDbContext.MockExperts.Find("2");
-            Assert.Equal("UpdatedFirstName", updatedExpert.FirstName);
+            Assert.Equal("UpdatedFirstName", updatedExpert?.FirstName);
 
             mockDbContext.Dispose();
         }
 
         [Fact]
-        public async Task UpdateUserData_WithInvalidToken_ReturnsBadRequest()
+        public void UpdateUserData_WithInvalidToken_ReturnsBadRequest()
         {
             // Arrange
             var mockDbContext = MockDbContextFactory.CreateMockContext();

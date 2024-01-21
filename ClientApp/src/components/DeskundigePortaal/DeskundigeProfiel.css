@@ -1,4 +1,4 @@
-.profileContainer{
+.DeskundigeProfileContainer{
     display: flex;
     flex-direction: row;
     width: 88vw;
@@ -6,7 +6,7 @@
 }
 
 .col1, .col2, .col3 {
-    display: flex;
+    display: flex;  
     flex-direction: column;
     width: 30%;
     padding-left: 10px;
@@ -31,7 +31,7 @@
   }
 
 @media screen and (max-width: 600px) {
-    .profileContainer {
+    .DeskundigeProfileContainer {
         flex-direction: column;
         width: 100%;
     }

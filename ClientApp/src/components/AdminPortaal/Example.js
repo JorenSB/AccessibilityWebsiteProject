@@ -1,11 +1,11 @@
-import React from 'react';
-import '../layouts/BaseLayout.css';
-import BaseNav from '../layouts/BaseNavbar';
+// import React from 'react';
+// import '../layouts/BaseLayout.css';
+// import BaseNav from '../layouts/BaseNavbar';
 
-export default class Example extends React.Component {
-    render() {
-      return (
-        <BaseNav/>
-      );
-    }
-  }
+// export default class Example extends React.Component {
+//     render() {
+//       return (
+//         <BaseNav/>
+//       );
+//     }
+//   }

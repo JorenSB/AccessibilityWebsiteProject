@@ -14,7 +14,6 @@ const DeskundigeProfiel = () => {
   const navigate = useNavigate();
   const [userData, setUserData] = useState({});
   const [birthDateData, setBirthdateData] = useState('');
-
   const [updatedData, setUpdatedData] = useState({});
 
   const fetchUserData = async () => {
@@ -28,6 +27,7 @@ const DeskundigeProfiel = () => {
       });
       const data = await response.json();
       setUserData(data);
+      console.log(data);
     } catch (error) {
       console.error('Error fetching user data:', error);
     }
@@ -43,6 +43,7 @@ const DeskundigeProfiel = () => {
           Authorization: `${jwt}`,
         },
         body: JSON.stringify({
+
           Email: updatedData.email,
           FirstName: updatedData.firstName,
           Password: updatedData.password,
@@ -52,7 +53,11 @@ const DeskundigeProfiel = () => {
           disabilityAids: updatedData.disabilityAids,
           CommercialContact: updatedData.benaderIsChecked,
           PhonePreference: updatedData.phonePreferenceIsChecked,
-          EmailPreference: updatedData.emailpreferenceIsChecked
+          EmailPreference: updatedData.emailpreferenceIsChecked,
+          GuardianFirstName: updatedData.guardianFirstName,
+          GuardianEmail: updatedData.guardianEmail,
+          GuardianPhoneNumber: updatedData.guardianPhoneNumber,
+          GuardianBirthDate: updatedData.guardianBirthDate
 
         }),
       });
@@ -90,7 +95,7 @@ const DeskundigeProfiel = () => {
 
   return (
     <BaseLayout>
-      <div className='profileContainer'>
+      <div className='DeskundigeProfileContainer'>
         <div className='col1'>
           <PictureCard onUpdateData={handleDataChange} firstName={userData.firstName} lastName={userData.lastName} phoneNumber={userData.phoneNumber} />
           <BenaderInfo onUpdateData={handleDataChange} emailPreference={userData.emailPreference} phonePreference={userData.phonePreference} commercialContact={userData.commercialContact} />
@@ -98,7 +103,10 @@ const DeskundigeProfiel = () => {
         </div>
         <div className='col2'>
           <AccountGegevens onUpdateData={handleDataChange} onAccountDataChange={handleAccountDataChange} email={userData.email} birthDate={userData.birthDate} />
-          <VoogdGegevens birthDate={userData.birthDate} birthDateData={birthDateData} />
+          <VoogdGegevens onUpdateData={handleDataChange} guardianFirstName = {userData.guardianFirstName} 
+            GuardianEmail = {userData.guardianEmail} GuardianPhoneNumber = {userData.guardianPhoneNumber}
+            GuardianBirthDate={userData.guardianBirthDate} birthDate = {userData.birthDate} birthDateData = {birthDateData} />
+            
           <button onClick={updateUserData} className='safeButton'>Sla Op</button>
         </div>
         <div className='col3'>

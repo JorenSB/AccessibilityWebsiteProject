@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Model.Users.Expert;
@@ -26,7 +27,7 @@ public class DeskundigeController : ControllerBase
                 return BadRequest();
             }
 
-            Expert expert = _context.Experts
+            Expert? expert = _context.Experts
                 .Include(e => e.Disabilities)
                 .Include(e => e.DisabilityAids)
                 .FirstOrDefault(c => c.Id == userId);
@@ -47,7 +48,13 @@ public class DeskundigeController : ControllerBase
                 DisabilityAids = expert.DisabilityAids.Select(a => a.DisabilityAidName).ToList(),
                 CommercialContact = expert.CommercialContact,
                 PhonePreference = expert.PhonePreference,
-                EmailPreference = expert.EmailPreference
+                EmailPreference = expert.EmailPreference,
+                GuardianFirstName = expert.GuardianFirstName,
+                GuardianBirthDate = expert.GuardianBirthDate,
+                GuardianEmail = expert.GuardianEmail,
+                GuardianPhoneNumber = expert.GuardianPhoneNumber
+
+
             };
             return Ok(userData);
         }
@@ -70,7 +77,7 @@ public class DeskundigeController : ControllerBase
             {
                 return BadRequest("Token is invalid.");
             }
-            Expert expert = _context.Experts
+            Expert? expert = _context.Experts
                 .Include(e => e.Disabilities)
                 .Include(e => e.DisabilityAids)
                 .FirstOrDefault(c => c.Id == userId);
@@ -88,26 +95,34 @@ public class DeskundigeController : ControllerBase
 
                 if (value != null)
                 {
-                    // Update the corresponding property in the Expert entity
-                    var expertProperty = typeof(Expert).GetProperty(property.Name);
+                    // Check if the property is the password
+                    // if (property.Name == "Password")
+                    // {
+                    //     // Hash and set the password
+                    //     var hashedPassword = _userManager.PasswordHasher.HashPassword(expert, value.ToString());
+                    //     expert.PasswordHash = hashedPassword;
+                    // }
+                    // else
+                    //{
+                        // Update the corresponding property in the Expert entity
+                        var expertProperty = typeof(Expert).GetProperty(property.Name);
 
-                    // Check if the property is DateTime
-                    if (expertProperty != null && expertProperty.PropertyType == typeof(DateTime))
-
-                    {
-                        var dateTimeValue = (DateTime)value;
-                        expertProperty.SetValue(expert, dateTimeValue.Date.Add(new TimeSpan(0, 0, 0)));
-                    }
-                    else if (expertProperty != null && expertProperty.Name != "DisabilityAids" && expertProperty.Name != "Disabilities")
-                    {
-                        expertProperty?.SetValue(expert, value);
-                    }
-
+                        // Check if the property is DateTime
+                        if (expertProperty != null && expertProperty.PropertyType == typeof(DateTime))
+                        {
+                            var dateTimeValue = (DateTime)value;
+                            expertProperty.SetValue(expert, dateTimeValue.Date.Add(new TimeSpan(0, 0, 0)));
+                        }
+                        else if (expertProperty != null && expertProperty.Name != "DisabilityAids" && expertProperty.Name != "Disabilities")
+                        {
+                            expertProperty?.SetValue(expert, value);
+                        }
+                    //}
                 }
             }
 
 
-            expert.Disabilities.Clear(); 
+            expert.Disabilities.Clear();
 
             foreach (var disabilityName in updatedUserData.Disabilities)
             {
@@ -125,7 +140,7 @@ public class DeskundigeController : ControllerBase
                 }
             }
 
-            expert.DisabilityAids.Clear(); 
+            expert.DisabilityAids.Clear();
 
             foreach (var disabilityAidName in updatedUserData.DisabilityAids)
             {
@@ -161,7 +176,7 @@ public class DeskundigeController : ControllerBase
             var disabilities = _context.Disabilities.Select(d => d.DisabilityName).Distinct().ToList();
             if (disabilities == null || disabilities.Count == 0)
             {
-                return NotFound("No disabilities found." );
+                return NotFound("No disabilities found.");
             }
 
             return Ok(disabilities);
@@ -181,7 +196,7 @@ public class DeskundigeController : ControllerBase
 
             if (disabilityAids == null || disabilityAids.Count == 0)
             {
-                return NotFound("No disability aids found." );
+                return NotFound("No disability aids found.");
             }
 
             return Ok(disabilityAids);

@@ -12,7 +12,7 @@ public class Expert : User
     public List<Disability> Disabilities { get; set; }
     public List<DisabilityAid> DisabilityAids { get; set; }
     public string? GuardianFirstName { get; set; }
-    public string? GuardianLastName { get; set; }
+    public DateTime? GuardianBirthDate { get; set; }
     public string? GuardianEmail { get; set; }
     public string? GuardianPhoneNumber { get; set; }
 }
