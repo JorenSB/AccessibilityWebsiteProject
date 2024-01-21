@@ -137,12 +137,12 @@ public class AdminPortaalController : ControllerBase
     [HttpDelete("companies/{id}")]
     public async Task<IActionResult> DeleteCompany(string id)
     {
-        var authAdmin = ValidationController.authAdmin(Request.Headers["Authorization"].FirstOrDefault());
+        var authAdmin = _validationController.authAdmin(Request.Headers["Authorization"].FirstOrDefault());
         if (!authAdmin) {
             return Unauthorized("Invalid or Expired Token");
         }
 
-        Company Company = _dbContext.Companies.FirstOrDefault(c => c.Id == id);
+        Company Company = _context.Companies.FirstOrDefault(c => c.Id == id);
 
         if (Company == null)
         {
@@ -194,7 +194,7 @@ public class AdminPortaalController : ControllerBase
     [HttpPut("experts/{id}")]
     public async Task<IActionResult> EditExpert(string? id, [FromBody] ExpertEditViewModel data)
     {
-        var authAdmin = ValidationController.authAdmin(Request.Headers["Authorization"].FirstOrDefault());
+        var authAdmin = _validationController.authAdmin(Request.Headers["Authorization"].FirstOrDefault());
         if (!authAdmin) {
             return Unauthorized("Invalid or Expired Token");
         }
@@ -205,7 +205,7 @@ public class AdminPortaalController : ControllerBase
         }
 
         // Retrieve the company based on the user ID
-        Expert expert = _dbContext.Experts.FirstOrDefault(c => c.Id == id);
+        Expert expert = _context.Experts.FirstOrDefault(c => c.Id == id);
 
         if (expert != null)
         {
@@ -219,23 +219,23 @@ public class AdminPortaalController : ControllerBase
                 expert.LastName = data.LastName;
             }
 
-            if (!string.IsNullOrEmpty(data.Email) && ValidationController.IsValidEmail(data.Email))
+            if (!string.IsNullOrEmpty(data.Email) && _validationController.IsValidEmail(data.Email))
             {
                 expert.Email = data.Email;
             }
 
-            if (!string.IsNullOrEmpty(data.NewPassword) && ValidationController.IsValidPassword(data.NewPassword))
+            if (!string.IsNullOrEmpty(data.NewPassword) && _validationController.IsValidPassword(data.NewPassword))
             {
                 // Update the user's password directly
                 var newPasswordHash = _userManager.PasswordHasher.HashPassword(expert, data.NewPassword);
                 expert.PasswordHash = newPasswordHash;
             }
 
-            _dbContext.Experts.Update(expert);
+            _context.Experts.Update(expert);
 
             try
             {
-                await _dbContext.SaveChangesAsync();
+                await _context.SaveChangesAsync();
                 return Ok("Success");
             }
             catch (DbUpdateConcurrencyException)
@@ -252,12 +252,12 @@ public class AdminPortaalController : ControllerBase
     [HttpDelete("experts/{id}")]
     public async Task<IActionResult> DeleteExpert(string id)
     {
-        var authAdmin = ValidationController.authAdmin(Request.Headers["Authorization"].FirstOrDefault());
+        var authAdmin = _validationController.authAdmin(Request.Headers["Authorization"].FirstOrDefault());
         if (!authAdmin) {
             return Unauthorized("Invalid or Expired Token");
         }
 
-        Expert expert = _dbContext.Experts.FirstOrDefault(c => c.Id == id);
+        Expert expert = _context.Experts.FirstOrDefault(c => c.Id == id);
 
         if (expert == null)
         {
@@ -276,7 +276,7 @@ public class AdminPortaalController : ControllerBase
     [HttpPost("create/admin")]
     public async Task<IActionResult> RegisterAdmin([FromBody] RegisterAdminViewModel model)
     {
-        var authAdmin = ValidationController.authAdmin(Request.Headers["Authorization"].FirstOrDefault());
+        var authAdmin = _validationController.authAdmin(Request.Headers["Authorization"].FirstOrDefault());
         if (!authAdmin) {
             return Unauthorized("Invalid or Expired Token");
         }
@@ -313,12 +313,12 @@ public class AdminPortaalController : ControllerBase
     [HttpGet("profile")]
     public IActionResult GetProfile()
     {
-        var authAdmin = ValidationController.authAdmin(Request.Headers["Authorization"].FirstOrDefault());
+        var authAdmin = _validationController.authAdmin(Request.Headers["Authorization"].FirstOrDefault());
         if (!authAdmin) {
             return BadRequest("Invalid or Expired Token");
         }
 
-        var id = ValidationController.getIdentifierFromJWT(Request.Headers["Authorization"].FirstOrDefault());
+        var id = _validationController.getIdentifierFromJWT(Request.Headers["Authorization"].FirstOrDefault());
 
         if (id == null || !ModelState.IsValid)
         {
@@ -326,7 +326,7 @@ public class AdminPortaalController : ControllerBase
         }
         
         try {
-            Admin admin = _dbContext.Admins.Where(e => e.Id == id).FirstOrDefault();
+            Admin admin = _context.Admins.Where(e => e.Id == id).FirstOrDefault();
             return Ok(admin);
         } catch {
             return NotFound("No Information found");
@@ -337,14 +337,14 @@ public class AdminPortaalController : ControllerBase
     [HttpDelete("profile")]
     public async Task<IActionResult> deleteAdmin()
     {
-        var authAdmin = ValidationController.authAdmin(Request.Headers["Authorization"].FirstOrDefault());
+        var authAdmin = _validationController.authAdmin(Request.Headers["Authorization"].FirstOrDefault());
         if (!authAdmin) {
             return Unauthorized("Invalid or Expired Token");
         }
 
-        var id = ValidationController.getIdentifierFromJWT(Request.Headers["Authorization"].FirstOrDefault());
+        var id = _validationController.getIdentifierFromJWT(Request.Headers["Authorization"].FirstOrDefault());
 
-        Admin admin = _dbContext.Admins.FirstOrDefault(c => c.Id == id);
+        Admin admin = _context.Admins.FirstOrDefault(c => c.Id == id);
 
         if (admin == null)
         {
@@ -362,12 +362,12 @@ public class AdminPortaalController : ControllerBase
     [HttpPut("profile")]
     public async Task<IActionResult> EditAdmin([FromBody] AdminEditViewModel data)
     {
-        var authAdmin = ValidationController.authAdmin(Request.Headers["Authorization"].FirstOrDefault());
+        var authAdmin = _validationController.authAdmin(Request.Headers["Authorization"].FirstOrDefault());
         if (!authAdmin) {
             return Unauthorized("Invalid or Expired Token");
         }
 
-        var id = ValidationController.getIdentifierFromJWT(Request.Headers["Authorization"].FirstOrDefault());
+        var id = _validationController.getIdentifierFromJWT(Request.Headers["Authorization"].FirstOrDefault());
 
         if (id == null || !ModelState.IsValid)
         {
@@ -375,7 +375,7 @@ public class AdminPortaalController : ControllerBase
         }
 
         // Retrieve the company based on the user ID
-        Admin admin = _dbContext.Admins.FirstOrDefault(c => c.Id == id);
+        Admin admin = _context.Admins.FirstOrDefault(c => c.Id == id);
 
         if (admin != null)
         {
@@ -389,23 +389,23 @@ public class AdminPortaalController : ControllerBase
                 admin.LastName = data.LastName;
             }
 
-            if (!string.IsNullOrEmpty(data.Email) && ValidationController.IsValidEmail(data.Email))
+            if (!string.IsNullOrEmpty(data.Email) && _validationController.IsValidEmail(data.Email))
             {
                 admin.Email = data.Email;
             }
 
-            if (!string.IsNullOrEmpty(data.NewPassword) && ValidationController.IsValidPassword(data.NewPassword))
+            if (!string.IsNullOrEmpty(data.NewPassword) && _validationController.IsValidPassword(data.NewPassword))
             {
                 // Update the user's password directly
                 var newPasswordHash = _userManager.PasswordHasher.HashPassword(admin, data.NewPassword);
                 admin.PasswordHash = newPasswordHash;
             }
 
-            _dbContext.Admins.Update(admin);
+            _context.Admins.Update(admin);
 
             try
             {
-                await _dbContext.SaveChangesAsync();
+                await _context.SaveChangesAsync();
                 return Ok("Success");
             }
             catch (DbUpdateConcurrencyException)
