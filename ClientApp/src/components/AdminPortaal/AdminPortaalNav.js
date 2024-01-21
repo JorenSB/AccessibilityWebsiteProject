@@ -1,5 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import LogoutButton from '../layouts/LogoutButton';
 import brandLogo from '../media/logo_met_text_transparant.png';
 
 // import stylesheet
@@ -45,7 +46,7 @@ export default class AdminPortaalNav extends React.Component {
                           <Link className='nav-link text-dark' to='/admin/profiel'>Mijn Profiel</Link>
                       </li>
                       <li className="nav-item">
-                          <Link className='nav-link text-dark' to='/'>Log Out</Link>
+                        <LogoutButton/>
                       </li>
                   </ul>
               </div>

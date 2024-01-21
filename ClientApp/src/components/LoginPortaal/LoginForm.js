@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import './LoginForm.css';
-import Logo from '../media/logo.png';
+import Logo from '../media/logo_met_text_transparant.png';
 import { Link, useNavigate } from 'react-router-dom';
 import { jwtDecode } from "jwt-decode"
 import { isAuthenticated, getUserRole } from '../../Auth';
@@ -66,7 +66,7 @@ function LoginForm() {
             } else if (role === "Company") {
                 navigate("/company");
             } else if (role === "Admin") {
-                navigate("/admin")
+                navigate("/admin/deskundigen")
             }
           }
         };
