@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import DeskundigeNavBar from './DeskundigeNavBar';
-import SideBar from '../layouts/ChatSideBar';
+import SideBar from './ChatSideBar';
 import PropTypes from 'prop-types';
 import { jwtIsValid } from '../../Auth'; 
 import { useNavigate } from 'react-router-dom';
