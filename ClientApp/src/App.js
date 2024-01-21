@@ -8,29 +8,28 @@ import Deskundige from './components/DeskundigePortaal/Deskundige';
 import DeskundigeProfiel from './components/DeskundigePortaal/DeskundigeProfiel';
 import Company from './components/CompanyPortal/Company';
 import CompanyProfile from './components/CompanyPortal/CompanyProfile';
-import TestPagina from './components/TestPagina';
 import AdminPortaalProfiel from "./components/AdminPortaal/Profiel/AdminProfielView.js";
 import AdminPortaalBedrijven from "./components/AdminPortaal/Bedrijven/BedrijvenView.js";
 import AdminPortaalEditBedrijf from "./components/AdminPortaal/Bedrijven/BedrijfEditView";
 import AdminPortaalExperts from "./components/AdminPortaal/Deskundige/ExpertsView";
 import AdminPortaalEditExpert from "./components/AdminPortaal/Deskundige/ExpertEditView.js";
 import CreateUser from "./components/AdminPortaal/component/Create/CreateUser.js";
-import Example from "./components/AdminPortaal/Example.js";
 import OnderzoekView from './components/Onderzoeken/OnderzoekView.js';
+import OnderzoekStart from './components/Onderzoeken/OnderzoekStart.js';
 
 function App() {
   return (
     <Routes>
       {/* zet hier onder alle routes van de experts */}
       <Route element={<PrivateRoutes role={'Expert'} />}>
-        <Route path='/profiel' element={<Deskundige />} />
-        <Route path='/deskundige/profiel' element={<DeskundigeProfiel />} />
+        <Route path='/deskundige' element={<Deskundige />} />
+        <Route path='/deskundige/profiel/' element={<DeskundigeProfiel />} />
       </Route>
       {/* zet hier onder alle routes van de bedrijven */}
       <Route element={<PrivateRoutes role={'Company'} />}>
         <Route path='/company' element={<Company />} />
         <Route path='/company/profile' element={<CompanyProfile />} />
-        {/* <Route path='/onderzoek/start' element={<OnderzoekStart />} /> */}
+        <Route path='/onderzoek/start' element={<OnderzoekStart />} />
         <Route path='/company/:CompanyID/onderzoek/:studyID' element={<OnderzoekView />} />
       </Route>
 
@@ -46,8 +45,6 @@ function App() {
 
         <Route path='/admin/aanmaken/:userType' element={<CreateUser />} />
       </Route>
-
-      <Route path='/admin/example' element={<Example />} />
 
       {/* dit zijn publieke routes */}
       <Route path='/' element={<Login />} />

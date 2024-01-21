@@ -22,9 +22,9 @@ const Deskundige = () => {
           <h1 className='titleOnderzoek'>Lopende Onderzoeken</h1>
         </div>
         <div className='onderzoekContainer'>
-          <Onderzoek  />
+          {/* <Onderzoek  />
           <Onderzoek />
-          <Onderzoek />
+          <Onderzoek /> */}
           
         </div>
         <div className='titleContainer'>

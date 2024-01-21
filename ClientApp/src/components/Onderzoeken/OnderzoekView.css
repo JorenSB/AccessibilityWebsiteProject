@@ -8,7 +8,8 @@
     background-color: #A9A9A9;
 }
 
-.onderzoek h1, .onderzoek p {
+.onderzoek h1,
+.onderzoek p {
     background-color: #EFEFEF;
     width: 12rem;
     border-radius: 4%;
@@ -17,15 +18,17 @@
     margin: 4px;
 }
 
-.onderzoek.Active, .onderzoek.Actief {
+.onderzoek.Active,
+.onderzoek.Actief {
     background-color: #FF7D00;
 }
 
-.upperhalf, .lowerhalf {
+.upperhalf,
+.lowerhalf {
     display: flex;
     justify-content: space-between;
     padding-left: 10px;
-    padding-right: 10px;   
+    padding-right: 10px;
 }
 
 .infoItem {
@@ -34,5 +37,5 @@
     flex-direction: column;
     align-items: start;
     padding: 10px;
-    
+
 }

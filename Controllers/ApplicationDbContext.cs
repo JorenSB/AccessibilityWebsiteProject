@@ -1,4 +1,7 @@
+using System.Security.Policy;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.EntityFrameworkCore;
 using Model.Users.Expert;
 
@@ -47,6 +50,8 @@ public class ApplicationDbContext : IdentityDbContext<User>
             .HasMany(e => e.DisabilityAids)
             .WithMany()
             .UsingEntity(j => j.ToTable("ExpertDisabilityAids"));
+
+        
         // Voeg eventueel andere configuraties toe
     }
 

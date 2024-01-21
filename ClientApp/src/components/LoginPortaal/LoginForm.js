@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import './LoginForm.css';
-import Logo from '../media/logo.png';
+import Logo from '../media/logo_met_text_transparant.png';
 import { Link, useNavigate } from 'react-router-dom';
 import { jwtDecode } from "jwt-decode"
 import { isAuthenticated, getUserRole } from '../../Auth';
@@ -14,7 +14,6 @@ function LoginForm() {
 
     const handleLogin = async (e) => {
         e.preventDefault();
-        console.log(email, password);
         try {
             const response = await fetch('https://localhost:7101/api/account/login', {
                 method: 'POST',
@@ -23,7 +22,7 @@ function LoginForm() {
                 },
                 body: JSON.stringify({ UserName: email, Password: password }),
             });
-            const contentType = response.headers.get('content-type');
+            const contentType = response.headers.get('content-type'); 
             const data = contentType && contentType.includes('application/json') ? await response.json() : null;
 
             if (response.ok) {
@@ -67,18 +66,9 @@ function LoginForm() {
             } else if (role === "Company") {
                 navigate("/company");
             } else if (role === "Admin") {
-                navigate("/admin")
+                navigate("/admin/deskundigen")
             }
           }
-            if (isAuthenticated()) {
-                const role = getUserRole();
-
-                if (role === 'Expert') {
-                    navigate('/deskundige/profiel');
-                } else if (role === 'Company') {
-                    navigate('/company/profile');
-                }
-            }
         };
 
         checkLocalStorage();
