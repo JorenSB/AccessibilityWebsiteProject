@@ -16,10 +16,10 @@ const OnderzoekStart = () => {
     const { addStudy, createdStudy } = PostStudy(studyData);
 
     const handleInputChange = (e) => {
-        const { name, value } = e.target;
+        const { id, value } = e.target;
         setStudyData({
             ...studyData,
-            [name]: value,
+            [id]: value,
         });
     };
 
@@ -39,50 +39,50 @@ const OnderzoekStart = () => {
         <CompanyLayout>
             <div className="container">
                 <div className="col1">
-                    <label><strong>Titel:</strong></label>
+                    <label htmlFor='Title'>Titel:</label>
                     <input
                         type="text"
-                        name="Titel"
+                        id="Title"
                         value={studyData.Title}
                         onChange={handleInputChange}
                     />
 
-                    <label><strong>Status:</strong></label>
+                    <label htmlFor='Status'>Status:</label>
                     <input
                         type="text"
-                        name="Status"
+                        id="Status"
                         value={studyData.Status}
                         onChange={handleInputChange}
                     />
 
-                    <label><strong>Beloning:</strong></label>
+                    <label htmlFor='Reward'>Beloning</label>
                     <input
                         type="number"
-                        name="Beloning"
+                        id="Reward"
                         value={studyData.Reward}
                         onChange={handleInputChange}
                     />
 
-                    <label><strong>Taal:</strong></label>
+                    <label htmlFor='Language'>Taal:</label>
                     <input
                         type="text"
-                        name="Taal"
+                        id="Language"
                         value={studyData.Language}
                         onChange={handleInputChange}
                     />
 
-                    <label><strong>Beperking:</strong></label>
+                    <label htmlFor='Beperking'>Beperking:</label>
                     <input
                         type="text"
-                        name="Beperking"
+                        id="Beperking"
                         value={studyData.Beperking}
                         onChange={handleInputChange}
                     />
 
-                    <label><strong>Datum:</strong></label>
+                    <label htmlFor='Date'>Datum:</label>
                     <input
                         type="date"
-                        name="Datum"
+                        id="Date"
                         value={studyData.Date}
                         onChange={handleInputChange}
                     />
