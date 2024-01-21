@@ -26,7 +26,6 @@ public class AdminPortaalController : ControllerBase
     }
 
     // get all
-
     [HttpGet("companies")]
     public IActionResult GetAllCompanies()
     {

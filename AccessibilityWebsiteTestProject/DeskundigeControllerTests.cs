@@ -1,6 +1,7 @@
 namespace AccessibilityWebsiteTestProject
 {
     using Microsoft.AspNetCore.Http;
+    using Microsoft.AspNetCore.Identity;
     using Microsoft.AspNetCore.Mvc;
     using Microsoft.Extensions.Primitives;
     using System.Collections.Generic;
@@ -11,13 +12,13 @@ namespace AccessibilityWebsiteTestProject
     {
         //getUser tests
         [Fact]
-        public async Task GetUser_ReturnsOkResult()
+        public void GetUser_ReturnsOkResult()
         {
-
+            // Arrange
             var mockDbContext = MockDbContextFactory.CreateMockContext();
             var mockValidationController = new MockValidationController();
-
             var controller = new DeskundigeController(mockDbContext, mockValidationController);
+
             var headerId = "2";
 
             // Een ControllerContext aanmaken met gesimuleerde headers
@@ -31,9 +32,10 @@ namespace AccessibilityWebsiteTestProject
 
             controller.ControllerContext = controllerContext;
 
-            // Actie
+            // Act
             var result = controller.GetUserData();
 
+            // Assert
             // Verifiëren
             var okObjectResult = Assert.IsType<OkObjectResult>(result);
             var userData = Assert.IsType<ExpertProfileModel>(okObjectResult.Value);
@@ -41,21 +43,21 @@ namespace AccessibilityWebsiteTestProject
             // Specifieke beweringen toevoegen op basis van de verwachte gebruikersgegevens
             Assert.Equal("test@example.com", userData.Email);
             Assert.Equal("John", userData.FirstName);
-            mockDbContext.Dispose();
 
+            // Cleanup
+            mockDbContext.Dispose();
         }
 
 
+
         [Fact]
-        public async Task GetUser_WithNullHeader_ReturnsBadRequest()
+        public void GetUser_WithNullHeader_ReturnsBadRequest()
         {
             // Arrange
             var mockDbContext = MockDbContextFactory.CreateMockContext();
             var mockValidationController = new MockValidationController();
 
             var controller = new DeskundigeController(mockDbContext, mockValidationController);
-
-            // Create a ControllerContext with a null Authorization header
             var controllerContext = new ControllerContext
             {
                 HttpContext = new DefaultHttpContext()
@@ -91,7 +93,7 @@ namespace AccessibilityWebsiteTestProject
             var okResult = Assert.IsType<OkObjectResult>(result);
             var disabilities = Assert.IsType<List<string>>(okResult.Value);
             Assert.NotEmpty(disabilities);
-            Assert.Equal(1, disabilities.Count);
+            Assert.Single(disabilities);
             Assert.Equal("doof", disabilities.First());
 
             mockDbContext.Dispose();
@@ -103,7 +105,7 @@ namespace AccessibilityWebsiteTestProject
             // Arrange
             var mockDbContext = MockDbContextFactory.CreateMockContext();
             var mockValidationController = new MockValidationController();
-            mockDbContext.MockDisabilities.RemoveRange(mockDbContext.MockDisabilities); 
+            mockDbContext.MockDisabilities.RemoveRange(mockDbContext.MockDisabilities);
             mockDbContext.SaveChanges();
             var deskundigeController = new DeskundigeController(mockDbContext, mockValidationController);
 
@@ -136,7 +138,7 @@ namespace AccessibilityWebsiteTestProject
             var okResult = Assert.IsType<OkObjectResult>(result);
             var disabilityAids = Assert.IsType<List<string>>(okResult.Value);
             Assert.NotEmpty(disabilityAids);
-            Assert.Equal(1, disabilityAids.Count);
+            Assert.Single(disabilityAids);
             Assert.Equal("gehoor apparaat", disabilityAids.First());
 
             mockDbContext.Dispose();
@@ -148,7 +150,7 @@ namespace AccessibilityWebsiteTestProject
             // Arrange
             var mockDbContext = MockDbContextFactory.CreateMockContext();
             var mockValidationController = new MockValidationController();
-            mockDbContext.MockDisabilityAids.RemoveRange(mockDbContext.MockDisabilityAids); 
+            mockDbContext.MockDisabilityAids.RemoveRange(mockDbContext.MockDisabilityAids);
             mockDbContext.SaveChanges();
             var deskundigeController = new DeskundigeController(mockDbContext, mockValidationController);
 
@@ -158,6 +160,72 @@ namespace AccessibilityWebsiteTestProject
             // Assert
             var notFoundResult = Assert.IsType<NotFoundObjectResult>(result);
             Assert.Equal("No disability aids found.", notFoundResult.Value);
+
+            mockDbContext.Dispose();
+        }
+
+        [Fact]
+        public void UpdateUserData_ReturnsOkResult()
+        {
+            // Arrange
+            var mockDbContext = MockDbContextFactory.CreateMockContext();
+            var mockValidationController = new MockValidationController();
+            var deskundigeController = new DeskundigeController(mockDbContext, mockValidationController);
+
+            var controllerContext = new ControllerContext
+            {
+                HttpContext = new DefaultHttpContext()
+            };
+            controllerContext.HttpContext.Request.Headers.Add("Authorization", "2");
+            deskundigeController.ControllerContext = controllerContext;
+
+            var updatedUserData = new UpdatedExpertProfileModel
+            {
+                FirstName = "UpdatedFirstName",
+            };
+
+            // Act
+            var result = deskundigeController.UpdateUserData(updatedUserData);
+
+            // Assert
+            var okResult = Assert.IsType<OkObjectResult>(result);
+            Assert.Equal("User data successfully updated.", okResult.Value);
+
+            var updatedExpert = mockDbContext.MockExperts.Find("2");
+            Assert.Equal("UpdatedFirstName", updatedExpert?.FirstName);
+
+            mockDbContext.Dispose();
+        }
+
+        [Fact]
+        public void UpdateUserData_WithInvalidToken_ReturnsBadRequest()
+        {
+            // Arrange
+            var mockDbContext = MockDbContextFactory.CreateMockContext();
+            var mockValidationController = new MockValidationController();
+            var deskundigeController = new DeskundigeController(mockDbContext, mockValidationController);
+
+            // Create a ControllerContext with an invalid Authorization header (null token)
+            var controllerContext = new ControllerContext
+            {
+                HttpContext = new DefaultHttpContext()
+            };
+            deskundigeController.ControllerContext = controllerContext;
+
+            var updatedUserData = new UpdatedExpertProfileModel
+            {
+                // Provide values for the properties you want to update
+                FirstName = "UpdatedFirstName",
+                // Add other properties as needed
+            };
+
+            // Act
+            var result = deskundigeController.UpdateUserData(updatedUserData);
+
+            // Assert
+            Assert.IsType<BadRequestObjectResult>(result);
+            var badRequestResult = (BadRequestObjectResult)result;
+            Assert.Equal("Token is invalid.", badRequestResult.Value);
 
             mockDbContext.Dispose();
         }

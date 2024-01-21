@@ -9,9 +9,9 @@ public class MockDbContext : ApplicationDbContext
     {
     }
 
-    public new DbSet<Expert> MockExperts { get; set; }
-    public new DbSet<Disability> MockDisabilities{get;set;}
-    public new DbSet<DisabilityAid> MockDisabilityAids{get;set;}
+    public DbSet<Expert> MockExperts { get; set; }
+    public DbSet<Disability> MockDisabilities{get;set;}
+    public DbSet<DisabilityAid> MockDisabilityAids{get;set;}
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {

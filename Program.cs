@@ -15,6 +15,7 @@ builder.Services.AddScoped<ValidationController>();
 
 
 
+
 builder.Services.AddIdentity<User, IdentityRole>(options =>
 {
     options.SignIn.RequireConfirmedAccount = true;

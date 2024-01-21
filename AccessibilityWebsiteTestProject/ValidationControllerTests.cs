@@ -2,12 +2,8 @@ namespace AccessibilityWebsiteTestProject;
 
 public class ValidationControllerTests
 {
-       private readonly ValidationController _validationController;
-
-    public ValidationControllerTests (ValidationController validationController)
-    {
-        _validationController = validationController;
-    }
+     ValidationController _validationController = new ValidationController();
+    
 
     [Fact]
     public void IsValidEmail_ShouldReturnTrueForValidEmail()
@@ -39,7 +35,7 @@ public class ValidationControllerTests
     public void IsValidEmail_ShouldReturnFalseForNullOrEmptyEmail()
     {
         // Arrange
-        string nullOrEmptyEmail = null;
+        string? nullOrEmptyEmail = null;
         string emptyEmail = string.Empty;
 
         // Act

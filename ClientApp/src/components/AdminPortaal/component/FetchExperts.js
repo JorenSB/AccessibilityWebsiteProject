@@ -55,7 +55,7 @@ const FetchExperts = () => {
                 </table>
               </div>
               <div className='col-lg-3 col-12 d-flex align-items-center justify-content-center'>
-                  <Link to={'/admin/deskundigen/' + expert.id} className="card-link figma-bg-white-rounded px-3 text-decoraction-none text-decoration-none font-weight-bold">Bekijk ></Link>
+                  <Link to={'/admin/deskundigen/' + expert.id} className="card-link figma-bg-white-rounded px-3 text-decoraction-none text-decoration-none font-weight-bold">Bekijk</Link>
               </div>
             </div>
           </div>
