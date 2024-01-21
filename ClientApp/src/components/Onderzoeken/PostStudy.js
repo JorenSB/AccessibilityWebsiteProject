@@ -1,4 +1,3 @@
-// PostStudy.js
 import { useState } from 'react';
 
 const PostStudy = (studyData) => {

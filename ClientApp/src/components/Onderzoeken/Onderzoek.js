@@ -1,8 +1,10 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
+import React, { useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import './Onderzoek.css';
 
 const Onderzoek = ({ study, CompanyID }) => {
+  const navigate = useNavigate();
+  const [buttonStatus, setButtonStatus] = useState('default');
 
   const {
     studyID,
@@ -15,7 +17,17 @@ const Onderzoek = ({ study, CompanyID }) => {
     result,
   } = study;
 
-  const statusClass = status.toLowerCase();
+  const handleButtonClick = async () => {
+    setButtonStatus('pressed');
+
+    await new Promise(resolve => setTimeout(resolve, 150));
+    var path = "/company/" + CompanyID + "/onderzoek/" + studyID;
+    navigate(path)
+
+    setTimeout(() => {
+      setButtonStatus('default');
+    }, 400);
+  };
 
   return (
     <div className={`onderzoek ${status}`}>
@@ -37,7 +49,9 @@ const Onderzoek = ({ study, CompanyID }) => {
       <div className='lowerhalf'>
         <p>Taal: {language}</p>
         <p>Beperking: {beperking}</p>
-        <Link to={`/company/${CompanyID}/onderzoek/${studyID}`}>Bekijk onderzoek</Link>
+        <div className="backButtonContainer">
+          <button className={`actionButton ${buttonStatus}`} onClick={handleButtonClick}>Bekijk onderzoek</button>
+        </div>
       </div>
     </div>
   );

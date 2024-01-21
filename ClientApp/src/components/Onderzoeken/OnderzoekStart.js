@@ -23,15 +23,15 @@ const OnderzoekStart = () => {
         });
     };
 
-    const [buttonColor, setButtonColor] = useState('green');
+    const [buttonStatus, setButtonStatus] = useState('default');
 
     const handleSaveClick = () => {
-        setButtonColor('orange');
+        setButtonStatus('pressed');
 
         addStudy();
 
         setTimeout(() => {
-            setButtonColor('green');
+            setButtonStatus('default');
         }, 400);
     };
 
@@ -87,9 +87,11 @@ const OnderzoekStart = () => {
                         onChange={handleInputChange}
                     />
                 </div>
-                <button className={`saveButton ${buttonColor}`} onClick={handleSaveClick}>
-                    Toevoegen
-                </button>
+                <div className="backButtonContainer">
+                    <button className={`actionButton ${buttonStatus}`} onClick={handleSaveClick}>
+                        Toevoegen
+                    </button>
+                </div>
             </div>
         </CompanyLayout>
     );

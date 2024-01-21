@@ -21,15 +21,15 @@ const CompanyProfile = () => {
     }));
   };
 
-  const [buttonColor, setButtonColor] = useState('green');
+  const [buttonStatus, setButtonStatus] = useState('default');
 
   const handleSaveClick = () => {
-    setButtonColor('orange');
+    setButtonStatus('pressed');
 
     PutCompany(companyData);
 
     setTimeout(() => {
-      setButtonColor('green');
+      setButtonStatus('default');
     }, 400);
   };
 
@@ -101,9 +101,9 @@ const CompanyProfile = () => {
             onChange={handleInputChange}
           />
         </div>
-        <button className={`saveButton ${buttonColor}`} onClick={handleSaveClick}>
-          Opslaan
-        </button>
+        <div className="backButtonContainer">
+          <button className={`actionButton ${buttonStatus}`} onClick={handleSaveClick}>Opslaan</button>
+        </div>
       </div>
     </CompanyLayout>
   );

@@ -1,5 +1,5 @@
-import React from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import React, { useState } from 'react';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import CompanyLayout from '../CompanyPortal/CompanyLayout';
 import './OnderzoekView.css';
 import FetchStudy from './FetchStudy';
@@ -9,6 +9,20 @@ const OnderzoekView = ({ }) => {
     const { pathname } = location;
     const [, , CompanyID, , StudyID] = pathname.split('/');
     const study = FetchStudy(StudyID);
+    const [buttonStatus, setButtonStatus] = useState('default');
+    const navigate = useNavigate();
+
+    const handleButtonClick = async () => {
+        setButtonStatus('pressed');
+
+        await new Promise(resolve => setTimeout(resolve, 150));
+
+        navigate('/company')
+
+        setTimeout(() => {
+            setButtonStatus('default');
+        }, 400);
+    };
 
     if (study == null) {
         return (<p>No study found</p>)
@@ -24,6 +38,8 @@ const OnderzoekView = ({ }) => {
         date,
         result,
     } = study;
+
+
 
     return (
         <CompanyLayout>
@@ -49,7 +65,7 @@ const OnderzoekView = ({ }) => {
                 </div>
             </div>
             <div className="backButtonContainer">
-                <Link to="/company">Terug naar onderzoeken overzicht</Link>
+                <button className={`actionButton ${buttonStatus}`} onClick={handleButtonClick}>Terug naar overzicht</button>
             </div>
         </CompanyLayout>
     );
