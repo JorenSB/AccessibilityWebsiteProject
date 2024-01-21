@@ -1,3 +1,5 @@
+using System.Runtime.CompilerServices;
+
 public class Admin : User
 {
     public required string FirstName {get; set;}

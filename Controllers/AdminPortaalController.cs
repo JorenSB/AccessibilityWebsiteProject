@@ -25,6 +25,8 @@ public class AdminPortaalController : ControllerBase
         _validationController = validationController;
     }
 
+    // get all
+
     [HttpGet("companies")]
     public IActionResult GetAllCompanies()
     {
@@ -37,7 +39,7 @@ public class AdminPortaalController : ControllerBase
         var companies = _context.Companies.ToList();
         return Ok(companies);
     }
-    
+    // get 1
     [HttpGet("companies/{id}")]
     public IActionResult GetCompany(string? id)
     {
@@ -55,9 +57,10 @@ public class AdminPortaalController : ControllerBase
             Company company = _context.Companies.Where(c => c.Id == id).FirstOrDefault();
             return Ok(company);
         } catch {
-            return NotFound("Company not found pik");
+            return NotFound("No information found");
         }
     }
+    // edit with id
     [HttpPut("companies/{id}")]
     public async Task<IActionResult> PutCompany(string? id, [FromBody] CompanyViewModel companyEditModel)
     {
@@ -130,6 +133,29 @@ public class AdminPortaalController : ControllerBase
             return NotFound("Company not found or invalid CompanyViewModel");
         }
     }
+
+    [HttpDelete("companies/{id}")]
+    public async Task<IActionResult> DeleteCompany(string id)
+    {
+        var authAdmin = ValidationController.authAdmin(Request.Headers["Authorization"].FirstOrDefault());
+        if (!authAdmin) {
+            return Unauthorized("Invalid or Expired Token");
+        }
+
+        Company Company = _dbContext.Companies.FirstOrDefault(c => c.Id == id);
+
+        if (Company == null)
+        {
+            return NotFound();
+        }
+
+        try{
+            await _userManager.DeleteAsync(Company);
+            return Ok(Company);
+        }catch {
+             return BadRequest();
+        }
+    }
     
     // een get all experts
     [HttpGet("experts")]
@@ -143,7 +169,7 @@ public class AdminPortaalController : ControllerBase
         var experts = _context.Experts.ToList();
         return Ok(experts);
     }
-
+    // get 1
     [HttpGet("experts/{id}")]
     public IActionResult GetExpert(string? id)
     {
@@ -161,8 +187,235 @@ public class AdminPortaalController : ControllerBase
             Expert expert = _context.Experts.Where(e => e.Id == id).FirstOrDefault();
             return Ok(expert);
         } catch {
-            return NotFound("Company not found pik");
+            return NotFound("No information found");
+        }
+    }
+    // edit by id
+    [HttpPut("experts/{id}")]
+    public async Task<IActionResult> EditExpert(string? id, [FromBody] ExpertEditViewModel data)
+    {
+        var authAdmin = ValidationController.authAdmin(Request.Headers["Authorization"].FirstOrDefault());
+        if (!authAdmin) {
+            return Unauthorized("Invalid or Expired Token");
+        }
+
+        if (id == null || !ModelState.IsValid)
+        {
+            return BadRequest(ModelState);
+        }
+
+        // Retrieve the company based on the user ID
+        Expert expert = _dbContext.Experts.FirstOrDefault(c => c.Id == id);
+
+        if (expert != null)
+        {
+            if (!string.IsNullOrEmpty(data.FirstName))
+            {
+                expert.FirstName = data.FirstName;
+            }
+
+            if (!string.IsNullOrEmpty(data.LastName))
+            {
+                expert.LastName = data.LastName;
+            }
+
+            if (!string.IsNullOrEmpty(data.Email) && ValidationController.IsValidEmail(data.Email))
+            {
+                expert.Email = data.Email;
+            }
+
+            if (!string.IsNullOrEmpty(data.NewPassword) && ValidationController.IsValidPassword(data.NewPassword))
+            {
+                // Update the user's password directly
+                var newPasswordHash = _userManager.PasswordHasher.HashPassword(expert, data.NewPassword);
+                expert.PasswordHash = newPasswordHash;
+            }
+
+            _dbContext.Experts.Update(expert);
+
+            try
+            {
+                await _dbContext.SaveChangesAsync();
+                return Ok("Success");
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                return BadRequest("Error: Er ging iets mis met het aanpassen van de gebruiker met id: " + id);
+            }
+        }
+        else
+        {
+            return NotFound("Deskundige niet gevonden of de data die is verstuurd is niet volledig / juist");
         }
     }
 
+    [HttpDelete("experts/{id}")]
+    public async Task<IActionResult> DeleteExpert(string id)
+    {
+        var authAdmin = ValidationController.authAdmin(Request.Headers["Authorization"].FirstOrDefault());
+        if (!authAdmin) {
+            return Unauthorized("Invalid or Expired Token");
+        }
+
+        Expert expert = _dbContext.Experts.FirstOrDefault(c => c.Id == id);
+
+        if (expert == null)
+        {
+            return NotFound();
+        }
+
+        try{
+            await _userManager.DeleteAsync(expert);
+            return Ok(expert);
+        }catch {
+             return BadRequest();
+        }
+    }
+
+    // aanmaken nieuwe admin
+    [HttpPost("create/admin")]
+    public async Task<IActionResult> RegisterAdmin([FromBody] RegisterAdminViewModel model)
+    {
+        var authAdmin = ValidationController.authAdmin(Request.Headers["Authorization"].FirstOrDefault());
+        if (!authAdmin) {
+            return Unauthorized("Invalid or Expired Token");
+        }
+
+        var admin = new Admin
+        {
+            Email = model.Email,
+            EmailConfirmed = true,
+            UserName = model.Email,
+            FirstName = model.FirstName, 
+            LastName = model.LastName
+        };
+
+        try {
+            var result = await _userManager.CreateAsync(admin, model.Password);
+
+            if (result.Succeeded)
+            {
+                // Geef de rol "Admin" aan de nieuwe gebruiker
+                await _userManager.AddToRoleAsync(admin, "Admin");
+
+                return Ok("Admin geregistreerd");
+            }
+        }
+        catch {
+            return BadRequest("Er is iets misgegaan bij de toevoegen van een Admin");
+        }
+        return BadRequest("Er is iets misgegaan, neem contact op met de developers");
+    }
+
+
+    // Admin Profile + edit/(delete) admin
+
+    [HttpGet("profile")]
+    public IActionResult GetProfile()
+    {
+        var authAdmin = ValidationController.authAdmin(Request.Headers["Authorization"].FirstOrDefault());
+        if (!authAdmin) {
+            return BadRequest("Invalid or Expired Token");
+        }
+
+        var id = ValidationController.getIdentifierFromJWT(Request.Headers["Authorization"].FirstOrDefault());
+
+        if (id == null || !ModelState.IsValid)
+        {
+            return BadRequest(ModelState);
+        }
+        
+        try {
+            Admin admin = _dbContext.Admins.Where(e => e.Id == id).FirstOrDefault();
+            return Ok(admin);
+        } catch {
+            return NotFound("No Information found");
+        }
+    }
+
+    // Tricky concept of deleting yourself - option still available
+    [HttpDelete("profile")]
+    public async Task<IActionResult> deleteAdmin()
+    {
+        var authAdmin = ValidationController.authAdmin(Request.Headers["Authorization"].FirstOrDefault());
+        if (!authAdmin) {
+            return Unauthorized("Invalid or Expired Token");
+        }
+
+        var id = ValidationController.getIdentifierFromJWT(Request.Headers["Authorization"].FirstOrDefault());
+
+        Admin admin = _dbContext.Admins.FirstOrDefault(c => c.Id == id);
+
+        if (admin == null)
+        {
+            return NotFound();
+        }
+
+        try{
+            await _userManager.DeleteAsync(admin);
+            return Ok(admin);
+        }catch {
+             return BadRequest();
+        }
+    }
+
+    [HttpPut("profile")]
+    public async Task<IActionResult> EditAdmin([FromBody] AdminEditViewModel data)
+    {
+        var authAdmin = ValidationController.authAdmin(Request.Headers["Authorization"].FirstOrDefault());
+        if (!authAdmin) {
+            return Unauthorized("Invalid or Expired Token");
+        }
+
+        var id = ValidationController.getIdentifierFromJWT(Request.Headers["Authorization"].FirstOrDefault());
+
+        if (id == null || !ModelState.IsValid)
+        {
+            return BadRequest(ModelState);
+        }
+
+        // Retrieve the company based on the user ID
+        Admin admin = _dbContext.Admins.FirstOrDefault(c => c.Id == id);
+
+        if (admin != null)
+        {
+            if (!string.IsNullOrEmpty(data.FirstName))
+            {
+                admin.FirstName = data.FirstName;
+            }
+
+            if (!string.IsNullOrEmpty(data.LastName))
+            {
+                admin.LastName = data.LastName;
+            }
+
+            if (!string.IsNullOrEmpty(data.Email) && ValidationController.IsValidEmail(data.Email))
+            {
+                admin.Email = data.Email;
+            }
+
+            if (!string.IsNullOrEmpty(data.NewPassword) && ValidationController.IsValidPassword(data.NewPassword))
+            {
+                // Update the user's password directly
+                var newPasswordHash = _userManager.PasswordHasher.HashPassword(admin, data.NewPassword);
+                admin.PasswordHash = newPasswordHash;
+            }
+
+            _dbContext.Admins.Update(admin);
+
+            try
+            {
+                await _dbContext.SaveChangesAsync();
+                return Ok("Success");
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                return BadRequest("Error: Er ging iets mis met het aanpassen van de Admin met id: " + id);
+            }
+        }
+        else
+        {
+            return NotFound("Admin niet gevonden of de data die is verstuurd is niet volledig / juist");
+        }
+    }
 }

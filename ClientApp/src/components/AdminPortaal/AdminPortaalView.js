@@ -14,5 +14,5 @@ export default class Bedrijvenview extends React.Component {
             </div>
         </Layout>
     )
-  }66
+  }
 }
