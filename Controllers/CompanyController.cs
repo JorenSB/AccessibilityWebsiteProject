@@ -2,28 +2,30 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Identity;
 
-[Authorize]
 [Route("api/[controller]")]
 [ApiController]
 public class CompanyController : ControllerBase
 {
     private readonly UserManager<User> _userManager;
     private readonly ApplicationDbContext _context;
-    public CompanyController(UserManager<User> userManager, ApplicationDbContext dbContext)
+    private readonly ValidationController _validationController;
+
+    public CompanyController(UserManager<User> userManager, ApplicationDbContext dbContext, ValidationController validationController)
     {
         _userManager = userManager;
         _context = dbContext;
+        _validationController = validationController;
     }
 
     // <summary>Gets the data from the Company Based on the JWTToken.</summary>
     // <param name="JWTToken">The token obtained on successful login.</param>
     // <returns>Returns the Company's data encapsulated in a CompanyViewModel for security purposes as a JSON.</returns>
-    [HttpGet("GetCompany/{JWTToken}")]
-    [Authorize(Roles = "Company")]
-    public IActionResult GetCompanyData(string JWTToken)
+    [HttpGet("GetCompany")]
+    public IActionResult GetCompanyData()
     {
+        var JWTToken = Request.Headers["JWTToken"].FirstOrDefault();
         //Gets the UserID from the databsae from the JWTToken
-        var userIdFromToken = ValidationController.getIdentifierFromJWT(JWTToken);
+        var userIdFromToken = _validationController.getIdentifierFromJWT(JWTToken!);
 
         // Checks if a valid token has been found
         if (userIdFromToken == null)
@@ -41,17 +43,19 @@ public class CompanyController : ControllerBase
             return Ok(new CompanyViewModel(company));
         }
         // Returns if no Company has been found
-        return NotFound("Company not found");
+        return BadRequest("Company not found");
     }
 
     // <summary>Updates the given information if it meets the requirements.</summary>
     // <param name="JWTToken">The token obtained on successful login.</param>
     // <param name="companyViewModel">A limited version of the Company class so only certain properties can be changed.</param>
     // <returns>Returns a HTTP status code with an error/success message.</returns>
-    [HttpPut("UpdateCompany/{JWTToken}")]
-    [Authorize(Roles = "Company")]
-    public async Task<IActionResult> UpdateCompany(string JWTToken, CompanyViewModel? companyViewModel)
+    [HttpPut("UpdateCompany")]
+    public async Task<IActionResult> UpdateCompany(CompanyViewModel? companyViewModel)
     {
+        var JWTToken = Request.Headers["JWTToken"].FirstOrDefault();
+
+
         if (companyViewModel == null)
         {
             // Returns nothing if no data is provided
@@ -59,7 +63,7 @@ public class CompanyController : ControllerBase
         }
 
         // Gets the UserID from the database from the JWTToken
-        var userIdFromToken = ValidationController.getIdentifierFromJWT(JWTToken);
+        var userIdFromToken = _validationController.getIdentifierFromJWT(JWTToken!);
 
         // Checks if a valid token has been found
         if (userIdFromToken == null)
@@ -76,8 +80,8 @@ public class CompanyController : ControllerBase
             return BadRequest("Company not found");
         }
 
-        // Checks if the Information field was filled in
-        if (companyViewModel.Information != null)
+        // Checks if the Information field was filled in and modified
+        if (companyViewModel.Information != null && company.Information != companyViewModel.Information)
         {
             // Checks if an empty string was provided
             if (companyViewModel.Information.Equals(""))
@@ -91,18 +95,18 @@ public class CompanyController : ControllerBase
                 company.Information = companyViewModel.Information;
             }
         }
-        // Checks if the CompanyName field was filled in
-        if (companyViewModel.CompanyName != null)
+        // Checks if the CompanyName field was filled in and modified
+        if (companyViewModel.CompanyName != null && company.CompanyName != companyViewModel.CompanyName)
         {
             // Updates the CompanyName field
             company.CompanyName = companyViewModel.CompanyName;
         }
 
-        // Checks if the Email field was filled in
-        if (companyViewModel.Email != null)
+        // Checks if the Email field was filled in and modified
+        if (companyViewModel.Email != null && company.Email != companyViewModel.Email)
         {
             // Checks if the Email meets the requirements
-            if (ValidationController.IsValidEmail(companyViewModel.Email))
+            if (_validationController.IsValidEmail(companyViewModel.Email))
             {
                 // Checks if any user already is using the given Email
                 var existingUser = await _userManager.FindByEmailAsync(companyViewModel.Email!);
@@ -128,7 +132,7 @@ public class CompanyController : ControllerBase
         if (companyViewModel.NewPassword != null)
         {
             // Checks if NewPassword meets requirements
-            if (ValidationController.IsValidPassword(companyViewModel.NewPassword))
+            if (_validationController.IsValidPassword(companyViewModel.NewPassword))
             {
                 // Checks if the CurrentPassword is filled in
                 if (companyViewModel.CurrentPassword != null)
@@ -149,8 +153,8 @@ public class CompanyController : ControllerBase
             }
         }
 
-        // Checks if the Url field was filled in
-        if (companyViewModel.Url != null)
+        // Checks if the Url field was filled in and modified
+        if (companyViewModel.Url != null && company.Url != companyViewModel.Url)
         {
             // Checks if an empty string was provided
             if (companyViewModel.Url.Equals(""))
@@ -172,8 +176,8 @@ public class CompanyController : ControllerBase
             company.KvkNumber = companyViewModel.KvkNumber.Value;
         }
 
-        // Checks if the Address field was filled in
-        if (companyViewModel.Address != null)
+        // Checks if the Address field was filled in and modified
+        if (companyViewModel.Address != null && company.Address != companyViewModel.Address)
         {
             // Updates the Address field
             company.Address = companyViewModel.Address;

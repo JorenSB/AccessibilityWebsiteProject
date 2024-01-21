@@ -1,5 +1,5 @@
 import React, {useEffect} from 'react';
-import BaseLayout from '../layouts/BaseLayout.js';
+import BaseLayout from '../layouts/DeskundigeLayout.js';
 import Onderzoek from '../Onderzoeken/Onderzoek.js';
 import { jwtIsValid } from '../../Auth.js';
 import { useNavigate } from 'react-router-dom';
@@ -22,9 +22,9 @@ const Deskundige = () => {
           <h1 className='titleOnderzoek'>Lopende Onderzoeken</h1>
         </div>
         <div className='onderzoekContainer'>
-          <Onderzoek  />
+          {/* <Onderzoek  />
           <Onderzoek />
-          <Onderzoek />
+          <Onderzoek /> */}
           
         </div>
         <div className='titleContainer'>

@@ -1,84 +1,103 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace AccessibilityWebsiteProject.Controllers
 {
-    [Authorize]
-    [Route("api/[controller]")]
     [ApiController]
+    [Route("api/[controller]")]
     public class StudyController : ControllerBase
     {
         private readonly ApplicationDbContext _context;
+        private readonly ValidationController _validationController;
 
-        public StudyController(ApplicationDbContext context)
+        public StudyController(ApplicationDbContext context, ValidationController validationController)
         {
             _context = context;
+            _validationController = validationController;
+
         }
 
         // GET: api/Study
-        [HttpGet]
+        [HttpGet("GetStudies")]
         public async Task<ActionResult<IEnumerable<Study>>> GetStudies()
         {
             if (_context.Studies == null)
             {
-                return NotFound("No studies found");
+                return BadRequest("No studies found");
             }
             return await _context.Studies.ToListAsync();
         }
 
         // GET: api/Study/MyStudies
-        [HttpGet("MyStudies")]
-        public async Task<ActionResult<IEnumerable<Study>>> GetMyStudies(string JWTToken)
+        [HttpGet("GetMyStudies")]
+        public async Task<ActionResult<IEnumerable<StudyViewModel>>> GetMyStudies()
         {
-            var idClaim = ValidationController.getIdentifierFromJWT(JWTToken);
+            var JWTToken = Request.Headers["JWTToken"].FirstOrDefault();
+
+            var idClaim = _validationController.getIdentifierFromJWT(JWTToken!);
 
             if (string.IsNullOrEmpty(idClaim))
             {
                 return BadRequest("Invalid or missing ID claim in the token");
             }
 
-            var matchingStudies = await _context.Studies
+            IEnumerable<Study> matchingStudies = await _context.Studies
                 .Where(s => s.CompanyID == idClaim)
                 .ToListAsync();
 
-            if (matchingStudies.Count == 0)
+            if (!matchingStudies.Any())
             {
-                return NotFound("No studies found from your company");
+                return BadRequest("No studies found from your company");
             }
 
-            return matchingStudies;
+            var studies = new List<StudyViewModel>();
+
+            foreach (Study study in matchingStudies)
+            {
+                if (study.Result != null)
+                {
+                    study.Result = _context.Results.First(x => x.StudyID == study.StudyID);
+                }
+                studies.Add(new StudyViewModel(study));
+            }
+
+            return Ok(studies);
         }
 
+
         // GET: api/Study/5
-        [HttpGet("{id}")]
-        public async Task<ActionResult<Study>> GetStudy(int id)
+        [HttpGet("GetStudy")]
+        public async Task<ActionResult<StudyViewModel>> GetStudy(int id)
         {
             if (_context.Studies == null)
             {
-                return NotFound();
+                return BadRequest();
             }
+
             var study = await _context.Studies.FindAsync(id);
 
             if (study == null)
             {
-                return NotFound();
+                return BadRequest();
             }
 
-            return study;
+            if (study.Result != null)
+            {
+                study.Result = _context.Results.First(x => x.StudyID == id);
+            }
+            
+            return Ok(new StudyViewModel(study));
         }
 
         // PUT: api/Study/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPut()]
-        public async Task<IActionResult> UpdateStudy(int id, StudyViewModel studyViewModel, string JWTToken)
+        [HttpPut("UpdateStudy")]
+        public async Task<IActionResult> UpdateStudy(int id, StudyViewModel studyViewModel)
         {
-            var userIdFromToken = ValidationController.getIdentifierFromJWT(JWTToken);
+            var JWTToken = Request.Headers["JWTToken"].FirstOrDefault();
+
+            var userIdFromToken = _validationController.getIdentifierFromJWT(JWTToken!);
 
             if (string.IsNullOrEmpty(userIdFromToken))
             {
@@ -87,14 +106,14 @@ namespace AccessibilityWebsiteProject.Controllers
 
             if (_context.Studies == null)
             {
-                return NotFound();
+                return BadRequest();
             }
 
             var study = await _context.Studies.FindAsync(id);
 
             if (study == null)
             {
-                return NotFound();
+                return BadRequest();
             }
 
             if (study.CompanyID != userIdFromToken)
@@ -114,7 +133,7 @@ namespace AccessibilityWebsiteProject.Controllers
             {
                 if (!StudyExists(id))
                 {
-                    return NotFound();
+                    return BadRequest();
                 }
                 else
                 {
@@ -126,10 +145,12 @@ namespace AccessibilityWebsiteProject.Controllers
 
         // POST: api/Study
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPost]
-        public async Task<ActionResult<Study>> AddStudy(StudyViewModel studyViewModel, string JWTToken)
+        [HttpPost("AddStudy")]
+        public async Task<ActionResult<Study>> AddStudy(StudyViewModel studyViewModel)
         {
-            var userIdFromToken = ValidationController.getIdentifierFromJWT(JWTToken);
+            var JWTToken = Request.Headers["JWTToken"].FirstOrDefault();
+
+            var userIdFromToken = _validationController.getIdentifierFromJWT(JWTToken!);
 
             if (string.IsNullOrEmpty(userIdFromToken))
             {
@@ -148,14 +169,16 @@ namespace AccessibilityWebsiteProject.Controllers
             _context.Studies.Add(study);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetStudy", new { id = study.StudyID }, study);
+            return CreatedAtAction("Created successfully", study);
         }
 
         // DELETE: api/Study/5
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteStudy(int id, string JWTToken)
+        [HttpDelete("Delete")]
+        public async Task<IActionResult> DeleteStudy(int id)
         {
-            var userIdFromToken = ValidationController.getIdentifierFromJWT(JWTToken);
+            var JWTToken = Request.Headers["JWTToken"].FirstOrDefault();
+
+            var userIdFromToken = _validationController.getIdentifierFromJWT(JWTToken!);
 
             if (string.IsNullOrEmpty(userIdFromToken))
             {
@@ -166,7 +189,7 @@ namespace AccessibilityWebsiteProject.Controllers
             var study = await _context.Studies.FindAsync(id);
             if (study == null)
             {
-                return NotFound("Study not found");
+                return BadRequest("Study not found");
             }
 
             // Check if the user ID in the token matches the user ID associated with the study

@@ -71,7 +71,7 @@
 .loginMessage{
     font-size: 19px;
     font-weight: 500;
-    color: #FFF;
+    color: black;
 }
 
 @media (max-width: 800px) {
@@ -110,7 +110,6 @@
     .loginMessage{
     font-size: 19px;
     font-weight: 500;
-    color: #FFF;
 }
 
     

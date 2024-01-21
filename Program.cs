@@ -11,6 +11,8 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 builder.Services.AddScoped<IRoleService, RoleService>();
+builder.Services.AddScoped<ValidationController>();
+
 
 
 builder.Services.AddIdentity<User, IdentityRole>(options =>
@@ -29,9 +31,9 @@ builder.Services.AddAuthorization(options =>
 {
     options.AddPolicy("RequireAdminRole", policy =>
         policy.RequireRole("Admin"));
-    options.AddPolicy("RequireExpertRole", policy => 
+    options.AddPolicy("RequireExpertRole", policy =>
         policy.RequireRole("Expert"));
-    options.AddPolicy("RequireCompanyRole", policy => 
+    options.AddPolicy("RequireCompanyRole", policy =>
         policy.RequireRole("Company"));
 });
 

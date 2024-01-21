@@ -1,0 +1,52 @@
+/* Important */
+#navBar {
+  background-color: #21CEA1;
+}
+
+
+
+@media screen and (max-width: 1399px) {
+  #nav-modal {
+    background-color: #1CA883;
+  }
+}
+
+/* end */
+
+body {
+  overflow-x: hidden;
+}
+
+#sideBar {
+  background-color: #1CA883;
+  height: 100vh;
+  max-height: 100vh;
+}
+
+#sideBar > *, .nav-link {
+  color: black;
+}
+
+/* Bootstrap Override */
+.nav-pills > li.nav-item > button.active{
+  background-color: #FF7D00;
+  color: black;
+  font-weight: bolder;
+  border: 1px solid black;
+}
+
+.nav-pills > li.nav-item > button {
+  background-color: #21CEA1;
+  font-weight: bolder;
+  color: black;
+}
+
+
+
+
+
+
+
+
+
+

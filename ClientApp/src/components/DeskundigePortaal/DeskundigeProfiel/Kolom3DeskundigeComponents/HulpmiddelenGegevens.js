@@ -39,7 +39,6 @@ const Dropdown = (props) => {
   }, []);
 
   useEffect(() => {
-    // Update selectedOptions whenever disabilities change
     setSelectedOptions(props.disabilityAids || []);
   }, [props.disabilityAids]);
   
@@ -49,6 +48,20 @@ const Dropdown = (props) => {
     updatedOptions.splice(index, 1);
     setSelectedOptions(updatedOptions);
   };
+  
+
+  useEffect(() => {
+    handleDataUpdate({
+      disabilityAids: selectedOptions
+    });
+  }, [selectedOptions]);
+  
+  const handleDataUpdate = (updatedData) => {
+    if (props.onUpdateData) {
+      props.onUpdateData(updatedData);
+    }
+  };
+
 
   return (
     <div className="dropdown">
@@ -68,7 +81,6 @@ const Dropdown = (props) => {
         {selectedOptions.length > 0 && (
             <div className="selected-options">
             Geselecteerde Hulpmiddelen:
-            {console.log(disabilityAids)}
             <ul>
                 {selectedOptions.map((option, index) => (
                 <li key={index}>

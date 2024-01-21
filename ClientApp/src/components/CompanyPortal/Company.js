@@ -1,37 +1,40 @@
-import React, {useEffect} from 'react';
-import BaseLayout from '../layouts/BaseLayout.js';
+import CompanyLayout from './CompanyLayout';
 import Onderzoek from '../Onderzoeken/Onderzoek.js';
-import { jwtIsValid } from '../../Auth.js';
-import { useNavigate } from 'react-router-dom';
-
 import './Company.css';
+import FetchMyStudies from './FetchMyStudies.js';
+import FetchCompanyProfile from './FetchCompanyProfile';
 
 const Company = () => {
-  const navigate = useNavigate();
+  const CompanyData = FetchCompanyProfile();
 
-  useEffect(() => {
-    if(!jwtIsValid()){
-      navigate('/');
-    }
+  const onderzoekenData = FetchMyStudies();
 
-  },[]) 
+  const activeOnderzoeken = onderzoekenData.filter(study =>
+    ['actief', 'active'].includes(study.status.toLowerCase())
+  );
+  const completedOnderzoeken = onderzoekenData.filter(study =>
+    !['actief', 'active'].includes(study.status.toLowerCase())
+  );
+
   return (
-   
-        <BaseLayout>
-        <div className='titleContainer'>
-          <h1 className='titleOnderzoek'>Lopende Onderzoeken</h1>
-        </div>
-        <div className='onderzoekContainer'>
-          <Onderzoek  />
-          <Onderzoek />
-          <Onderzoek />
-          
-        </div>
-        <div className='titleContainer'>
-          <h1 className='titleOnderzoek'>Afgeronde Onderzoeken</h1>
-        </div>
-        </BaseLayout>
-  
+    <CompanyLayout>
+      <div className='titleContainer'>
+        <h1 className='titleOnderzoek'>{CompanyData.companyName}'s Actieve Onderzoeken</h1>
+      </div>
+      <div className='onderzoekContainer'>
+        {activeOnderzoeken.map((study, index) => (
+          <Onderzoek key={index} study={study} CompanyID={CompanyData.companyID} />
+        ))}
+      </div>
+      <div className='titleContainer'>
+        <h1 className='titleOnderzoek'>{CompanyData.companyName}'s Afgeronde Onderzoeken</h1>
+      </div>
+      <div className='onderzoekContainer'>
+        {completedOnderzoeken.map((study, index) => (
+          <Onderzoek key={index} study={study} CompanyID={CompanyData.companyID} />
+        ))}
+      </div>
+    </CompanyLayout>
   );
 };
 

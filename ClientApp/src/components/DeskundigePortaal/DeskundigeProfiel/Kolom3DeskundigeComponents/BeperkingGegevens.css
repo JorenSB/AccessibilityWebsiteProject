@@ -9,6 +9,7 @@
   width: 70%;
   border-radius: 8px 8px 0px 0px ;
   border: 2px solid #1CA883;
+  margin-left: 3.8vw;
 
 }
 
@@ -85,4 +86,13 @@
 
 .selected-options li button:hover {
   background-color: #21CEA1;
+}
+
+
+@media only screen and (max-width: 600px) {
+  .dropbtn {
+    
+    margin-left: 15vw;
+  
+  }
 }

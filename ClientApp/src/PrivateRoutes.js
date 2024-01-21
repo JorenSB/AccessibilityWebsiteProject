@@ -15,8 +15,6 @@ const PrivateRoutes = ({ role }) => {
     }
   }, [isAuthenticatedUser, userRole, role]);
 
-  console.log("Rol = " + userRole);
-
   if (navigateTo) {
     // Als navigateTo is ingesteld, navigeer dan naar de opgegeven locatie
     return <Navigate to={navigateTo} />;
