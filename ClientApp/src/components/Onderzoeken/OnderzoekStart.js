@@ -39,10 +39,10 @@ const OnderzoekStart = () => {
         <CompanyLayout>
             <div className="container">
                 <div className="col1">
-                    <label><strong>Title:</strong></label>
+                    <label><strong>Titel:</strong></label>
                     <input
                         type="text"
-                        name="Title"
+                        name="Titel"
                         value={studyData.Title}
                         onChange={handleInputChange}
                     />
@@ -55,18 +55,18 @@ const OnderzoekStart = () => {
                         onChange={handleInputChange}
                     />
 
-                    <label><strong>Reward:</strong></label>
+                    <label><strong>Beloning:</strong></label>
                     <input
                         type="number"
-                        name="Reward"
+                        name="Beloning"
                         value={studyData.Reward}
                         onChange={handleInputChange}
                     />
 
-                    <label><strong>Language:</strong></label>
+                    <label><strong>Taal:</strong></label>
                     <input
                         type="text"
-                        name="Language"
+                        name="Taal"
                         value={studyData.Language}
                         onChange={handleInputChange}
                     />
@@ -79,16 +79,16 @@ const OnderzoekStart = () => {
                         onChange={handleInputChange}
                     />
 
-                    <label><strong>Date:</strong></label>
+                    <label><strong>Datum:</strong></label>
                     <input
                         type="date"
-                        name="Date"
+                        name="Datum"
                         value={studyData.Date}
                         onChange={handleInputChange}
                     />
                 </div>
                 <button className={`saveButton ${buttonColor}`} onClick={handleSaveClick}>
-                    Add Study
+                    Toevoegen
                 </button>
             </div>
         </CompanyLayout>
