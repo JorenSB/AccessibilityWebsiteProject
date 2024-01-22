@@ -35,13 +35,13 @@ jobs:
         run: dotnet build --configuration Release
 
       - name: Publish .NET app
-        run: dotnet publish -c Release -o $(Build.ArtifactStagingDirectory)
+        run: dotnet publish -c Release -o ${{ github.workspace }}/artifacts
 
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v2
         with:
           name: dotnet-react-app
-          path: $(Build.ArtifactStagingDirectory)
+          path: ${{ github.workspace }}/artifacts
 
   deploy:
     runs-on: windows-latest
@@ -62,4 +62,4 @@ jobs:
           app-name: 'accessibilitywebsiteproject'
           slot-name: 'Production'
           publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_EA36A7D9508844479DC8E4DE5CD9E73A }}
-          package: $(Build.ArtifactStagingDirectory)
+          package: ${{ github.workspace }}/artifacts
