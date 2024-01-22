@@ -63,4 +63,4 @@ jobs:
           app-name: 'project-accesibility'
           slot-name: 'Production'
           publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_EA36A7D9508844479DC8E4DE5CD9E73A }}
-          package: /artifacts
+          package: D:\a\AccessibilityWebsiteProject\artifacts
