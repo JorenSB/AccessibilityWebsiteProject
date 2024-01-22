@@ -1,4 +1,4 @@
-name: Build and deploy ASP.Net Core app to Azure Web App - project-accesibility
+name: Build and deploy React app to Azure Web App - accessibilitywebsiteproject
 
 on:
   push:
@@ -13,12 +13,6 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Set up .NET Core
-        uses: actions/setup-dotnet@v1
-        with:
-          dotnet-version: '7.x'
-          include-prerelease: true
-
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
@@ -27,17 +21,14 @@ jobs:
       - name: Install npm packages
         run: npm install
 
-      - name: Build with dotnet
-        run: dotnet build --configuration Release
-
-      - name: dotnet publish
-        run: dotnet publish -c Release -o ${{env.DOTNET_ROOT}}/myapp
+      - name: Build React app
+        run: npm run build
 
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v3
         with:
-          name: .net-app
-          path: ${{env.DOTNET_ROOT}}/myapp
+          name: react-app
+          path: ./build
 
   deploy:
     runs-on: windows-latest
@@ -50,13 +41,13 @@ jobs:
       - name: Download artifact from build job
         uses: actions/download-artifact@v3
         with:
-          name: .net-app
+          name: react-app
 
       - name: Deploy to Azure Web App
         id: deploy-to-webapp
         uses: azure/webapps-deploy@v2
         with:
-          app-name: 'project-accesibility'
+          app-name: 'accessibilitywebsiteproject'
           slot-name: 'Production'
           publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_EA36A7D9508844479DC8E4DE5CD9E73A }}
-          package: .
+          package: ./build
