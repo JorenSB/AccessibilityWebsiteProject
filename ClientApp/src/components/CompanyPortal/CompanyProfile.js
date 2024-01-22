@@ -14,10 +14,10 @@ const CompanyProfile = () => {
   }, [data])
 
   const handleInputChange = (e) => {
-    const { name, value } = e.target;
+    const { id, value } = e.target;
     setCompanyData((prevData) => ({
       ...prevData,
-      [name]: value,
+      [id]: value,
     }));
   };
 
@@ -37,39 +37,39 @@ const CompanyProfile = () => {
     <CompanyLayout>
       <div className="container">
         <div className="col1">
-          <label><strong>Informatie:</strong></label>
+          <label htmlFor='information'>Informatie:</label>
           <input
             type="text"
-            name="information"
+            id="information"
             value={companyData?.information || ''}
             onChange={handleInputChange}
           />
 
-          <label><strong>Bedrijfsnaam:</strong></label>
+          <label htmlFor='companyName'>Bedrijfsnaam:</label>
           <input
             type="text"
-            name="companyName"
+            id="companyName"
             value={companyData?.companyName || ''}
             onChange={handleInputChange}
           />
 
-          <label><strong>Email:</strong></label>
+          <label htmlFor='email'>Email:</label>
           <input
             type="text"
-            name="email"
+            id="email"
             value={companyData?.email || ''}
             onChange={handleInputChange}
           />
 
-          <label><strong>Adres:</strong></label>
+          <label htmlFor='address'>Adres:</label>
           <input
             type="text"
-            name="address"
+            id="address"
             value={companyData?.address || ''}
             onChange={handleInputChange}
           />
 
-          <label><strong>Kvk Nummer:</strong></label>
+          <label htmlFor='kvkNumber'>Kvk Nummer:</label>
           <input
             type="text"
             name="kvkNumber"
@@ -77,26 +77,26 @@ const CompanyProfile = () => {
             onChange={handleInputChange}
           />
 
-          <label><strong>URL:</strong></label>
+          <label htmlFor='url'>URL:</label>
           <input
             type="text"
-            name="url"
+            id="url"
             value={companyData?.url || ''}
             onChange={handleInputChange}
           />
 
-          <label><strong>Huidig Wachtwoord:</strong></label>
+          <label htmlFor='currentPassword'>Huidig Wachtwoord:</label>
           <input
             type="password"
-            name="currentPassword"
+            id="currentPassword"
             value={companyData?.currentPassword || ''}
             onChange={handleInputChange}
           />
 
-          <label><strong>Nieuw Wachtwoord:</strong></label>
+          <label htmlFor='newPassword'>Nieuw Wachtwoord:</label>
           <input
             type="password"
-            name="newPassword"
+            id="newPassword"
             value={companyData?.newPassword || ''}
             onChange={handleInputChange}
           />
