@@ -59,7 +59,8 @@ jobs:
       - name: Deploy to Azure Web App
         uses: azure/webapps-deploy@v2
         with:
-          app-name: 'accessibilitywebsiteproject'
+        
+          app-name: 'project-accesibility'
           slot-name: 'Production'
           publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_EA36A7D9508844479DC8E4DE5CD9E73A }}
           package: ${{ github.workspace }}/artifacts
