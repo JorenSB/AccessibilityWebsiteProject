@@ -1,5 +1,5 @@
 import React from 'react';
-import Nav from './BaseNavbar'
+import Nav from './BaseNavBar'
 import SideBar from './ChatSideBar'
 import PropTypes from 'prop-types'; 
 import './BaseLayout.css'

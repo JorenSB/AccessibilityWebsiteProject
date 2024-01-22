@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import './RegisterForm.css';
-import Logo from '../media/logo.png';
+import Logo from '../media/logo_met_text_transparant.png';
 import { Link, useNavigate } from 'react-router-dom';
 
 function RegisterFormCompany() {

@@ -3,7 +3,7 @@ import { jwtDecode } from "jwt-decode";
 
 export const isAuthenticated = () => {
   const jwtToken = localStorage.getItem('jwtToken');
-  return !!jwtToken; // Return true als er een token aanwezig is, anders false
+  return !!jwtToken; 
 };
 
 export const jwtIsValid = () => {

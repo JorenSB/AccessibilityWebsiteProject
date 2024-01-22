@@ -48,6 +48,7 @@ function App() {
 
       {/* dit zijn publieke routes */}
       <Route path='/' element={<Login />} />
+      <Route path='/login' element={<Login />} />
       <Route path='/registreerbedrijf' element={<RegisterCompany />} />
       <Route path='/registreerdeskundige' element={<RegisterExpert />} />
     </Routes>

@@ -22,7 +22,6 @@ public class ValidationController
         {
             return false;
         }
-        // Checks if the password is at least 8 characters long
         if (password!.Length < 8)
         {
             return false;

@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import brandLogo from '../media/logo_met_text_transparant.png';
+import LogoutButton from './LogoutButton';
 
 import './BaseLayout.css';
 
@@ -35,16 +36,16 @@ export default class BaseNavBar extends React.Component {
               <div className="collapse navbar-collapse flex-grow-1 text-right" id="myNavbar7">
                   <ul className="navbar-nav ms-auto flex-nowrap">
                       <li className="nav-item">
-                          <Link className='nav-link text-dark' to='/admin/bedrijven'>Bedrijven</Link>
+                          <Link className='nav-link text-dark' to='/deskundige/profiel'>Mijn onderzoeken</Link>
                       </li>
                       <li className="nav-item">
-                          <Link className='nav-link text-dark' to='/admin/deskundigen'>ErvaringsDeskundigen</Link>
+                          <Link className='nav-link text-dark' to='/deskundige/profiel'>Inschrijven Onderzoek</Link>
                       </li>
                       <li className="nav-item">
-                          <Link className='nav-link text-dark' to='/admin/profiel'>Mijn Profiel</Link>
+                          <Link className='nav-link text-dark' to='/deskundige/profiel'>Mijn Profiel</Link>
                       </li>
                       <li className="nav-item">
-                          <Link className='nav-link text-dark' to='/'>Log Out</Link>
+                          <LogoutButton />
                       </li>
                   </ul>
               </div>

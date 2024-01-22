@@ -1,7 +1,6 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Model.Users.Expert;
 
 [ApiController]
 [Route("api/deskundige")]
@@ -65,7 +64,6 @@ public class DeskundigeController : ControllerBase
     }
 
 
-
     [HttpPut("updateuser")]
     public IActionResult UpdateUserData([FromBody] UpdatedExpertProfileModel updatedUserData)
     {
@@ -95,29 +93,21 @@ public class DeskundigeController : ControllerBase
 
                 if (value != null)
                 {
-                    // Check if the property is the password
-                    // if (property.Name == "Password")
-                    // {
-                    //     // Hash and set the password
-                    //     var hashedPassword = _userManager.PasswordHasher.HashPassword(expert, value.ToString());
-                    //     expert.PasswordHash = hashedPassword;
-                    // }
-                    // else
-                    //{
-                        // Update the corresponding property in the Expert entity
-                        var expertProperty = typeof(Expert).GetProperty(property.Name);
 
-                        // Check if the property is DateTime
-                        if (expertProperty != null && expertProperty.PropertyType == typeof(DateTime))
-                        {
-                            var dateTimeValue = (DateTime)value;
-                            expertProperty.SetValue(expert, dateTimeValue.Date.Add(new TimeSpan(0, 0, 0)));
-                        }
-                        else if (expertProperty != null && expertProperty.Name != "DisabilityAids" && expertProperty.Name != "Disabilities")
-                        {
-                            expertProperty?.SetValue(expert, value);
-                        }
-                    //}
+                    // Update the corresponding property in the Expert entity
+                    var expertProperty = typeof(Expert).GetProperty(property.Name);
+
+                    // Check if the property is DateTime
+                    if (expertProperty != null && expertProperty.PropertyType == typeof(DateTime))
+                    {
+                        var dateTimeValue = (DateTime)value;
+                        expertProperty.SetValue(expert, dateTimeValue.Date.Add(new TimeSpan(0, 0, 0)));
+                    }
+                    else if (expertProperty != null && expertProperty.Name != "DisabilityAids" && expertProperty.Name != "Disabilities")
+                    {
+                        expertProperty?.SetValue(expert, value);
+                    }
+
                 }
             }
 

@@ -80,6 +80,8 @@ const DeskundigeProfiel = () => {
 
   useEffect(() => {
     fetchUserData();
+
+
   }, [navigate]);
 
   function handleAccountDataChange(birthdate) {
