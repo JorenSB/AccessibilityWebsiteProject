@@ -1,4 +1,4 @@
-name: Build and deploy .NET React app to Azure Web App - accessibilitywebsiteproject
+name: Build and deploy .NET React app to Azure Web App - project-accessibility
 
 on:
   push:
