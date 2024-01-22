@@ -11,13 +11,12 @@ public class AccountController : ControllerBase
 {
     private readonly UserManager<User> _userManager;
     private readonly SignInManager<User> _signInManager;
-    private readonly ValidationController _validationController;
+    private readonly ValidationController _validationController = new ValidationController();
 
-    public AccountController(UserManager<User> userManager, SignInManager<User> signInManager, ValidationController validationController)
+    public AccountController(UserManager<User> userManager, SignInManager<User> signInManager)
     {
         _userManager = userManager;
         _signInManager = signInManager;
-        _validationController = validationController;
     }
 
     [HttpPost("login")]
@@ -146,40 +145,5 @@ public class AccountController : ControllerBase
         return BadRequest(new { Message = "Er is iets misgegaan bij de registratie van het bedrijf" });
     }
 
-    // Illegal
-    // aanmaken nieuwe admin
-    [HttpGet("create/illegal/bober")]
-    public async Task<IActionResult> RegisterAdmin()
-    {
-        var isProd = Environment.GetEnvironmentVariable("DB_PROD")?.Equals("true", StringComparison.OrdinalIgnoreCase) ?? false;
-        if (isProd)
-        {
-             return Unauthorized("Route not Active");
-        }
-
-        var admin = new Admin
-        {
-            Email = "admin@admin.nl",
-            EmailConfirmed = true,
-            UserName = "admin@admin.nl",
-            FirstName = "Bob", 
-            LastName = "de Admin"
-        };
-
-        try {
-            var result = await _userManager.CreateAsync(admin, "!Testing123");
-
-            if (result.Succeeded)
-            {
-                // Geef de rol "Admin" aan de nieuwe gebruiker
-                await _userManager.AddToRoleAsync(admin, "Admin");
-
-                return Ok("Admin geregistreerd");
-            }
-        }
-        catch {
-            return BadRequest("Er is iets misgegaan bij de toevoegen van een Admin");
-        }
-        return BadRequest("Er is iets misgegaan, neem contact op met de developers");
-    }
+   
 }

@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import DeskundigeNavBar from './DeskundigeLayout';
+import DeskundigeNavBar from './DeskundigeNavbar';
 import SideBar from './ChatSideBar';
 import PropTypes from 'prop-types';
 import { jwtIsValid } from '../../Auth'; 

@@ -18,12 +18,12 @@ function PictureCard(props) {
   return (
     <div className="card">
       <div className='pic'></div>
-      <div className="container">
+      <div className="containerCard">
         <div className='cardInput'>
           <input onChange={e => setFirstName(e.target.value)} type="text" id="name" name="name" placeholder={props.firstName} />
         </div>
         <div className='cardInput'> 
-          <input onChange={e => setPhoneNumber(e.target.value)} type="tel" id="phoneNumber" name="phoneNumber" placeholder={props.phoneNumber ?? "Voer een telefoonNummer in"} />
+          <input onChange={e => setPhoneNumber(e.target.value)} type="tel" id="phoneNumber" name="phoneNumber" placeholder={props.phoneNumber ?? "06-12345678"} />
         </div>
       </div>
     </div>

@@ -1,5 +1,5 @@
 import React, {useEffect} from 'react';
-import BaseLayout from '../layouts/DeskundigeLayout.js';
+import BaseLayout from '../layouts/BaseLayout.js';
 import Onderzoek from '../Onderzoeken/Onderzoek.js';
 import { jwtIsValid } from '../../Auth.js';
 import { useNavigate } from 'react-router-dom';

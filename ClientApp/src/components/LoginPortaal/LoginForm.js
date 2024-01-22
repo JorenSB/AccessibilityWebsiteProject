@@ -62,7 +62,7 @@ function LoginForm() {
             const role = getUserRole();
       
             if (role === "Expert") {
-                navigate("/deskundige");
+                navigate("/deskundige/profiel");
             } else if (role === "Company") {
                 navigate("/company");
             } else if (role === "Admin") {
@@ -78,10 +78,10 @@ function LoginForm() {
             <form onSubmit={handleLogin}>
                 <img className='logo-img' src={Logo} alt='logo accessibilty.nl'></img>
                 <div className='input-box'>
-                    <input className='input' type='text' placeholder='E-mail' required onChange={(e) => setEmail(e.target.value)} />
+                    <input className='inputLogin' type='text' placeholder='E-mail' required onChange={(e) => setEmail(e.target.value)} />
                 </div>
                 <div className='input-box'>
-                    <input className='input' type='password' placeholder='Wachtwoord' required onChange={(e) => setPassword(e.target.value)} />
+                    <input className='inputLogin' type='password' placeholder='Wachtwoord' required onChange={(e) => setPassword(e.target.value)} />
                 </div>
                 <div className='forgot-register'>
                     <a href='#'>Wachtwoord vergeten</a>

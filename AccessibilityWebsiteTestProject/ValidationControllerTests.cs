@@ -46,4 +46,31 @@ public class ValidationControllerTests
         Assert.False(resultNullOrEmpty);
         Assert.False(resultEmpty);
     }
+
+
+    [Fact]
+    public void IsValidPassword_ValidPassword_ReturnsTrue()
+    {
+        // Arrange
+        var password = "SterkWachtwoord1!";
+
+        // Act
+        var result = _validationController.IsValidPassword(password);
+
+        // Assert
+        Assert.True(result);
+    }
+
+    [Fact]
+    public void IsValidPassword_ValidPassword_ReturnsFalse()
+    {
+        // Arrange
+        var password = "nietSterkOuwe";
+
+        // Act
+        var result = _validationController.IsValidPassword(password);
+
+        // Assert
+        Assert.False(result);
+    }
 }
